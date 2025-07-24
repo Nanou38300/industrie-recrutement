@@ -1,0 +1,124 @@
+.bulle {
+    margin: 0;
+    padding: 0;
+    // height: 100vh;
+    font-family: sans-serif;
+  }
+  .floating-bubble {
+    position: fixed;
+    bottom: 100px;
+    right: 20px; /* ✅ bouton bien en bas à droite */
+    display: flex;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .actions {
+    display: flex;
+    flex-direction: row-reverse; /* ✅ les éléments partent vers la gauche */
+    margin-right: 10px;          /* ✅ espace entre bouton et actions */
+    opacity: 0;
+    transform: translateX(20px); /* ✅ animation : vient de la droite */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .actions.show {
+    opacity: 1;
+    transform: translateX(0);    /* ✅ s’anime à sa position */
+    pointer-events: auto;
+  }
+
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(197, 197, 197, 0.6);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .main-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #C9AB89;
+    border: 1px solid #e8e8e8;
+    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+    transition: all 0.3s;
+  }
+  
+  .main-button:hover {
+    border: 1px solid white;
+  }
+  
+  .main-button:active {
+    box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
+  }
+  
+  .main-button img {
+    width: 28px;
+    height: 28px;
+  }
+  
+  
+
+  .action-button {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+    border-radius: 50%;
+    background-color:white;
+    border: 1px solid $beige;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .action-button:hover {
+    transform: scale(1.1);
+    background-color: white;
+  }
+
+  a.action-button {
+    text-decoration: none;
+  }
+
+
+  .vcf-notice {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: #ffffff;
+    color: #333;
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+    font-size: 14px;
+    z-index: 1000;
+    animation: fadeInOut 3s ease forwards;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  

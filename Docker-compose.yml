@@ -1,0 +1,156 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - mvc
+      - mvcautoload
+      - fromagerie
+      - composer
+      - wordpress
+      - wp
+      - industrie
+    networks:
+      - webnet
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bdd_students
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - webnet
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+  
+
+  mvc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mvc
+    volumes:
+      - ./mvc:/var/www/html
+    expose:
+      - "80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+
+
+  fromagerie:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fromagerie
+    volumes:
+      - ./fromagerie:/var/www/html
+    expose:
+      - "80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+
+
+  mvcautoload:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mvcautoload
+    volumes:
+      - ./mvcautoload:/var/www/html
+    expose:
+      - "80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+
+
+  composer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: composer
+    volumes:
+      - ./composer:/var/www/html
+    expose:
+      - "80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+
+
+  wordpress :
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wordpress
+    volumes:
+      - ./wordpress:/var/www/html
+    expose:
+      - "80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+
+  wp :
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wp
+    volumes:
+      - ./wp:/var/www/html
+    expose:
+      - "80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+
+
+  industrie :
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: industrie
+    volumes:
+      - ./industrie:/var/www/html
+    expose:
+      - "80"
+    depends_on:
+      - mysql
+    networks:
+      - webnet
+
+volumes:
+  mysql_data:
+
+networks:
+  webnet:

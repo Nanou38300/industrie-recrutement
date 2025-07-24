@@ -1,0 +1,1218 @@
+@import "vars", "typo", "en-tete";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+   img {
+    object-fit: cover;
+   }
+}
+
+// enleve les soulignements sur les liens de redirection.
+a.scroll-link,
+a.scroll-link * {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+
+
+//page accueil
+#P1 { 
+    width: 100%; 
+    .hero {
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 50rem;
+        }
+    }
+    .bloc-redirection {
+        display: flex;
+        flex-direction: row;
+        margin: 9rem;
+
+        .trait-vert {
+            border: 9px solid $vert;
+            transform: translate(-6rem, -0rem);
+        }
+        img {
+            height: 20rem;
+            width: 20rem;
+            object-fit: cover;
+        }
+   
+    .card {
+        width: 70%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+   
+        .icone {
+            width: 3rem;
+            height: 3rem;
+            transform: translate(250px, -100px);
+        }
+        a {
+            text-decoration: none;
+        }
+        p {
+            color: #ffffff;
+            font-size: 1.1rem;
+            transform: translate(30px, -70px);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.737);
+        }
+    }
+    .card > div {
+        position: relative;
+        overflow: hidden;
+        height: 20rem;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+}
+    .texte1 {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.7rem;
+        .tcs-C {
+            @include tcsBeige;
+        }
+        .btn1 {
+            @include boutonVert;
+        }
+        .separateur {
+            border: 0.1rem solid $vert;
+            width: 11rem;
+        }
+        h1 {
+            font-size: 3rem;
+            font-family: "bebas neuve";
+            
+        }
+    }
+    figure { 
+        width: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 30rem;
+            opacity: 0.5;
+            width: 100%;
+        }
+        figcaption { 
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            .compteur { 
+                font-size: 5rem;
+                font-weight: bold;
+                text-align: center;
+              }
+              .chiffre-compteur {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                gap: 10rem;
+              }
+              .texte-compteur {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                font-size: 2rem;
+                gap: 10rem;
+                @include tcsTitre;
+              }
+        }
+    }
+    .template-titre1 {
+        margin: 9rem;
+        .tcs-C {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+        .separateur {
+            border: 1px solid $beige;
+            width: 60px;    
+            transform: translate(14rem, -2rem);
+            box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+        } 
+    }
+    .superposition1 {
+        border: 2px solid $beige;
+        margin: 9rem;
+        height: 40rem;
+ 
+        img {
+            object-fit: cover;
+            height: 23rem;
+            width: 23rem;
+            transform: translate(80px, -480px);
+        }
+        article {
+            display: flex;
+            flex-direction: column;
+            background: $gris;  
+            width: 40rem;
+            transform: translate(25rem, 10rem);
+
+            .tcs-C {
+                @include tcsBeige;
+                text-shadow: 2px 2px 5px rgba(230, 214, 214, 0.732);
+                margin-top: 3rem;
+            }
+            p {
+                margin: 2rem 9rem 2rem 9rem;
+            }
+            h2 {
+                @include tcsTitre;
+                margin: 2rem 9rem 2rem 9rem;
+            }
+        }
+    }
+    .btn2 {
+        @include boutonVert;
+        transform: translate(15rem, -12rem);
+    
+    }
+    .template-titre1 {
+        margin: 9rem;
+        .tcs-C {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+        .separateur2 {
+            border: 1px solid $beige;   
+            width: 80px;    
+            transform: translate(14rem, -2rem);
+            box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+        } 
+    }
+    .superposition2 {
+        border: 2px solid $beige;
+        margin: 9rem;
+        height: 40rem;
+
+        img {
+            object-fit: cover;
+            height: 23rem;
+            width: 23rem;
+            transform: translate(45rem, -30rem);
+        }
+        article {
+            display: flex;
+            flex-direction: column;
+            background: $gris;  
+            width: 40rem;
+            transform: translate(7rem, 10rem);
+            z-index: 2;
+            .tcs-C {
+                @include tcsBeige;
+                text-shadow: 2px 2px 5px rgba(230, 214, 214, 0.732);
+            }
+            p {
+                margin: 2rem 9rem 2rem 9rem;
+            }
+            h2 {
+                @include tcsTitre;
+                margin: 2rem 9rem 2rem 9rem;
+            }
+        }
+    }
+    .btn3 {
+        @include boutonVert;
+        transform: translate(-3rem, -12rem);
+    
+    }
+    .template-titre2 {
+        display: flex;
+        line-height: 1;
+        height: auto;
+        margin: 14rem 9rem 9rem 9rem;
+        gap: 3rem;
+        .tcs-C {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+        .separateur2 {
+            border: 1px solid $beige;
+            transform: rotate(90deg);
+            transform: translate(0rem, -0rem);
+            box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+        } 
+    }
+    .cadre-vert {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+            p {
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                align-items: center; 
+                background: $vert;
+                height: 6rem;
+                width: 12rem;
+                color: white;
+                text-shadow: 1px 1px 1px rgb(91, 88, 88);
+            }
+            .cadre-beige {
+                display: flex;
+                gap: 2rem;
+                justify-content: center;
+                position: relative;
+                z-index: 2;
+            p {
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                align-items: center; 
+                background: $beige;
+                height: 6rem;
+                width: 12rem;
+                color:black;
+                text-shadow: 1px 1px 1px rgb(91, 88, 88);
+            }
+            }
+    }
+    .citation {
+        transform: translate(700px,-40px);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 1;
+        background: $gris;
+        height: 25rem;
+        width: 40rem;
+        img {
+            height: 3rem;
+            width: 3rem;
+            object-fit: cover;
+            margin: 4rem 0rem 0rem 4rem;
+        }
+        .citation-texte {
+            font-style: italic;
+            font-size: 1.4rem;
+            margin: 4rem;
+            text-align: center;
+        }
+        .prenom {
+            margin: 0rem 10rem;
+        }
+    }
+    .temoignage {
+        border: 1px solid $beige;
+        width: 80%;
+        height: 40rem;
+        transform: translateY(-10rem);
+        margin: 2rem;
+        h3 {
+            margin: 3rem 0rem 0rem 9rem;
+        }
+       .temoignage-texte {
+            margin: 3rem 0rem 0rem 9rem;
+       }
+        .template-titre2 {
+            margin: 10rem;
+            
+            .tcs-C {
+                @include tcsBeige;
+            }
+            .titre {
+                @include tcsTitre;
+            }
+        }
+        img {
+            margin-left: 10rem;
+            width: 10rem;
+            object-fit: cover;
+        }
+ 
+    }    
+    a {
+        display: flex;
+        justify-content: center;
+        text-decoration: none;
+    }
+    .btn1 {
+        @include boutonVert;
+        align-items: center;
+        margin: 2rem;
+    }
+    }
+
+
+
+//--------- PAGE BUREAU D'ETUDE -----------
+#P2 { 
+    //margin: 9rem;
+    // display: flex;
+    // flex-direction: column;
+    // gap: 5rem;
+    width: 100%;
+    .template-titre1 {
+        margin: 9rem;
+        .tcs-C {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+        .separateur {
+            border: 1px solid $beige;
+            width: 80px;    
+            transform: translate(14rem, -2rem);
+            box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+        } 
+        a {
+            display: flex;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .btn1 {
+            @include boutonVert;
+            align-items: center;
+        }
+    }
+    .texte {
+        margin: 4rem 9rem 9rem 9rem;
+        @include tcsPara;
+        font-size: 1rem;
+        }
+    .template-titre2 {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        
+        .tcs-C {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+    }
+    .separateur2 {
+        border: 1px solid $beige;
+        transform: rotate(90deg);
+        transform: translate(0rem, -0rem);
+        box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+    } 
+    .hero {
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 50rem;
+        }
+    }
+    .preambule {
+        margin: 9rem;
+        line-height: 0.4;
+        .tcsC {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+    }
+
+    .separateur {
+        border: 1px solid $beige;
+        width: 50px;    
+        transform: translate(14rem, -3rem);
+        box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+    } 
+    .activite {
+        margin: 9rem;
+        display: flex;
+        line-height: 0.4;
+        gap: 30px;
+        height: auto;    
+        .para {
+            display: flex;
+            align-items: center;
+        }
+    }
+    .trois-images {
+    margin: 9rem;
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        .carte {
+            height: 450px;
+            width: 300px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            .filtre {
+                background-color: rgba(0, 0, 0, 0.5);
+                transform: translate(0px, -182px);
+                height: 180px;
+                line-height: 0.4;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                .plus {
+                    color: white;
+                    text-align: center;
+                    font-size: 2rem;
+                }
+                h2 {
+                    color: white;
+                    text-align: center;
+                    @include tcsTitre;
+                    letter-spacing: 3px; // espace entre les lettres
+                    margin: 50px 0 0;
+                }
+            }
+            a {
+                text-decoration: none;
+            }
+   }        
+   .carte:hover {
+    transform: scale(1.05);
+    img {
+        filter: brightness(0.8);
+      }
+  }
+    } 
+    .maintenance {
+        margin: 9rem;
+        @include flexbox(false, center, row);
+        width: 100%;
+        gap: 5rem;
+        div {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            img {
+                width: 20rem;
+                height: 15rem;
+            }
+            .cadre-beige {
+                border: 1px solid $beige;
+                height: 15rem;
+                width: auto;
+            }
+        }
+        article {
+            background: rgba(128, 128, 128, 0.315);
+            padding: 4rem;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            h2 {
+                margin-bottom: 2rem;
+            }
+            a {
+                text-decoration: none;
+                .btn1 {
+                    @include boutonVert;
+                    
+                }
+            }
+        
+        }
+
+    }
+    .chimie {
+        margin: 9rem;
+        @include flexbox(false, center, row);
+            width: 100%;
+            gap: 5rem;
+            div {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                img {
+                    width: 20rem;
+                    height: 15rem;
+                }
+                .cadre-beige {
+                    border: 1px solid $beige;
+                    height: 15rem;
+                    width: auto;
+                }
+            }
+            article {
+                background: rgba(128, 128, 128, 0.315);
+                padding: 4rem;
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+
+                h2 {
+                    margin-bottom: 2rem;
+                }
+                a {
+                    text-decoration: none;
+                    .btn1 {
+                        margin-top: 2rem;
+                        @include boutonVert;
+                    }
+                }
+            
+            }
+        }    
+    .nucleaire {
+        margin: 9rem;
+        @include flexbox(false, center, row);
+        width: 100%;
+        gap: 5rem;
+            div {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                img {
+                    width: 20rem;
+                    height: 15rem;
+                }
+                .cadre-beige {
+                    border: 1px solid $beige;
+                    width: 20rem;
+                    height: 15rem;
+                }
+            }
+            article {
+                background: rgba(128, 128, 128, 0.315);
+                padding: 4rem;
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                h2 {
+                    margin-bottom: 2rem;
+                }
+                a {
+                    text-decoration: none;
+                    .btn1 {
+                        margin-top: 2rem;
+                        @include boutonVert;
+                    }
+                }
+            }
+        }
+    .section-flip {
+        width: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin: 9rem;
+        img {
+            height: 15rem;
+            width: 15rem;
+            object-fit: cover;
+        }
+        .bloc-beige {
+            height: 15rem;
+            width: 15rem;
+            background: $beige;
+        }
+        .bloc-vert {
+            height: 15rem;
+            width: 15rem;
+            background: $vert; 
+        }
+        .bloc-gris {
+            height: 15rem;
+            width: 15rem;
+            background: $gris;    
+    }
+    .flip-card {
+        background-color: transparent;
+        width: 15rem;
+        height: 15rem;
+        border: 1px solid #f1f1f1;
+        perspective: 1000px; /* Supprimez ceci si vous ne souhaitez pas l'effet 3D */
+    }
+    
+    /* Ce conteneur est nécessaire pour positionner les faces avant et arrière */
+    .flip-card-interieur {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+    }
+    
+    /* Effectue un flip horizontal lorsque la souris survole le conteneur du flip box */
+    .flip-card:hover .flip-card-interieur {
+        transform: rotateY(180deg);
+    }
+    
+    /* Positionnement des faces avant et arrière */
+    .flip-card-recto, .flip-card-verso {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden; /* Pour Safari */
+        backface-visibility: hidden;
+    }
+    
+    /* Style de la face avant (affichage de secours si l'image est manquante) */
+    .flip-card-recto {
+        background-color: #bbb;
+        color: black;
+    }
+    
+    /* Style de la face arrière */
+    .flip-card-verso {
+        background-color: $beige;
+        color: white;
+        transform: rotateY(180deg);
+        h2 {
+            margin: 1rem;
+        }
+    }
+        }
+} 
+
+//  Page Domaine d'expertise
+#P3 {
+    width: 100%; 
+    .hero {
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 50rem;
+        }
+    }
+    .btn1 {
+        @include boutonVert;
+}
+    .template-titre1 { 
+        margin: 3rem 9rem 3rem 9rem;
+        .tcs-C {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+        .separateur {
+            border: 1px solid $beige;
+            width: 80px;    
+            transform: translate(20rem, -3rem);
+            box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+        } 
+    }
+    .template-titre2 {
+        margin: 3rem 9rem 3rem 9rem;
+        display: flex;
+        line-height: 1;
+        gap: 30px;
+        height: auto;
+        .tcsC {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+        .separateur2 {
+            border: 1px solid $beige;
+            transform: rotate(90deg);
+            transform: translate(0rem, -0rem);
+            box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(77, 77, 77, 0.087);
+        }  
+    }
+
+    .redirection {
+       margin: 4rem 10rem 1rem 10rem;
+        width: 40%;
+        padding: 3rem 5rem;
+        border: 0.3rem solid $beige;
+        box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+        transform: translate(300px, 0px);
+        margin: 9rem;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        z-index: 99;
+        position: relative;
+        align-items: center;
+        gap: 2rem;
+        .plan {
+            display: flex;
+            gap: 5rem;
+        }
+        .cahiers {
+            display: flex;
+            gap: 5rem;
+        }
+        .fleches {
+            display: flex;
+            gap: 5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+            overflow: hidden;   
+            .fleches:hover {
+                transform: scale(1.05);
+                img {
+                    filter: brightness(0.8);
+                  }
+              }
+        }
+        .icone {
+            height: 4rem;
+            width: 4rem;
+        }
+        .fleche {
+            height: 4rem;
+            width: 4rem;
+            object-fit: cover;
+        }
+        h4 {
+            line-height: 1.5rem;
+        }
+    }
+    .rect-vert {
+        height: 35rem;
+        background: $vert;
+        @include flexbox(center, center, column);
+        gap: 3rem;
+        transform: translate(0, -280px);
+        z-index: 2;
+        .btn2 {
+            @include boutonBeige;
+            align-items: center;
+        }
+        p {
+            width: 60%;
+            color: white;
+            @include tcsTitre;
+            text-align: center;
+        }
+    }
+    .plan-chaudronnerie {
+        margin: 9rem;
+        @include flexbox(center, false, row);
+        gap: 4rem;
+        img {
+            height: 25rem;
+            object-fit: cover;
+        }
+        .texte-chaudronnerie {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    }
+    .cahier-charge {
+        margin: 9rem;
+        @include flexbox(center, false, row);
+        gap: 4rem;
+        img {
+            height: 40rem;
+            object-fit: cover;
+        }
+        .texte-cahier {
+            display: flex;
+            flex-direction: column;
+            margin: 1rem;
+            gap: 0.5rem;
+        }
+        .btn1 {
+            margin: 4rem;
+        }
+    }
+    .cahier-soudage {
+        margin: 9rem;
+        @include flexbox(center, false, row);
+        gap: 4rem;
+        img {
+            height: 40rem;
+            object-fit: cover;
+        }
+        .texte-soudage {
+            display: flex;
+            flex-direction: column;
+            align-items:center;
+            margin-top: 6rem;
+            gap: 3rem;
+        }
+    }
+}
+
+//  Page recrutement
+#P4 {  
+    width: 100%; 
+    .hero {
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 50rem;
+        }
+    }
+    .picto-processus {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 6rem 0rem 6rem 0rem;
+        img {
+            height: 6rem;
+            width: 6rem;
+            object-fit: cover;
+        }
+        .texte-beige {
+            color: $beige;
+            @include tcsPara; 
+            font-style: normal;
+        }
+        p {
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+    .fleche {
+        height: 3rem;
+        width: 3rem;
+        object-fit: cover;
+        align-items: center;
+    }
+ 
+    .etape-process {
+        width: 15%;
+    }
+    }
+    .template-titre1 { 
+        margin: 9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        img {
+            height: 20rem;
+            width: 20rem;
+            object-fit: cover;
+            transform: translate(500px, 300px);
+        }
+        im2 {
+            height: 20rem;
+            width: 20rem;
+            object-fit: cover;
+            transform: translate(400px, 300px);
+        }
+        .tcsC {
+            @include tcsBeige;
+        }
+        .titre {
+            @include tcsTitre;
+        }
+        .separateur {
+            border: 1px solid $beige;
+            width: 80px;    
+            transform: translate(20rem, -3rem);
+            box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
+        } 
+        .btn1 {
+            @include boutonVert;
+            transform: translate(250px, 10px);
+            margin-top: 2rem;
+        }
+        .article {
+            margin: 9rem;
+            padding: 9rem;
+            border: 1px solid $beige;
+            .btn1 {
+                @include boutonVert;
+                transform: translate(0px, 10px);
+                margin-top: 2rem;
+            }
+        }
+        .article2 {
+            margin: 9rem;
+            padding: 9rem;
+            border: 1px solid $beige;
+            @include flexbox(end, end, column);
+            .btn2 {
+                @include boutonBeige;
+                transform: translate(0px, 10px);
+                margin-top: 2rem;
+            }
+            p {
+                text-align: end;
+            }
+        }
+        .article3 {
+            margin: 9rem;
+            padding: 9rem;
+            border: 1px solid $beige;
+            .btn1 {
+                @include boutonVert;
+                transform: translate(0px, 10px);
+                margin-top: 2rem;
+            }
+        }
+    }
+    // form {
+    //     border: 1px solid $beige;
+    //     height: 50rem;
+    //     width: 50%;
+    //     margin: 9rem;
+    //     padding: 2rem;
+    //     display: flex;
+    //     flex-direction: column;
+    //     gap: 1rem;
+    //     label {
+    //         width: 100%;
+    //     }
+    //     input {
+    //        height: 3rem;
+           
+    //     }
+    //     .message {
+    //         height: 15rem;
+    //        }
+    //        .btn1 {
+    //         @include boutonVert;
+       
+    //     }
+    // }
+}
+
+//V2
+.form-container {
+    font-family: 'Arial', sans-serif;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #e0e0e0;
+    // border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(13, 13, 13, 0.1);
+    background-color: #ffffff;
+}
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.company-name {
+    color: #d4a76a;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.title {
+    color: #333333;
+    font-size: 2.1rem;
+    margin-bottom: 1rem;
+}
+.separator {
+    height: 2px;
+    background-color: #d4a76a;
+    margin: 1rem auto;
+    width: 50%;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    @include tcsPara;
+    font-weight: bold;
+    color: #555555;
+}
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    // border-radius: 4px;
+    font-size: 1rem;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #d4a76a;
+    outline: none;
+}
+.message {
+    height: 150px;
+    resize: vertical;
+}
+.rgpd {
+    margin-bottom: 1.5rem;
+}
+.rgpd input {
+    margin-right: 0.5rem;
+}
+.rgpd label {
+    font-size: 0.9rem;
+    color: #666666;
+}
+.btn {
+    @include boutonBeige;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.btn:hover {
+    background-color: #baad9a;
+}
+
+
+
+//Page Contact
+#P5 {
+    
+    .hero {
+        img {
+            object-fit: cover;
+            width: 100%;
+            height: 50rem;
+        }
+    }
+    .P {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin: 2rem 2rem 9rem 2rem;
+        h1 {
+            font-family: "BEBAS NEUVE";
+            font-size: 3rem;
+            text-align: center;
+             }
+    .coordonnees {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        left: 50rem;
+        width: 40%;
+        padding: 5rem;
+        section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    
+        img {
+            height: 2rem;
+            object-fit: cover;
+        }
+        .bloc-co {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        }
+    }
+    // .formulaire {
+    //     display: flex;
+    //     flex-direction: column;
+    //     gap: 2rem;
+    //     align-items: center;
+    //     width: 40%;
+    //     padding: 5rem;
+    //     background: $vert;
+    //     color: white;
+    //     form {
+    //         display: flex;
+    //         flex-direction: column;
+    //         gap: 1rem;
+    //         background: $vert;
+    //         color: white;
+    //         input {
+    //             height: 2rem;
+    //         }
+    //         .btn-form {
+    //             @include boutonBeige;
+    //         }
+    //     }
+    // }
+    
+
+
+    .form-container {
+        font-family: 'Arial', sans-serif;
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 6px rgba(13, 13, 13, 0.1);
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .company-name {
+        color: $beige;
+        font-size: 1.4rem;
+        margin-bottom: 0.5rem;
+    }
+    .title {
+        color: black;
+        margin-bottom: 1rem;
+        @include tcsTitre;
+    }
+    .separator {
+        height: 2px;
+        background-color: $beige;
+        margin: 1rem auto;
+        width: 50%;
+    }
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    @include tcsPara;
+    font-weight: bold;
+    color: $beige;
+}
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    font-size: 1rem;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #d4a76a;
+    outline: none;
+}
+.message {
+    height: 150px;
+    resize: vertical;
+}
+.btn {
+    @include boutonBeige;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.btn:hover {
+    background-color: #baad9a;
+}
+
+}
+
+
+
+
+
+
+@import "bulle-flottante","footer";

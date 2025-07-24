@@ -1,0 +1,12 @@
+# Activer la réécriture d'URL
+RewriteEngine On
+
+# Spécifie la base (important car ton projet est à la racine du domaine mvc.localhost)
+RewriteBase /
+
+# Si la requête est un fichier ou un dossier réel, on ne fait rien
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Sinon, tout est redirigé vers index.php
+RewriteRule ^(.*)$ index.php [QSA,L]

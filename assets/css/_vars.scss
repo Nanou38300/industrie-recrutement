@@ -1,0 +1,58 @@
+@mixin boutonVert {
+    background: #1A3E38;
+    color: white;
+    height: 3rem;
+    width: 12rem;
+    font-family: "BEBAS NEUVE";
+    border: none;
+}
+
+@mixin boutonBeige {
+  background: $beige;
+  color: white;
+  height: 3rem;
+  width: 12rem;
+  font-family: "BEBAS NEUVE";
+  border: none;
+}
+
+@mixin tcsBeige {
+    font-family: "Lora";
+    font-size: 1rem;
+    color: #C9AB89;
+    text-shadow: 2px 2px 5px rgba(129, 126, 126, 0.359);
+}
+
+@mixin tcsTitre {
+    font-family: "Bebas Neue";
+    font-size: 2rem;
+}
+
+@mixin tcsPara {
+    font-family: "Outfit";
+    font-size: 1rem;
+}
+
+
+
+// FLexbox
+@mixin flexbox($jc, $ai, $fd:false, $fw: false) {
+	display:flex;
+	justify-content: $jc;
+	align-items: $ai;
+	
+  @if $fd {
+    flex-direction: $fd;
+  }
+  @if $fw {
+    flex-wrap: $fw;
+  }
+}
+
+
+
+//couleurs
+$beige:#C9AB89;
+$gris:#D9D9D9; 
+$blanc: white;
+$vert: #1A3E38;

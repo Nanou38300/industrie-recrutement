@@ -77,6 +77,76 @@ header nav a {
   transform: translate(110px, 750px);
 }
 
+.inscription {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 2rem;
+  margin: 4rem;
+  align-content: center;
+  justify-content: center;
+}
+.inscription .superposition-insc {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.inscription .superposition-insc .img-inscription {
+  height: 50rem;
+  width: 40%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  position: absolute;
+}
+.inscription .superposition-insc div {
+  position: relative;
+  z-index: 99;
+}
+.inscription .superposition-insc div img {
+  height: 3rem;
+  width: 3rem;
+  -o-object-fit: cover;
+     object-fit: cover;
+  position: relative;
+}
+.inscription .superposition-insc div .btn-insc {
+  background: #C9AB89;
+  color: white;
+  height: 5rem;
+  width: 15rem;
+  font-size: 1.5rem;
+  font-family: "BEBAS NEUVE";
+  border: none;
+}
+.inscription .form-inscription {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 30%;
+}
+.inscription .form-inscription .titre-inscr {
+  padding: 3rem;
+  text-align: center;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.737);
+  font-size: 2rem;
+  background: #1A3E38;
+  color: white;
+}
+.inscription .form-inscription button {
+  background: #C9AB89;
+  color: white;
+  height: 3rem;
+  width: 12rem;
+  font-family: "BEBAS NEUVE";
+  border: none;
+}
+
+.connexion {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
 * {
   margin: 0;
   padding: 0;

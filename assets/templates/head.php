@@ -12,10 +12,10 @@
     <title>TCS - Tuyauterie Chaudronnerie Soudure</title>
 
     <!-- Charge une feuille de style CSS pour définir l'apparence du site. -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 
     <!-- Définit une URL de base pour toutes les références relatives dans la page. -->
-    <base href="http://industrie.localhost:8080/">
+    <base href="http://industrie.localhost:8080">
 
     <!-- Permet d'ajouter une description de la page pour les moteurs de recherche (ici, vide). -->
     <meta name="description" content="">

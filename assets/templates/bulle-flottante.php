@@ -11,7 +11,7 @@
         <nav class="actions" id="actionButtons" aria-label="Actions rapides">
             <!-- Nouveau -->
             <div id="vcfNotice" class="vcf-notice" style="display: none;">
-  📇 Contact en cours d'enregistrement...
+            📇 Contact en cours d'enregistrement...
 </div>
             <a class="action-button call-vcf" title="Appeler et enregistrer le contact" aria-label="Appeler et enregistrer">
             <img src="./assets/images/bulle-appel.png" alt="Icône téléphone" width="24" height="24" loading="lazy">

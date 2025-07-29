@@ -1,4 +1,4 @@
-@import "vars", "typo", "en-tete";
+@import "vars", "typo", "en-tete", "login";
 
 * {
     margin: 0;
@@ -355,9 +355,7 @@ a.scroll-link * {
         align-items: center;
         margin: 2rem;
     }
-    }
-
-
+}
 
 //--------- PAGE BUREAU D'ETUDE -----------
 #P2 { 
@@ -1069,8 +1067,6 @@ a.scroll-link * {
 .btn:hover {
     background-color: #baad9a;
 }
-
-
 
 //Page Contact
 #P5 {

@@ -2,10 +2,13 @@ Projet : un site internet d'une entreprise de chaudronnerie, tuyauterie et soudu
 
 
 <!-- ------------------------------- OBJECTIF -------------------------------------- -->
-Développemtn d'un site web en PHP (model MVC) qui permettera :  
+Développement d'un site web en PHP (model MVC) qui permettera :  
 -> aux administrateur de gerer les annonces et les recrutements via un dashabord personnalisé. (calendrier, annonces, candidatures).
 -> aux candidats de postuler à des annonces et suivre leurs candidatures via un dashboard personnalisé (profil, accés aux annonces, suivi de l'état de la candidature).
 
+<!-- --------------------------- CONFIGURATION DU PROJET  -------------------------------------- -->
+Variables à définir dans le fichier .env
+Détails du fichier Database.php
 
 <!-- --------------------------- STRUCTURE DU PROJET -------------------------------------- -->
 
@@ -23,7 +26,7 @@ INDUSTRIE
 |  | |_AnnonceModel.php → Gestion des annonces en base
 |  | |_CandidatureModel.php → Données relatives aux candidatures
 |  | |_EntretienModel.php → Accès aux entretiens
-|  | |_UtilisateurMoedel.php → Accès aux données des candidats
+|  | |_UtilisateurModel.php → Accès aux données des candidats
 |  |
 |  |_view
 |  | |_AdministrateurView.php → Interface pour le recruteur
@@ -34,19 +37,19 @@ INDUSTRIE
 |
 |_ASSETS
 | |_css
-| | |_btn-retour-haut.scss → Affiche un bouton qui renvoie en haut de page
-| | |_bulle-flottante.scss → La bulle en bas à droite de l'écran permettant de contacter l'entreprise
-| | |_en-tete.scss → Menu principal
-| | |_footer.scss → Bas de page
-| | |_typo.scss → Les polices importées
-| | |_vars.scss → Les mixins scss et variables
+| | |_btn-retour-haut.scss  → Affiche un bouton qui renvoie en haut de page
+| | |_bulle-flottante.scss  → La bulle en bas à droite de l'écran permettant de contacter l'entreprise
+| | |_en-tete.scss          → Menu principal
+| | |_footer.scss           → Bas de page
+| | |_typo.scss             → Les polices importées
+| | |_vars.scss             → Les mixins scss et variables
 | |
 | |_IMAGES
 | |
 | |_JS
-| | |_btn-retour-haut.js → Le bouton qui permet de remonter en haut de page
-| | |_bulle-flotante.js → La bulle en bas à droite de l'écran, permettant de contacter l'entreprise.
-| | |_compteur.js → Le compteur sur la page d'accueil, année d'expérience/nombre de collaborateurs/CA
+| | |_btn-retour-haut.js    → Le bouton qui permet de remonter en haut de page
+| | |_bulle-flotante.js     → La bulle en bas à droite de l'écran, permettant de contacter l'entreprise.
+| | |_compteur.js           → Le compteur sur la page d'accueil, année d'expérience/nombre de collaborateurs/CA
 | | |_redirection-page-be.js → Permet de naviguer entre les blocs, sur la page Bureau d'étude. (style ONEPAGE)
 | | |_redirection-page-expertise.js → Permet de naviguer entre pages selon expertise
 | |
@@ -91,6 +94,23 @@ les tables utilisées :
 - Entretien : rendez-vous programmés
 
 
+
+
+
 <!-- --------------------------- INSTALLATION DU PROJET  -------------------------------------- -->
 
+Plateforme → GITHUB Mettre son projet sur GitHub permet de le sauvegarder en ligne, de collaborer facilement avec d'autres personnes et de suivre toutes les modifications du code au fil du temps.
 
+cd ton_dossier_projet/INDUSTRIE
+
+git init                               # Initialise Git dans ton projet
+git remote add origin https://github.com/nanou38300/industrie-recrutement.git    // le projet s'appel industrie-recrutement dans github
+git add .                              # Ajoute tous les fichiers
+git commit -m "Initial commit"         # Premier commit
+git branch -M main                     # Nomme la branche principale "main"
+git push -u origin main                # Envoie ton projet sur GitHub
+
+
+
+
+<!-- ---------------------------   -------------------------------------- -->

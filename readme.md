@@ -29,6 +29,12 @@ INDUSTRIE
 |  | |_UtilisateurModel.php → Accès aux données des candidats
 |  |
 |  |_view
+|  | |_Candidat
+|  | |_|_profil.php → Affiche les infos du candidat
+|  | |_|_annonce.php → 	Affiche les détails d’une annonce
+|  | |_|_annonces.php → Liste des annonces disponibles
+|  | |_|_candidatures.php → Montre les candidatures du candidat
+
 |  | |_AdministrateurView.php → Interface pour le recruteur
 |  | |_UserView.php → Interface côté candidat
 |  | |_SharedView.php 
@@ -95,8 +101,6 @@ les tables utilisées :
 
 
 
-
-
 <!-- --------------------------- INSTALLATION DU PROJET  -------------------------------------- -->
 
 Plateforme → GITHUB Mettre son projet sur GitHub permet de le sauvegarder en ligne, de collaborer facilement avec d'autres personnes et de suivre toutes les modifications du code au fil du temps.
@@ -113,4 +117,72 @@ git push -u origin main                # Envoie ton projet sur GitHub
 
 
 
-<!-- ---------------------------   -------------------------------------- -->
+<!-- --------------------------- MISE EN PLACE DU ROUTER  -------------------------------------- -->
+| 🧭 Action (segment 1)  | 🚪 Étape (segment 2)     | 🎯 Contrôleur                 | 🧩 Méthode                            |
+|------------------------|--------------------------|-------------------------------|----------------------------------------|
+| `accueil`              |                          | (page statique)               | `Pages/accueil.php`                    |
+| `bureauEtude`          |                          | (page statique)               | `Pages/bureauEtude.php`                |
+| `domaineExpertise`     |                          | (page statique)               | `Pages/domaineExpertise.php`           |
+| `recrutement`          |                          | (page statique)               | `Pages/recrutement.php`                |
+| `contact`              |                          | (page statique)               | `Pages/contact.php`                    |
+
+### 👩‍💼 Administration
+
+| `administrateur`       | `dashboard`              | `AdministrateurController`    | `dashboard()`         Affiche les stats globales à l’accueil admin
+|                        | `profil`                 |                                | `editProfil()`       Permet à l’admin de modifier ses infos perso
+|                        | `annonces`               |                                | `viewAnnonces()`     Liste toutes les offres d’emploi
+|                        | `create-annonce`         |                                | `createAnnonce()`	Gère l’affichage + enregistrement d’une nouvelle annonce
+|                        | `edit-annonce`           |                                | `editAnnonce(id)` 	Affiche et modifie une annonce existante
+|                        | `archive-annonce`        |                                | `archiveAnnonce(id)`	Archive une annonce (sans suppression)
+|                        | `candidatures`           |                                | `listCandidatures()`	Montre toutes les candidatures reçues
+|                        | `candidature`            |                                | `viewCandidature(id)`	Détail d’une candidature en particulier 
+
+### 📢 Annonces globales
+
+| `annonce`              | `create`                 | `AnnonceController`            | `createAnnonce(id)`                    |
+|                        | `update`                 |                                | `updateAnnonce()`                      |
+|                        | `delete`                 |                                | `deleteAnnonce(id)`                    |
+|                        | *(autre)*                |                                | `listAnnonces()`                       |
+
+### 📄 Candidatures globales
+
+| `candidature`          | `submit`                 | `CandidatureController`        | `submitCandidature()`                  |
+|                        | `view`                   |                                | `viewCandidature(id)`                  |
+|                        | `delete`                 |                                | `deleteCandidature(id)`                |
+|                        | `suivi`                  |                                | `suivi()`                              |
+|                        | *(autre)*                |                                | `listCandidatures()`                   |
+
+### 📅 Entretiens
+
+| `entretien`            | `planifier`              | `EntretienController`          | `planifierEntretien()`                 |
+|                        | `rappel`                 |                                | `envoyerRappel(id)`                    |
+|                        | *(autre)*                |                                | `listEntretiens()`                     |
+
+### 👥 Utilisateurs
+
+| `utilisateur`          | `create`                 | `UtilisateurController`        | `createUtilisateur()`                  |
+|                        | `edit`                   |                                | `editUtilisateur(id)`                  |
+|                        | `login`                  |                                | `loginUtilisateur(id)`                 |
+|                        | `logout`                 |                                | `logoutUtilisateur()`                  |
+|                        | `update`                 |                                | `updateUtilisateur()`                  |
+|                        | `delete`                 |                                | `deleteUtilisateur(id)`                |
+|                        | *(autre)*                |                                | `listUtilisateurs()`                   |
+
+### 📆 Calendrier
+
+| `calendrier`           | `semaine`                | `CalendrierController`         | `vueSemaine()`                         |
+|                        | `jour`                   |                                | `vueJour(id)`                          |
+|                        | `rappel`                 |                                | `rappelDuJour()`                       |
+|                        | `rendez-vous`            |                                | `infoRendezVous(id)`                   |
+|                        | *(autre)*                |                                | `vueSemaine()`                         |
+
+### 🧑‍🎓 Candidat (front office)
+
+| `candidat`             | `profil`                 | `CandidatController`           | `profil()`                             |
+|                        | `update`                 |                                | `update()`                             |
+|                        | `upload-cv`              |                                | `uploadCV()`                           |
+|                        | `annonces`               |                                | `listAnnonces()`                       |
+|                        | `annonce-view`           |                                | `viewAnnonce(id)`                      |
+|                        | `postuler`               |                                | `postuler(id)`                         |
+|                        | `candidatures`           |                                | `suiviCandidatures()`                  |
+|                        | *(autre)*                |                                | `profil()`                             |

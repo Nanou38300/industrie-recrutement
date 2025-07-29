@@ -47,3 +47,97 @@ public function loginForm()
     ';
     }
 } 
+
+
+
+
+
+<MENU>
+    <?php if ($afficherLayout): ?>
+    <?php include 'assets/templates/menu.php'; ?>
+<?php endif; ?>
+
+<header>
+
+<div class="logo">
+    <div class="rectangle-header"></div>
+    <div class="diagonale-header"> </div>
+    <a href="/accueil">
+        <img src="assets/images/LOGO.svg" alt="Logo de l'entreprise">
+</a>
+ </div>
+
+
+
+    <nav>
+        <a href="/accueil">Accueil</a>
+        <a href="/bureauEtude">Bureau d'étude</a>
+        <a href="/domaineExpertise">Notre expertise</a>
+        <a href="recrutement">Recrutement</a>
+        <a href="/contact/utilisateur/create">Contact</a>
+    </nav>
+
+    
+
+    <nav class="menu">
+    <?php if (isset($_SESSION['utilisateur'])): ?>
+        <?php if ($_SESSION['utilisateur']['role'] === 'administrateur'): ?>
+            <!-- Menu administrateur -->
+            <a href="/administrateur/dashboard">Dashboard</a>
+            <a href="/administrateur/annonces">Annonces</a>
+            <a href="/administrateur/candidatures">Candidatures</a>
+            <a href="/utilisateur/create">Créer un utilisateur</a>
+            <a href="/utilisateur/manage">Gérer les utilisateurs</a>
+            <a href="/utilisateur/logout">Déconnexion</a>
+        <?php elseif ($_SESSION['utilisateur']['role'] === 'candidat'): ?>
+            <!-- Menu candidat -->
+            <a href="/candidat/profil">Profil</a>
+            <a href="/candidat/annonces">Voir les annonces</a>
+            <a href="/candidat/candidatures">Mes candidatures</a>
+            <a href="/utilisateur/logout">Déconnexion</a>
+        <?php else: ?>
+            <!-- Menu générique connecté (autres rôles) -->
+            <a href="/utilisateur/logout">Déconnexion</a>
+        <?php endif; ?>
+    <?php else: ?>
+        <!-- Menu visiteur -->
+        <a href="/utilisateur/login">Connexion</a>
+        <a href="/utilisateur/create">Inscription</a>
+    <?php endif; ?>
+</nav>
+
+</header>
+<div class="separateur-header"></div>
+
+
+
+
+</MENU>
+
+    <!-- <nav class="menu">
+    <?php if (isset($_SESSION['utilisateur'])): ?>
+            <?php if ($_SESSION['utilisateur']['role'] === 'administrateur'): ?>
+                
+                <a href="/candidat/profil" class="<?= ($_SERVER['REQUEST_URI'] == '/candidat/profil') ? 'active' : '' ?>">Profil</a>
+
+                
+                <a href="/administrateur/dashboard">Dashboard</a>
+                <a href="/administrateur/annonces">Annonces</a>
+                <a href="/administrateur/candidatures">Candidatures</a>
+                <a href="/utilisateur/create">Créer un utilisateur</a>
+                <a href="/utilisateur/manage">Gérer les utilisateurs</a>
+                <a href="/utilisateur/logout">Déconnexion</a>
+                
+            <?php elseif ($_SESSION['utilisateur']['role'] === 'candidat'): ?>
+                <a href="/candidat/profil">Profil</a>
+                <a href="/candidat/annonces">Voir les annonces</a>
+                <a href="/candidat/candidatures">Mes candidatures</a>
+                <a href="/utilisateur/logout">Déconnexion</a>
+            <?php else: ?>
+                <a href="/utilisateur/logout">Déconnexion</a>
+            <?php endif; ?>
+        <?php else: ?>
+            <a href="/utilisateur/login">Connexion</a>
+            <a href="/utilisateur/create">Inscription</a>
+        <?php endif; ?>
+    </nav> -->

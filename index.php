@@ -1,44 +1,52 @@
 <?php
-declare(strict_types=1);          // ✅ Active le typage strict pour plus de robustesse
-session_start();                   // ✅ Démarre la session pour suivre l’utilisateur
+declare(strict_types=1);
+session_start();
 
-require_once __DIR__ . '/vendor/autoload.php'; // ✅ Chargement automatique des classes via Composer
+require_once __DIR__ . '/vendor/autoload.php';
 
-// ✅ Importation des contrôleurs nécessaires au projet
-use App\View\SharedView;
+// Importation des contrôleurs
 use App\Controller\AdministrateurController;
+use App\Controller\CandidatController;
 use App\Controller\AnnonceController;
 use App\Controller\CandidatureController;
 use App\Controller\EntretienController;
-use App\Controller\UtilisateurController;
-use App\Controller\NewsController;
 use App\Controller\CalendrierController;
-use App\Controller\CandidatController;
+use App\Controller\UtilisateurController;
+// use App\Controller\NewsController;
 
-// ✅ Chargement des variables d’environnement (BDD, API, etc.)
+// Chargement des variables d’environnement
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// ✅ Analyse de l’URL demandée (sans les paramètres GET)
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// ✅ Découpe l’URL en segments (ex: /admin/edit/5 → ['admin', 'edit', '5'])
+// Analyse de l’URL
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $segments = array_values(array_filter(explode('/', $requestUri)));
 
-// ✅ Définition des paramètres de routage
 $action = $segments[0] ?? ($_GET['action'] ?? '');
 $step   = $segments[1] ?? ($_GET['step'] ?? '');
 $id     = $segments[2] ?? ($_GET['id'] ?? '');
 
-// ✅ Inclusion des templates partagés
+// 🔍 Définir les pages sans menu/footer
+$afficherLayout = true;
+
+if (
+    ($action === 'utilisateur' && in_array($step, ['login', 'create']))||
+    ($action === 'candidat' && in_array($step, ['profil', 'update', 'delete', 'upload-cv', 'annonces','candidatures']))
+) {
+    $afficherLayout = false;
+}
+
+// Inclusion des templates communs si nécessaire
 require_once('assets/templates/head.php');
-require_once('assets/templates/menu.php');
+if ($afficherLayout) {
+    require_once('assets/templates/menu.php');
+}
 
-
-// 🚦 Routeur principal
+// Routeur principal
 switch ($action) {
 
-    // ✅ Pages statiques
+    // Pages statiques
     case 'accueil':
         include "Pages/accueil.php";
         break;
@@ -55,23 +63,39 @@ switch ($action) {
         include "Pages/contact.php";
         break;
 
-    // ✅ ADMINISTRATION
+    // ADMINISTRATEUR
     case 'administrateur':
         $a = new AdministrateurController;
         switch ($step) {
-            case 'dashboard':         $a->dashboard(); break;
-            case 'profil':            $a->editProfil(); break;
-            case 'annonces':          $a->viewAnnonces(); break;
-            case 'create-annonce':    $a->createAnnonce(); break;
-            case 'edit-annonce':      $a->editAnnonce((int)$id); break;
-            case 'archive-annonce':   $a->archiveAnnonce((int)$id); break;
-            case 'candidatures':      $a->listCandidatures(); break;
-            case 'candidature':       $a->viewCandidature((int)$id); break;
-            default:                  $a->dashboard(); break;
+            // case 'dashboard':       $a->dashboard($_SESSION['utilisateur']['id']); break;
+            case 'profil':          $a->profil($_SESSION['utilisateur']['id']); break;
+            case 'annonces':        $a->viewAnnonces(); break;
+            case 'create-annonce':  $a->createAnnonce(); break;
+            case 'edit-annonce':    $a->editAnnonce((int)$id); break;
+            case 'archive-annonce': $a->archiveAnnonce((int)$id); break;
+            case 'candidatures':    $a->listCandidatures(); break;
+            case 'candidature':     $a->viewCandidature((int)$id); break;
+            default:                $a->dashboard($_SESSION['utilisateur']['id']); break;
         }
         break;
 
-    // ✅ GESTION DES ANNONCES (globale)
+    // CANDIDAT
+    case 'candidat':
+        $c = new CandidatController;
+        switch ($step) {
+            case 'profil':          $c->profil(); break;
+            case 'update':          $c->update(); break;
+            case 'delete':          $c->delete(); break;
+            case 'upload-cv':       $c->uploadCV(); break;
+            case 'annonces':        $c->listAnnonces(); break;
+            case 'annonce-view':    $c->viewAnnonce((int)$id); break;
+            case 'postuler':        $c->postuler((int)$id); break;
+            case 'candidatures':    $c->suiviCandidatures(); break;
+            default:                $c->profil(); break;
+        }
+        break;
+
+    // ANNONCE
     case 'annonce':
         $annonce = new AnnonceController;
         switch ($step) {
@@ -82,19 +106,19 @@ switch ($action) {
         }
         break;
 
-    // ✅ GESTION DES CANDIDATURES (globale)
+    // CANDIDATURE
     case 'candidature':
         $candidature = new CandidatureController;
         switch ($step) {
             case 'submit':  $candidature->submitCandidature(); break;
             case 'view':    $candidature->viewCandidature((int)$id); break;
             case 'delete':  $candidature->deleteCandidature((int)$id); break;
-            case 'suivi':   $candidature->suivi(); break;  // 💡 Attention, tu avais utilisé $c au lieu de $candidature
+            case 'suivi':   $candidature->suivi(); break;
             default:        $candidature->listCandidatures(); break;
         }
         break;
 
-    // ✅ ENTRETIENS
+    // ENTRETIEN
     case 'entretien':
         $entretien = new EntretienController;
         switch ($step) {
@@ -104,21 +128,21 @@ switch ($action) {
         }
         break;
 
-    // ✅ UTILISATEURS
+    // UTILISATEUR
     case 'utilisateur':
         $utilisateur = new UtilisateurController;
         switch ($step) {
             case 'create':   $utilisateur->createUtilisateur(); break;
             case 'edit':     $utilisateur->editUtilisateur((int)$id); break;
-            case 'login':    $utilisateur->loginUtilisateur((int)$id); break;
+            case 'login':    $utilisateur->loginUtilisateur(); break;
             case 'logout':   $utilisateur->logoutUtilisateur(); break;
             case 'update':   $utilisateur->updateUtilisateur(); break;
             case 'delete':   $utilisateur->deleteUtilisateur((int)$id); break;
-            default:         $utilisateur->listUtilisateurs(); break;
+            default:         $utilisateur->listUtilisateur(); break;
         }
         break;
 
-    // ✅ CALENDRIER
+    // CALENDRIER
     case 'calendrier':
         $cal = new CalendrierController;
         switch ($step) {
@@ -130,28 +154,19 @@ switch ($action) {
         }
         break;
 
-    // ✅ CANDIDAT — Accès au front office
-    case 'candidat':
-        $c = new CandidatController;
-        switch ($step) {
-            case 'profil':            $c->profil(); break;
-            case 'update':            $c->update(); break;
-            case 'upload-cv':         $c->uploadCV(); break;
-            case 'annonces':          $c->listAnnonces(); break;
-            case 'annonce-view':      $c->viewAnnonce((int)$id); break;
-            case 'postuler':          $c->postuler((int)$id); break;
-            case 'candidatures':      $c->suiviCandidatures(); break;
-            default:                  $c->profil(); break;
-        }
+
+    // Route par défaut
+    default:
+        include "Pages/accueil.php";
         break;
 
-    // ✅ Route par défaut → Page d'accueil
-    default:
-        require_once('Pages/accueil.php');
-        break;
+
 }
 
-// ✅ Inclusion du pied de page et de la bulle de contact
-require_once("assets/templates/footer.php");
-require_once("assets/templates/bulle-flottante.php");
+
+// Footer + bulle uniquement si layout actif
+if ($afficherLayout) {
+    require_once("assets/templates/footer.php");
+    require_once("assets/templates/bulle-flottante.php");
+}
 ?>

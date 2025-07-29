@@ -113,35 +113,45 @@ class UtilisateurController
     public function loginUtilisateur(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';                // Email saisi
-            $mot_de_passe = $_POST['mot_de_passe'] ?? '';  // Mot de passe saisi
-
+            $email = $_POST['email'] ?? '';
+            $mot_de_passe = $_POST['mot_de_passe'] ?? '';
+    
             $utilisateur = $this->utilisateurModel->loginUtilisateur($email);
-
-            // Vérifie que l'utilisateur existe et que le mot de passe est valide
+    
             if ($utilisateur && password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
-                // Crée la session utilisateur avec les infos récupérées
+                // 🧠 Vérification du domaine CTS
+                $role = $utilisateur['role'] ?? 'candidat';
+                if (preg_match('/@cts\.fr$/', $utilisateur['email'])) {
+                    $role = 'administrateur';
+                }
+    
+                // ✅ Création de la session avec les infos
                 $_SESSION['utilisateur'] = [
-                    'id' => $utilisateur['id'],
-                    'nom' => $utilisateur['nom'],
-                    'prenom' => $utilisateur['prenom'],
-                    'email' => $utilisateur['email'],
-                    'role' => $utilisateur['role'] ?? 'candidat'
+                    'id'      => $utilisateur['id'],
+                    'nom'     => $utilisateur['nom'],
+                    'prenom'  => $utilisateur['prenom'],
+                    'email'   => $utilisateur['email'],
+                    'role'    => $role
                 ];
-
-                // Redirection vers la page d'accueil
-                echo '<script>window.location.href = "/";</script>';
+    
+                // 🔁 Redirection selon le rôle
+                if ($_SESSION['utilisateur']['role'] === 'administrateur') {
+                    echo '<script>window.location.href = "/administrateur/dashboard";</script>';
+                } else {
+                    echo '<script>window.location.href = "/candidat/profil";</script>';
+                }
                 exit;
             } else {
-                // Affiche un message d'erreur si les identifiants sont invalides
+                // ❌ Identifiants invalides
                 echo "<p style='color:red;'>Email ou mot de passe incorrect.</p>";
                 $this->utilisateurView->loginForm();
             }
         } else {
-            // Affiche le formulaire de connexion si pas encore soumis
+            // 📄 Affiche le formulaire de connexion
             $this->utilisateurView->loginForm();
         }
     }
+    
 
     // Méthode pour déconnecter un utilisateur
     public function logoutUtilisateur(): void

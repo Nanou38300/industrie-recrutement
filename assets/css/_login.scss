@@ -1,39 +1,46 @@
 .inscription {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 2rem;
-    margin: 4rem;
-    align-content: center;
     justify-content: center;
-
+    margin: 1rem 10rem 1rem 10rem;
     .superposition-insc {
         display: flex;
         flex-direction: column;
         width: 100%;
+
         .img-inscription{
             height: 50rem;
             width: 40%;
             object-fit: cover;
             position: absolute;
         }
-        div {
+        .cadre-img {
             position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             z-index: 99;
             img {
-                height: 3rem;
-                width: 3rem;
+                height: 2rem;
+                width: 2rem;
                 object-fit: cover;
                 position: relative;
+                background-color: $beige;
+                transform: translate(2.5rem, 0rem);
+            }
+            a {
+                text-decoration: none;
             }
             .btn-insc {
-                background: $beige;
+                background: #C9AB89;
                 color: white;
-                height: 5rem;
+                height: 4rem;
                 width: 15rem;
-                font-size: 1.5rem;
+                font-size: 1rem;
                 font-family: "BEBAS NEUVE";
                 border: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
         }
     }
@@ -42,26 +49,137 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        width: 30%;
-   
-    .titre-inscr {
-        padding: 3rem;
+        border: 1px solid $beige;
+        height: 50rem;
+        width: 100%;
+        align-content: center;
+        justify-content: center;
+        padding: 2rem 0rem 5rem 10rem;
+        margin-bottom: 3rem;
+        input {
+            display: flex;
+            gap: 1rem;
+            width: 70%;
+            border: none;
+            border-bottom: 1px solid $beige;
+        }
+    .titre-inscription {
+        padding: 1rem;
         text-align: center;
         text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.737);
         font-size: 2rem;
-        background: $vert;
+        background-color: $vert;
         color: white;
+        margin-bottom: 3rem;
     }
-    button {
-        @include boutonBeige;
+    .btn-crea {
+        background: $beige;
+        color: white;
+        padding: 1rem;
+        width: 15rem;
+        font-size: 1rem;
+        font-family: "BEBAS NEUVE";
+        border: none;
     }
 }
+
+  
 }
 
 
 .connexion {
-    width: 100%;
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+    margin: 1rem 10rem 1rem 10rem;
+    .options-co {
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+        .checkbox-label {
+            display: flex;
+            flex-direction: column;
+        }
+        .lien-mdp-oublie {
+            text-decoration: none;
+            color: black;
+        }
+    }
+    .superposition-co {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        .img-connexion{
+            height: 50rem;
+            width: 40%;
+            object-fit: cover;
+            position: absolute;
+        }
+        .cadre-co {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            z-index: 99;
+            img {
+                height: 2rem;
+                width: 2rem;
+                object-fit: cover;
+                position: relative;
+                background-color: $beige;
+                transform: translate(-2.5rem, 0rem);
+            }
+            a {
+                text-decoration: none;
+            }
+            .btn-co { // bouton qui navigue sur la page inscription
+                background: #C9AB89;
+                color: white;
+                height: 4rem;
+                width: 15rem;
+                font-size: 1rem;
+                font-family: "BEBAS NEUVE";
+                border: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+       
+    }
+    .form-connexion {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        height: 50rem;
+        width: 100%;
+        padding: 10rem 5rem 5rem 5rem;
+        border: 1px solid $beige;
+        input {
+            display: flex;
+            gap: 1rem;
+            width: 70%;
+            border: none;
+            border-bottom: 1px solid $beige;
+        }
+    .titre-co {
+        padding: 1rem;
+        text-align: center;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.737);
+        font-size: 2rem;
+        background-color: $vert;
+        color: white;
+        margin-bottom: 3rem;
+    }
+    .btn-crea { // bouton qui navigue vers l'inscription
+        background: $beige;
+        color: white;
+        padding: 1rem;
+        width: 15rem;
+        font-size: 1rem;
+        font-family: "BEBAS NEUVE";
+        border: none;
+    }
+    }
 }
 

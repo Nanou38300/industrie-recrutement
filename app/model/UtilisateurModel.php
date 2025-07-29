@@ -1,4 +1,6 @@
 <?php
+
+
 // namespace App\Model;
 
 // use PDO;
@@ -120,6 +122,8 @@ class UtilisateurModel
 
     public function loginUtilisateur(string $email): ?array
     {
+
+        $sql = "SELECT id, nom, prenom, email, mot_de_passe, role FROM utilisateur WHERE email = :email";
         $req = $this->cnx->prepare("SELECT * FROM {$this->table} WHERE email = ?");
         $req->execute([$email]);
         return $req->fetch(PDO::FETCH_ASSOC) ?: null;

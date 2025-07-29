@@ -103,3 +103,77 @@ p {
         <p class="footer-text">Vous n'avez pas de compte ? <a href="#">Insrivez-vous</a></p>
         <p class="footer-text"><a href="#">Mot de passe oublié ?</a></p>
     </div>
+
+
+
+
+
+
+    | 🧭 Action (segment 1)  | 🚪 Étape (segment 2)     | 🎯 Contrôleur                 | 🧩 Méthode                            |
+|------------------------|--------------------------|-------------------------------|----------------------------------------|
+| `accueil`              | *(aucune)*               | *(page statique)*             | `Pages/accueil.php`                    |
+| `bureauEtude`          | *(aucune)*               | *(page statique)*             | `Pages/bureauEtude.php`                |
+| `domaineExpertise`     | *(aucune)*               | *(page statique)*             | `Pages/domaineExpertise.php`           |
+| `recrutement`          | *(aucune)*               | *(page statique)*             | `Pages/recrutement.php`                |
+| `contact`              | *(aucune)*               | *(page statique)*             | `Pages/contact.php`                    |
+
+### 👩‍💼 Administration
+
+| `administrateur`       | `dashboard`              | `AdministrateurController`    | `dashboard()`                          |
+|                        | `profil`                 |                                | `editProfil()`                         |
+|                        | `annonces`               |                                | `viewAnnonces()`                       |
+|                        | `create-annonce`         |                                | `createAnnonce()`                      |
+|                        | `edit-annonce`           |                                | `editAnnonce(id)`                      |
+|                        | `archive-annonce`        |                                | `archiveAnnonce(id)`                   |
+|                        | `candidatures`           |                                | `listCandidatures()`                   |
+|                        | `candidature`            |                                | `viewCandidature(id)`                  |
+
+### 📢 Annonces globales
+
+| `annonce`              | `create`                 | `AnnonceController`           | `createAnnonce(id)`                    |
+|                        | `update`                 |                                | `updateAnnonce()`                      |
+|                        | `delete`                 |                                | `deleteAnnonce(id)`                    |
+|                        | *(autre)*                |                                | `listAnnonces()`                       |
+
+### 📄 Candidatures globales
+
+| `candidature`          | `submit`                 | `CandidatureController`       | `submitCandidature()`                  |
+|                        | `view`                   |                                | `viewCandidature(id)`                  |
+|                        | `delete`                 |                                | `deleteCandidature(id)`               |
+|                        | `suivi`                  |                                | `suivi()`                              |
+|                        | *(autre)*                |                                | `listCandidatures()`                   |
+
+### 📅 Entretiens
+
+| `entretien`            | `planifier`              | `EntretienController`         | `planifierEntretien()`                 |
+|                        | `rappel`                 |                                | `envoyerRappel(id)`                    |
+|                        | *(autre)*                |                                | `listEntretiens()`                     |
+
+### 👥 Utilisateurs
+
+| `utilisateur`          | `create`                 | `UtilisateurController`       | `createUtilisateur()`                  |
+|                        | `edit`                   |                                | `editUtilisateur(id)`                  |
+|                        | `login`                  |                                | `loginUtilisateur(id)`                 |
+|                        | `logout`                 |                                | `logoutUtilisateur()`                  |
+|                        | `update`                 |                                | `updateUtilisateur()`                  |
+|                        | `delete`                 |                                | `deleteUtilisateur(id)`                |
+|                        | *(autre)*                |                                | `listUtilisateurs()`                   |
+
+### 📆 Calendrier
+
+| `calendrier`           | `semaine`                | `CalendrierController`        | `vueSemaine()`                         |
+|                        | `jour`                   |                                | `vueJour(id)`                          |
+|                        | `rappel`                 |                                | `rappelDuJour()`                       |
+|                        | `rendez-vous`            |                                | `infoRendezVous(id)`                   |
+|                        | *(autre)*                |                                | `vueSemaine()`                         |
+
+### 🧑‍🎓 Candidat (front office)
+
+| `candidat`             | `profil`                 | `CandidatController`          | `profil()`                             |
+|                        | `update`                 |                                | `update()`                             |
+|                        | `upload-cv`              |                                | `uploadCV()`                           |
+|                        | `annonces`               |                                | `listAnnonces()`                       |
+|                        | `annonce-view`           |                                | `viewAnnonce(id)`                      |
+|                        | `postuler`               |                                | `postuler(id)`                         |
+|                        | `candidatures`           |                                | `suiviCandidatures()`                  |
+|                        | *(autre)*                |                                | `profil()`                             |

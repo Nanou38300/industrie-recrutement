@@ -6,6 +6,7 @@ use PDO; // 📚 Utilisation de la classe PDO pour la connexion à la base de do
 class Database
 {
     private PDO $connection; // 🔒 Propriété privée qui contiendra l'objet PDO
+    private static ?Database $instance = null;
 
     public function __construct()
     {
@@ -29,4 +30,13 @@ class Database
     {
         return $this->connection;
     }
+
+    public static function getInstance(): Database
+    {
+        if (self::$instance === null) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
+    }
+
 }

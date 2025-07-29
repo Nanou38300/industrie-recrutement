@@ -31,21 +31,22 @@ class UtilisateurView
 
         <div class="superposition-insc">
             <img class="img-inscription" src="./assets/images/P1_soudeur.jpg" alt="une image d\'un soudeur.">
-            <div>
+            <div class="cadre-img">
                 <img src="./assets/images/icone_fleche_blanche.png" alt="une icone fleche">
-                <button class="btn-insc">SE CONNECTER</button>
+                <a href="/utilisateur/login" class="btn-insc">SE CONNECTER</a>
             </div>
         </div>
 
                 <form class="form-inscription" action="/utilisateur/create" method="POST">
-                    <h1>CRÉATION DE COMPTE</h1>
+                    <h1 class="titre-inscription">CRÉATION DE COMPTE</h1>
                         <label>Nom: <input type="text" name="nom" required></label><br>
                         <label>Prénom: <input type="text" name="prenom" required></label><br>
                         <label>Email: <input type="email" name="email" required></label><br>
                         <label>Mot de passe: <input type="password" name="mot_de_passe" required></label><br>
                         <label>Date de naissance: <input type="date" name="date_naissance" required></label><br>
-                        <label>Téléphone: <input type="number" name="telephone" required></label><br>
-                        <button type="submit">CRÉER UN COMPTE</button>
+                        <label>Téléphone: <input type="int" name="telephone" required></label><br>
+
+                        <button class="btn-crea" type="submit">CRÉER UN COMPTE</button>
                     </form>      
                 </section>  
             ';
@@ -54,24 +55,43 @@ class UtilisateurView
 
 
 public function loginForm()
-    {
-        echo '<h1>Connexion</h1>
-        <section class="connexion">
+{
+    echo '
+    <section class="connexion">
+        <form class="form-connexion" action="utilisateur/login" method="post">
+            <h1 class="titre-co">Connexion</h1>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="mot_de_passe">Mot de passe</label>
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required>
+
+            <div class="options-co">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="remember_me">
+                    <span>Se souvenir de moi</span>
+                </label>
+
+                <a href="/utilisateur/mot-de-passe-oublie" class="lien-mdp-oublie">Mot de passe oublié&nbsp;?</a>
+            </div>
+
+            <button class="btn-crea" type="submit">Se connecter</button>
+        </form>
+        
+        <div class="superposition-co">
             <img class="img-connexion" src="./assets/images/P4_soudeurPosition.png" alt="un soudeur.">
 
-            <form class="form-connexion" action="utilisateur/login" method="post">
-                            
-                <label>Email</label>
-                <input type="email" name="email" required >
-                
-                <label>Mot de passe</label>
-                <input type="passeword" name="mot de passe" required >
-                
-                <button type="submit">Se connecter</button>
-            </form>
-        </section>
+            <div class="cadre-co">
+                <a href="/utilisateur/create" class="btn-co">CREER UN COMPTE</a>
+
+                <img src="./assets/images/icone_fleche_blanche_inverse.png" alt="une icone fleche">
+            </div>
+        </div>
+    </section>
     ';
-    }
+}
+
     public function displayUpdateForm(array $utilisateur): void
     {
         echo '

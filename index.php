@@ -23,25 +23,50 @@ $dotenv->load();
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $segments = array_values(array_filter(explode('/', $requestUri)));
 
-$action = $segments[0] ?? ($_GET['action'] ?? '');
+$action = $_GET['action'] ?? ($segments[0] ?? '');
 $step   = $segments[1] ?? ($_GET['step'] ?? '');
 $id     = $segments[2] ?? ($_GET['id'] ?? '');
 
+
+
+
 // 🔍 Définir les pages sans menu/footer
-$afficherLayout = true;
+$afficherLayout          = true;
+$afficherMenuPublic      = false;
+$afficherMenuConnecte    = false;
+$afficherFooter          = false;
+
+$pagesStatiques = ['accueil', 'bureauEtude', 'domaineExpertise', 'recrutement', 'contact'];
+
+
+if (in_array($action, $pagesStatiques)) {
+    $afficherMenuPublic = true;
+    $afficherFooter = true;
+}
+$pagesConnectees = [
+    'administrateur' => ['profil', 'annonces', 'create-annonce', 'edit-annonce', 'archive-annonce', 'candidatures', 'candidature'],
+    'candidat'       => ['profil', 'update', 'delete', 'upload-cv', 'annonces', 'annonce-view', 'postuler', 'candidatures'],
+    // 'utilisateur' => ['login', 'create'],
+];
+
 
 if (
-    ($action === 'utilisateur' && in_array($step, ['login', 'create']))||
-    ($action === 'candidat' && in_array($step, ['profil', 'update', 'delete', 'upload-cv', 'annonces','candidatures']))
+    (isset($pagesConnectees[$action]) && in_array($step, $pagesConnectees[$action]))
 ) {
-    $afficherLayout = false;
+    $afficherMenuConnecte = true;
 }
 
 // Inclusion des templates communs si nécessaire
 require_once('assets/templates/head.php');
-if ($afficherLayout) {
-    require_once('assets/templates/menu.php');
+
+if ($afficherMenuConnecte) {
+    require_once('assets/templates/menu-connecte.php');
 }
+
+if ($afficherMenuPublic) {
+    require_once('assets/templates/menu-public.php');
+}
+
 
 // Routeur principal
 switch ($action) {
@@ -163,10 +188,11 @@ switch ($action) {
 
 }
 
-
-// Footer + bulle uniquement si layout actif
-if ($afficherLayout) {
-    require_once("assets/templates/footer.php");
-    require_once("assets/templates/bulle-flottante.php");
+// ✅ Inclusion du footer uniquement sur les pages statiques
+if ($afficherFooter) {
+    require_once('assets/templates/footer.php');
 }
+
+
+
 ?>

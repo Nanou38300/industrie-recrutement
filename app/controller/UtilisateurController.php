@@ -2,6 +2,7 @@
 // Définit le namespace du contrôleur
 namespace App\Controller;
 
+
 // Importe les classes nécessaires depuis d'autres namespaces
 use App\Model\UtilisateurModel;
 use App\View\UtilisateurView;
@@ -17,6 +18,9 @@ class UtilisateurController
     // Constructeur qui initialise les instances du modèle et de la vue
     public function __construct()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->utilisateurModel = new UtilisateurModel();
         $this->utilisateurView = new UtilisateurView();
     }

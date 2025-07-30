@@ -1,65 +1,67 @@
 <?php
+// Namespace pour organiser les vues dans le projet
 namespace App\View;
 
-class AnnonceView
-{
-    public function renderAdminSlider(array $annonces, object $model): void
-    {
-        echo "<div class='slider-annonces'>";
-        foreach ($annonces as $annonce) {
-            $stats = $model->getStatsParAnnonce($annonce['id']);
-            
-            echo "<div class='card-admin'>";
-            echo "<h3>" . htmlspecialchars($annonce['titre']) . "</h3>";
-            echo "<p>" . htmlspecialchars($annonce['lieu']) . " | " . htmlspecialchars($annonce['contrat']) . " | " . htmlspecialchars($annonce['salaire']) . " €</p>";
-            
-            echo "<div class='stats'>";
-            echo "📬 Total : " . $stats['total'] . " | 🔎 Non lues : " . $stats['non_lues'];
-            echo "</div>";
+// Classe pour gérer l’affichage des annonces
+class AnnonceView {
+    
+    // Méthode pour afficher la liste des annonces
+    public function renderListe($annonces) {
+        // Parcours de chaque annonce dans le tableau
+        foreach ($annonces as $a) {
+            echo "<div class='annonce'>"; // Bloc contenant l’annonce
+            echo "<h3>{$a['titre']}</h3>"; // Titre du poste
+            echo "<p>{$a['lieu']} | {$a['contrat']} | {$a['salaire']}<br>Publié le {$a['date']} | Réf: {$a['ref']}</p>"; // Infos principales
 
-            echo "<div class='actions'>";
-            echo "<a href='/annonce/modifier/" . $annonce['id'] . "'>✏️ Modifier</a> ";
-            echo "<a href='/annonce/archiver/" . $annonce['id'] . "'>🗃️ Archiver</a>";
-            echo "</div>";
-            echo "</div>";
+            // Bouton pour afficher les détails (fonction JS)
+            echo "<button onclick=\"toggleDetails('{$a['ref']}')\">🔽 Détails</button>";
+
+            // Bloc masqué qui contient les détails
+            echo "<div id='details_{$a['ref']}' style='display:none'>";
+
+            // Si l’annonce est complète, affiche les détails avec une autre méthode
+            if ($a['complet']) {
+                $this->renderDetails($a);
+            } else {
+                // Sinon, indique qu’il n’y a pas de détails
+                echo "<p>Aucun détail disponible.</p>";
+            }
+
+            echo "</div></div><hr>"; // Fin du bloc + séparateur
         }
-        echo "</div>";
+
+        // Script JavaScript intégré pour basculer l’affichage des détails
+        echo "<script>
+            function toggleDetails(ref) {
+                var el = document.getElementById('details_' + ref);
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            }
+        </script>";
     }
 
-    public function renderCandidatAnnonces(array $annonces): void
-    {
-        echo "<div class='liste-annonces'>";
-        foreach ($annonces as $annonce) {
-            echo "<div class='card-candidat'>";
-            echo "<h4>" . htmlspecialchars($annonce['titre']) . "</h4>";
-            echo "<p>" . htmlspecialchars($annonce['lieu']) . " | " . htmlspecialchars($annonce['contrat']) . " | " . htmlspecialchars($annonce['salaire']) . " €</p>";
+    // Méthode pour afficher les détails d’une annonce complète
+    public function renderDetails($a) {
+        echo "<p><strong>Description :</strong> {$a['description']}</p>";
 
-            echo "<button class='toggle-details'>ℹ️ Voir plus</button>";
-            echo "<div class='details' style='display:none;'>";
-            echo "<p>" . nl2br(htmlspecialchars($annonce['description'])) . "</p>";
-            echo "<a href='/utilisateur/create' class='btn-postuler'>📝 Postuler</a>";
-            echo "</div>";
-            echo "</div>";
-        }
-        echo "</div>";
-    }
+        // Missions à afficher en liste si présentes
+        echo "<p><strong>Missions :</strong><ul>";
+        foreach ($a['missions'] ?? [] as $m) echo "<li>$m</li>"; // Boucle sur les missions
+        echo "</ul></p>";
 
-    public function renderAnnonceForm(array $annonce = []): void
-    {
-        $titre = $annonce['titre'] ?? '';
-        $description = $annonce['description'] ?? '';
-        $lieu = $annonce['lieu'] ?? '';
-        $contrat = $annonce['contrat'] ?? '';
-        $salaire = $annonce['salaire'] ?? '';
+        // Profil recherché
+        echo "<p><strong>Profil :</strong> {$a['profil']}</p>";
 
-        echo "<form method='POST'>";
-        echo "<label>Titre : <input name='titre' value='" . htmlspecialchars($titre) . "' /></label><br>";
-        echo "<label>Description :</label><br>";
-        echo "<textarea name='description'>" . htmlspecialchars($description) . "</textarea><br>";
-        echo "<label>Lieu : <input name='lieu' value='" . htmlspecialchars($lieu) . "' /></label><br>";
-        echo "<label>Type de contrat : <input name='contrat' value='" . htmlspecialchars($contrat) . "' /></label><br>";
-        echo "<label>Salaire : <input name='salaire' value='" . htmlspecialchars($salaire) . "' /></label><br>";
-        echo "<button type='submit'>Enregistrer</button>";
-        echo "</form>";
+        // Liste des avantages
+        echo "<p><strong>Avantages :</strong><ul>";
+        foreach ($a['avantages'] ?? [] as $av) echo "<li>$av</li>"; // Boucle sur les avantages
+        echo "</ul></p>";
+
+        // Formulaire intégré pour postuler avec upload de CV
+        echo "<form method='POST' action='index.php?action=postuler' enctype='multipart/form-data'>
+                <input type='hidden' name='ref' value='{$a['ref']}'> <!-- Référence cachée -->
+                <label>Déposez votre CV :</label><br>
+                <input type='file' name='cv' required><br><br> <!-- Champ d’upload -->
+                <button type='submit'>POSTULER</button> <!-- Bouton de soumission -->
+              </form>";
     }
 }

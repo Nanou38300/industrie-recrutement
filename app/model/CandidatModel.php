@@ -115,7 +115,13 @@ class CandidatModel
             ],
         ];
     }
-
+    public function getUserById($id) {
+        $db = Db::getInstance(); // Singleton
+        $stmt = $db->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+    
     public function getCandidatures(int $idCandidat): array
     {
         // 📬 Candidatures du candidat

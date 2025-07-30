@@ -63,3 +63,72 @@
         text-decoration: none;
     }
 }
+
+
+// Responsive styles
+@media screen and (max-width: 1024px) {
+    .footer-complet {
+      flex-direction: column;
+      height: auto;
+      padding: 2rem 1rem;
+      gap: 3rem;
+  
+      img {
+        height: 5rem;
+      }
+  
+      h4 {
+        font-size: 1.3rem;
+        text-align: center;
+      }
+  
+      nav {
+        align-items: center;
+        a {
+          font-size: 1.1rem;
+          text-align: center;
+        }
+      }
+  
+      .contact, .reseaux {
+        align-items: center;
+        text-align: center;
+      }
+  
+      .reseaux img {
+        height: 2.5rem;
+        width: 2.5rem;
+      }
+    }
+  
+    .mentions {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: center;
+    }
+  }
+  
+  @media screen and (max-width: 600px) {
+    .footer-complet {
+      gap: 2rem;
+      padding: 1rem;
+      h4 {
+        font-size: 1.1rem;
+      }
+      nav a {
+        font-size: 1rem;
+        letter-spacing: 0.1rem;
+      }
+      .reseaux img {
+        height: 2rem;
+        width: 2rem;
+      }
+    }
+  
+    .mentions {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+  }
+  

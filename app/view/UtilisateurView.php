@@ -59,7 +59,7 @@ public function loginForm()
     echo '
     <section class="connexion">
         <form class="form-connexion" action="utilisateur/login" method="post">
-            <h1 class="titre-co">Connexion</h1>
+            <h1 class="titre-co">CONNEXION</h1>
 
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>

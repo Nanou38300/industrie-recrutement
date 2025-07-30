@@ -1,4 +1,4 @@
-@import "vars", "typo", "en-tete", "login";
+@import "vars", "typo", "en-tete", "login", "candidat";
 
 * {
     margin: 0;
@@ -17,7 +17,7 @@ a.scroll-link * {
 }
 
 
-
+// ----------------------- PAGES STATIQUES -------------//
 
 //page accueil
 #P1 { 
@@ -356,7 +356,6 @@ a.scroll-link * {
         margin: 2rem;
     }
 }
-
 //--------- PAGE BUREAU D'ETUDE -----------
 #P2 { 
     //margin: 9rem;
@@ -685,8 +684,7 @@ a.scroll-link * {
         }
     }
         }
-} 
-
+}
 //  Page Domaine d'expertise
 #P3 {
     width: 100%; 
@@ -853,7 +851,6 @@ a.scroll-link * {
         }
     }
 }
-
 //  Page recrutement
 #P4 {  
     width: 100%; 
@@ -989,7 +986,6 @@ a.scroll-link * {
     //     }
     // }
 }
-
 //V2
 .form-container {
     font-family: 'Arial', sans-serif;
@@ -1067,7 +1063,6 @@ a.scroll-link * {
 .btn:hover {
     background-color: #baad9a;
 }
-
 //Page Contact
 #P5 {
     
@@ -1208,7 +1203,4 @@ a.scroll-link * {
 
 
 
-
-
-
-@import "bulle-flottante","footer";
+@import "bulle-flottante","mobile", "footer";

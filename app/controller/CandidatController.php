@@ -54,6 +54,11 @@ class CandidatController
         $this->view->renderUploadForm();
         $this->view->renderDeleteButton();
     }
+    public function profile() {
+        $userModel = new UserModel();
+        $user = $userModel->getUserById($_SESSION['user_id']);
+        require 'views/profile.php';
+    }
 
     public function create(): void
     {
@@ -99,7 +104,22 @@ class CandidatController
             echo "<p>📄 CV téléchargé avec succès !</p>";
         }
     }
+    public function uploadPhoto() {
+        if (isset($_FILES['photo'])) {
+            $target = 'uploads/' . basename($_FILES['photo']['name']);
+            move_uploaded_file($_FILES['photo']['tmp_name'], $target);
+    
+            $db = Db::getInstance();
+            $stmt = $db->prepare("UPDATE users SET photo = :photo WHERE id = :id");
+            $stmt->execute([
+                'photo' => $target,
+                'id' => $_SESSION['user_id']
+            ]);
+        }
+        header('Location: index.php?action=profile');
+    }
 
+    
     public function listAnnonces(): void
     {
         $annonces = $this->model->getAnnoncesDisponibles();

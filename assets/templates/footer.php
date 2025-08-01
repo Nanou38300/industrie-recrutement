@@ -36,7 +36,7 @@
 
 <!-- Scripts -->
 <script src="/assets/js/btn-retour-haut.js" defer></script>
-
+<script src="/assets/js/bulle-flottante.js" defer></script>
 </footer>
 
 </body>

@@ -65,7 +65,7 @@
 
         <section class="texte-compteur">
             <p>ANS D'EXPÉRIENCE</p>
-            <p>CHIFFRE <br>D'AFFAIRES</p>
+            <p>MILLIONS <br>CHIFFRE D'AFFAIRES</p>
             <p>COLLABORATEURS</p>
         </section>
     </figcaption>

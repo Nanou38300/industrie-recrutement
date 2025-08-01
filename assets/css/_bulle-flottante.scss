@@ -1,9 +1,9 @@
 .bulle {
     margin: 0;
     padding: 0;
-    // height: 100vh;
+    height: 100vh;
     font-family: sans-serif;
-  }
+  
   .floating-bubble {
     position: fixed;
     bottom: 50px;
@@ -114,7 +114,7 @@
     z-index: 1000;
     animation: fadeInOut 3s ease forwards;
   }
-  
+}
   @keyframes fadeInOut {
     0% { opacity: 0; }
     10% { opacity: 1; }

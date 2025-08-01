@@ -1,67 +1,214 @@
 <?php
-// Namespace pour organiser les vues dans le projet
 namespace App\View;
 
-// Classe pour gérer l’affichage des annonces
 class AnnonceView {
-    
-    // Méthode pour afficher la liste des annonces
-    public function renderListe($annonces) {
-        // Parcours de chaque annonce dans le tableau
-        foreach ($annonces as $a) {
-            echo "<div class='annonce'>"; // Bloc contenant l’annonce
-            echo "<h3>{$a['titre']}</h3>"; // Titre du poste
-            echo "<p>{$a['lieu']} | {$a['contrat']} | {$a['salaire']}<br>Publié le {$a['date']} | Réf: {$a['ref']}</p>"; // Infos principales
-
-            // Bouton pour afficher les détails (fonction JS)
-            echo "<button onclick=\"toggleDetails('{$a['ref']}')\">🔽 Détails</button>";
-
-            // Bloc masqué qui contient les détails
-            echo "<div id='details_{$a['ref']}' style='display:none'>";
-
-            // Si l’annonce est complète, affiche les détails avec une autre méthode
-            if ($a['complet']) {
-                $this->renderDetails($a);
-            } else {
-                // Sinon, indique qu’il n’y a pas de détails
-                echo "<p>Aucun détail disponible.</p>";
-            }
-
-            echo "</div></div><hr>"; // Fin du bloc + séparateur
+    public function renderListe(array $annonces) {
+        echo "<h2>📋 Liste des annonces</h2>";
+        echo "<a href='?action=annonce&step=create' class='btn btn-primary'>➕ Nouvelle annonce</a><br><br>";
+        
+        if (empty($annonces)) {
+            echo "<p>Aucune annonce disponible.</p>";
+            return;
         }
-
-        // Script JavaScript intégré pour basculer l’affichage des détails
-        echo "<script>
-            function toggleDetails(ref) {
-                var el = document.getElementById('details_' + ref);
-                el.style.display = el.style.display === 'none' ? 'block' : 'none';
-            }
-        </script>";
+        
+        foreach ($annonces as $a) {
+            echo "<div class='annonce-item'>";
+            echo "<strong>{$a['titre']}</strong> - {$a['localisation']} ";
+            echo "<span class='status'>[{$a['statut']}]</span><br>";
+            echo "<small>Publié le : {$a['date_publication']}</small><br>";
+            echo "<div class='actions'>";
+            echo "<a href='?action=annonce&step=view&id={$a['id']}'>👁️ Voir</a> | ";
+            echo "<a href='?action=annonce&step=update&id={$a['id']}'>✏️ Modifier</a> | ";
+            echo "<a href='?action=annonce&step=delete&id={$a['id']}' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cette annonce ?\")'>🗑️ Supprimer</a>";
+            echo "</div>";
+            echo "</div><hr>";
+        }
     }
 
-    // Méthode pour afficher les détails d’une annonce complète
-    public function renderDetails($a) {
-        echo "<p><strong>Description :</strong> {$a['description']}</p>";
+    public function renderDetails(array $a) {
+        echo "<div class='annonce-details'>";
+        echo "<h2>{$a['titre']}</h2>";
+        echo "<div class='annonce-meta'>";
+        echo "<span class='badge'>{$a['statut']}</span> ";
+        echo "<span class='date'>Publié le : {$a['date_publication']}</span>";
+        echo "</div>";
+        
+        echo "<div class='section'>";
+        echo "<h3>Description</h3>";
+        echo "<p>{$a['description']}</p>";
+        echo "</div>";
+        
+        echo "<div class='section'>";
+        echo "<h3>Mission</h3>";
+        echo "<p>{$a['mission']}</p>";
+        echo "</div>";
+        
+        echo "<div class='section'>";
+        echo "<h3>Profil recherché</h3>";
+        echo "<p>{$a['profil_recherche']}</p>";
+        echo "</div>";
+        
+        echo "<div class='info-grid'>";
+        echo "<div class='info-item'><strong>Secteur :</strong> {$a['secteur_activite']}</div>";
+        echo "<div class='info-item'><strong>Localisation :</strong> {$a['localisation']} ({$a['code_postale']})</div>";
+        echo "<div class='info-item'><strong>Salaire :</strong> {$a['salaire']}</div>";
+        echo "<div class='info-item'><strong>Avantages :</strong> {$a['avantages']}</div>";
+        echo "<div class='info-item'><strong>Type de contrat :</strong> {$a['type_contrat']}</div>";
+        echo "<div class='info-item'><strong>Durée :</strong> {$a['duree_contrat']}</div>";
+        echo "<div class='info-item'><strong>Référence :</strong> {$a['reference']}</div>";
+        echo "</div>";
+        
+        echo "<div class='actions'>";
+        echo "<a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour à la liste</a> ";
+        echo "<a href='?action=annonce&step=update&id={$a['id']}' class='btn btn-primary'>✏️ Modifier</a>";
+        echo "</div>";
+        echo "</div>";
+    }
 
-        // Missions à afficher en liste si présentes
-        echo "<p><strong>Missions :</strong><ul>";
-        foreach ($a['missions'] ?? [] as $m) echo "<li>$m</li>"; // Boucle sur les missions
-        echo "</ul></p>";
-
-        // Profil recherché
-        echo "<p><strong>Profil :</strong> {$a['profil']}</p>";
-
-        // Liste des avantages
-        echo "<p><strong>Avantages :</strong><ul>";
-        foreach ($a['avantages'] ?? [] as $av) echo "<li>$av</li>"; // Boucle sur les avantages
-        echo "</ul></p>";
-
-        // Formulaire intégré pour postuler avec upload de CV
-        echo "<form method='POST' action='index.php?action=postuler' enctype='multipart/form-data'>
-                <input type='hidden' name='ref' value='{$a['ref']}'> <!-- Référence cachée -->
-                <label>Déposez votre CV :</label><br>
-                <input type='file' name='cv' required><br><br> <!-- Champ d’upload -->
-                <button type='submit'>POSTULER</button> <!-- Bouton de soumission -->
-              </form>";
+    public function renderForm(string $mode, ?array $data = null) {
+        $action = $mode === 'create' ? 'create' : 'update';
+        $title = $mode === 'create' ? '➕ Créer une annonce' : '✏️ Modifier une annonce';
+        $idField = $mode === 'update' ? "<input type='hidden' name='id' value='{$data['id']}'>" : "";
+        
+        echo "<div class='form-container'>";
+        echo "<h2>$title</h2>";
+        echo "<form method='POST' action='?action=annonce&step=$action' class='annonce-form'>";
+        echo $idField;
+        
+        // Informations principales
+        echo "<fieldset>";
+        echo "<legend>Informations principales</legend>";
+        echo "<div class='form-group'>";
+        echo "<label for='titre'>Titre de l'annonce *:</label>";
+        echo "<input type='text' id='titre' name='titre' value='" . htmlspecialchars($data['titre'] ?? '') . "' required>";
+        echo "</div>";
+        
+        echo "<div class='form-group'>";
+        echo "<label for='description'>Description *:</label>";
+        echo "<textarea id='description' name='description' rows='4' required>" . htmlspecialchars($data['description'] ?? '') . "</textarea>";
+        echo "</div>";
+        
+        echo "<div class='form-group'>";
+        echo "<label for='mission'>Mission *:</label>";
+        echo "<textarea id='mission' name='mission' rows='4' required>" . htmlspecialchars($data['mission'] ?? '') . "</textarea>";
+        echo "</div>";
+        
+        echo "<div class='form-group'>";
+        echo "<label for='profil_recherche'>Profil recherché *:</label>";
+        echo "<textarea id='profil_recherche' name='profil_recherche' rows='3' required>" . htmlspecialchars($data['profil_recherche'] ?? '') . "</textarea>";
+        echo "</div>";
+        echo "</fieldset>";
+        
+        // Localisation
+        echo "<fieldset>";
+        echo "<legend>Localisation</legend>";
+        echo "<div class='form-row'>";
+        echo "<div class='form-group'>";
+        echo "<label for='localisation'>Ville *:</label>";
+        echo "<input type='text' id='localisation' name='localisation' value='" . htmlspecialchars($data['localisation'] ?? '') . "' required>";
+        echo "</div>";
+        echo "<div class='form-group'>";
+        echo "<label for='code_postale'>Code postal *:</label>";
+        echo "<input type='text' id='code_postale' name='code_postale' value='" . htmlspecialchars($data['code_postale'] ?? '') . "' required>";
+        echo "</div>";
+        echo "</div>";
+        echo "</fieldset>";
+        
+        // Détails du poste
+        echo "<fieldset>";
+        echo "<legend>Détails du poste</legend>";
+        echo "<div class='form-group'>";
+        echo "<label for='secteur_activite'>Secteur d'activité *:</label>";
+        echo "<input type='text' id='secteur_activite' name='secteur_activite' value='" . htmlspecialchars($data['secteur_activite'] ?? '') . "' required>";
+        echo "</div>";
+        
+        echo "<div class='form-row'>";
+        echo "<div class='form-group'>";
+        echo "<label for='salaire'>Salaire:</label>";
+        echo "<input type='text' id='salaire' name='salaire' value='" . htmlspecialchars($data['salaire'] ?? '') . "'>";
+        echo "</div>";
+        echo "<div class='form-group'>";
+        echo "<label for='avantages'>Avantages:</label>";
+        echo "<input type='text' id='avantages' name='avantages' value='" . htmlspecialchars($data['avantages'] ?? '') . "'>";
+        echo "</div>";
+        echo "</div>";
+        
+        echo "<div class='form-row'>";
+        echo "<div class='form-group'>";
+        echo "<label for='type_contrat'>Type de contrat *:</label>";
+        echo "<select id='type_contrat' name='type_contrat' required>";
+        $types = ['CDI', 'CDD', 'Stage', 'Alternance', 'Freelance'];
+        foreach ($types as $type) {
+            $selected = (($data['type_contrat'] ?? '') === $type) ? 'selected' : '';
+            echo "<option value='$type' $selected>$type</option>";
+        }
+        echo "</select>";
+        echo "</div>";
+        echo "<div class='form-group'>";
+        echo "<label for='duree_contrat'>Durée du contrat:</label>";
+        echo "<input type='text' id='duree_contrat' name='duree_contrat' value='" . htmlspecialchars($data['duree_contrat'] ?? '') . "'>";
+        echo "</div>";
+        echo "</div>";
+        echo "</fieldset>";
+        
+        // Informations administratives
+        echo "<fieldset>";
+        echo "<legend>Informations administratives</legend>";
+        echo "<div class='form-row'>";
+        echo "<div class='form-group'>";
+        echo "<label for='reference'>Référence:</label>";
+        echo "<input type='text' id='reference' name='reference' value='" . htmlspecialchars($data['reference'] ?? '') . "'>";
+        echo "</div>";
+        echo "<div class='form-group'>";
+        echo "<label for='date_publication'>Date de publication *:</label>";
+        echo "<input type='date' id='date_publication' name='date_publication' value='" . htmlspecialchars($data['date_publication'] ?? date('Y-m-d')) . "' required>";
+        echo "</div>";
+        echo "</div>";
+        
+        echo "<div class='form-row'>";
+        echo "<div class='form-group'>";
+        echo "<label for='statut'>Statut *:</label>";
+        echo "<select id='statut' name='statut' required>";
+        $statuts = ['active', 'inactive', 'archivee'];
+        foreach ($statuts as $statut) {
+            $selected = (($data['statut'] ?? 'active') === $statut) ? 'selected' : '';
+            echo "<option value='$statut' $selected>" . ucfirst($statut) . "</option>";
+        }
+        echo "</select>";
+        echo "</div>";
+        echo "<div class='form-group'>";
+        echo "<label for='id_administrateur'>ID Administrateur *:</label>";
+        echo "<input type='number' id='id_administrateur' name='id_administrateur' value='" . htmlspecialchars($data['id_administrateur'] ?? ($_SESSION['utilisateur']['id'] ?? '')) . "' required>";
+        echo "</div>";
+        echo "</div>";
+        echo "</fieldset>";
+        
+        // Actions
+        echo "<div class='form-actions'>";
+        echo "<button type='submit' class='btn btn-primary'>💾 Enregistrer</button> ";
+        echo "<a href='?action=annonce' class='btn btn-secondary'>❌ Annuler</a>";
+        echo "</div>";
+        
+        echo "</form>";
+        echo "</div>";
+        
+        // CSS basique pour améliorer l'apparence
+        echo "<style>
+        .form-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .annonce-form fieldset { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .annonce-form legend { padding: 0 10px; font-weight: bold; }
+        .form-group { margin-bottom: 15px; }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .form-actions { text-align: center; margin-top: 20px; }
+        .btn { padding: 10px 20px; margin: 5px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .annonce-item { margin-bottom: 15px; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
+        .status { color: #28a745; font-weight: bold; }
+        .actions a { margin-right: 10px; }
+        </style>";
     }
 }

@@ -38,9 +38,8 @@ function isActive($path) {
         echo '</nav>';
     }
 
-    echo '<div class="logo">
-        <div class="rectangle-header"></div>
-        <div class="diagonale-header"></div>
+    echo '<div class="logoconnecte">
+
         <a href="/accueil">
             <img src="assets/images/LOGO.svg" alt="Logo de l\'entreprise">
         </a>

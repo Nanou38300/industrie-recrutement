@@ -139,15 +139,10 @@ nav.menu a.active {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.logo {
-  margin-top: auto;
-  text-align: center;
-}
-
-.logo img {
-  max-width: 120px;
-  height: auto;
-  filter: drop-shadow(0 0 2px #000);
+.logoconnecte {
+  height: 6rem;
+  display: flex;
+  justify-content: center;
 }
 
 .separateur-header {
@@ -1736,10 +1731,10 @@ a.scroll-link * {
 .bulle {
   margin: 0;
   padding: 0;
+  height: 100vh;
   font-family: sans-serif;
 }
-
-.floating-bubble {
+.bulle .floating-bubble {
   position: fixed;
   bottom: 50px;
   right: 20px; /* ✅ bouton bien en bas à droite */
@@ -1747,8 +1742,7 @@ a.scroll-link * {
   align-items: center;
   z-index: 999;
 }
-
-.actions {
+.bulle .actions {
   display: flex;
   flex-direction: row-reverse; /* ✅ les éléments partent vers la gauche */
   margin-right: 10px; /* ✅ espace entre bouton et actions */
@@ -1757,13 +1751,11 @@ a.scroll-link * {
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 }
-
-.actions.show {
+.bulle .actions.show {
   opacity: 1;
   transform: translateX(0); /* ✅ s’anime à sa position */
   pointer-events: auto;
 }
-
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -1778,7 +1770,7 @@ a.scroll-link * {
     box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
   }
 }
-.main-button {
+.bulle .main-button {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -1792,21 +1784,17 @@ a.scroll-link * {
   animation: pulse 2s infinite;
   transition: all 0.3s;
 }
-
-.main-button:hover {
+.bulle .main-button:hover {
   border: 1px solid white;
 }
-
-.main-button:active {
+.bulle .main-button:active {
   box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
 }
-
-.main-button img {
+.bulle .main-button img {
   width: 28px;
   height: 28px;
 }
-
-.action-button {
+.bulle .action-button {
   width: 50px;
   height: 50px;
   margin-left: 10px;
@@ -1821,17 +1809,14 @@ a.scroll-link * {
   cursor: pointer;
   transition: transform 0.3s;
 }
-
-.action-button:hover {
+.bulle .action-button:hover {
   transform: scale(1.1);
   background-color: white;
 }
-
-a.action-button {
+.bulle a.action-button {
   text-decoration: none;
 }
-
-.vcf-notice {
+.bulle .vcf-notice {
   position: fixed;
   bottom: 80px;
   right: 20px;

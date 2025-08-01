@@ -137,16 +137,12 @@
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
   
-  .logo {
-    margin-top: auto;
-    text-align: center;
+  .logoconnecte {
+    height: 6rem;
+    display: flex;
+    justify-content: center;
   }
-  
-  .logo img {
-    max-width: 120px;
-    height: auto;
-    filter: drop-shadow(0 0 2px #000);
-  }
+
   
   .separateur-header {
     width: 100%;

@@ -1,0 +1,203 @@
+<?php
+namespace App\Controller;
+
+use App\Model\AnnonceModel;
+use App\View\AnnonceView;
+use PDO, Exception;
+
+class AnnonceController {
+    private AnnonceModel $model;
+    private AnnonceView $view;
+
+    public function __construct() {
+        $dsn = "mysql:host={$_ENV['DB_HOST_LOCAL']};dbname={$_ENV['DB_NAME_LOCAL']};charset=utf8";
+        $pdo = new PDO($dsn, $_ENV['DB_USER_LOCAL'], $_ENV['DB_PASSWORD_LOCAL']);
+        $this->model = new AnnonceModel($pdo);
+        $this->view = new AnnonceView();
+    }
+
+    public function index() { $this->listAnnonces(); }
+
+    public function run() {
+        $this->displayMessages();
+        if (isset($_GET['status'])) return $this->listByStatus($_GET['status']);
+        if (isset($_GET['stats'])) return $this->showStats();
+        $this->handleRequest();
+    }
+
+    public function handleRequest() {
+        $step = $_GET['step'] ?? null;
+        $id = $_GET['id'] ?? null;
+        return match ($step) {
+            'view'     => $id ? $this->viewAnnonce($id) : $this->warn("ID manquant", true),
+            'create'   => $this->createAnnonce(),
+            'update'   => $this->updateAnnonce($id),
+            'delete'   => $id ? $this->deleteAnnonce($id) : $this->warn("ID manquant", true),
+            'search'   => $this->searchAnnonces(),
+            'archive'  => $id ? $this->archiveAnnonce($id) : $this->warn("ID manquant", true),
+            'activate' => $id ? $this->activateAnnonce($id) : $this->warn("ID manquant", true),
+            default    => $this->index(),
+        };
+    }
+
+    private function warn($msg, $back = false) {
+        echo "<div class='alert alert-warning'>⚠️ $msg</div>";
+        if ($back) $this->index();
+    }
+
+    public function listAnnonces() {
+        try {
+            $annonces = $this->model->getAll();
+            $this->view->renderListe($annonces);
+        } catch (Exception $e) {
+            echo "<div class='alert alert-danger'>⚠️ Erreur : " . htmlspecialchars($e->getMessage()) . "</div>";
+            echo "<p>Voulez-vous créer une nouvelle annonce ?</p><a href='?action=annonce&step=create' class='btn btn-primary'>➕ Créer une annonce</a>";
+        }
+    }
+
+    public function viewAnnonce(int $id) {
+        try {
+            $annonce = $this->model->getById($id);
+            $annonce ? $this->view->renderDetails($annonce)
+                     : $this->warn("Annonce introuvable", false) . print("<a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour</a>");
+        } catch (Exception $e) {
+            echo "<div class='alert alert-danger'>⚠️ Erreur : " . htmlspecialchars($e->getMessage()) . "</div><a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour</a>";
+        }
+    }
+
+    public function createAnnonce() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                foreach (['titre', 'description', 'mission', 'profil_recherche', 'localisation', 'code_postale', 'secteur_activite', 'type_contrat'] as $f)
+                    if (empty($_POST[$f])) throw new Exception("Le champ '$f' est requis.");
+                if ($this->model->create($_POST)) return header("Location: index.php?action=annonce&success=created");
+                echo "<div class='alert alert-danger'>⚠️ Erreur lors de la création.</div>";
+            } catch (Exception $e) {
+                echo "<div class='alert alert-danger'>⚠️ " . htmlspecialchars($e->getMessage()) . "</div>";
+            }
+        }
+        $this->view->renderForm('create');
+    }
+
+    public function updateAnnonce(int $id = null) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            try {
+                if ($this->model->update((int)$_POST['id'], $_POST))
+                    return header("Location: index.php?action=annonce&success=updated");
+                echo "<div class='alert alert-danger'>⚠️ Erreur lors de la mise à jour.</div>";
+            } catch (Exception $e) {
+                echo "<div class='alert alert-danger'>⚠️ " . htmlspecialchars($e->getMessage()) . "</div>";
+            }
+        }
+        if (!$id) return $this->warn("ID manquant", true);
+        try {
+            $annonce = $this->model->getById($id);
+            $annonce ? $this->view->renderForm('update', $annonce)
+                     : $this->warn("Annonce introuvable", true);
+        } catch (Exception $e) {
+            echo "<div class='alert alert-danger'>⚠️ " . htmlspecialchars($e->getMessage()) . "</div><a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour</a>";
+        }
+    }
+
+    public function deleteAnnonce(int $id) {
+        try {
+            if (!$this->model->getById($id)) return header("Location: index.php?action=annonce&error=not_found");
+            header("Location: index.php?action=annonce&" . ($this->model->delete($id) ? "success=deleted" : "error=delete_failed"));
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            header("Location: index.php?action=annonce&error=delete_error");
+        } exit;
+    }
+
+    public function searchAnnonces() {
+        $keyword = $_GET['q'] ?? '';
+        if (!$keyword) return $this->warn("Veuillez saisir un terme de recherche.", true);
+        try {
+            $annonces = $this->model->search($keyword);
+            echo "<h3>🔍 Résultats pour \"$keyword\" (" . count($annonces) . ")</h3><a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour</a><br><br>";
+            empty($annonces)
+                ? print("<div class='alert alert-info'>Aucune annonce trouvée.</div><a href='?action=annonce&step=create' class='btn btn-primary'>➕ Créer une annonce</a>")
+                : $this->view->renderListe($annonces);
+        } catch (Exception $e) {
+            echo "<div class='alert alert-danger'>⚠️ " . htmlspecialchars($e->getMessage()) . "</div>";
+            $this->index();
+        }
+    }
+
+    public function archiveAnnonce(int $id) {
+        try {
+            header("Location: index.php?action=annonce&" . ($this->model->archive($id) ? "success=archived" : "error=archive_failed"));
+        } catch (Exception $e) {
+            header("Location: index.php?action=annonce&error=archive_error");
+        } exit;
+    }
+
+    public function activateAnnonce(int $id) {
+        try {
+            header("Location: index.php?action=annonce&" . ($this->model->activate($id) ? "success=activated" : "error=activate_failed"));
+        } catch (Exception $e) {
+            header("Location: index.php?action=annonce&error=activate_error");
+        } exit;
+    }
+
+    public function listByStatus(string $status) {
+        try {
+            $annonces = $this->model->getByStatus($status);
+            echo "<h3>📋 Annonces : " . ucfirst($status) . " (" . count($annonces) . ")</h3><a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour</a><br><br>";
+            $this->view->renderListe($annonces);
+        } catch (Exception $e) {
+            echo "<div class='alert alert-danger'>⚠️ Erreur : " . htmlspecialchars($e->getMessage()) . "</div>";
+            $this->index();
+        }
+    }
+
+    public function showStats() {
+        try {
+            $total = $this->model->count();
+            $active = count($this->model->getByStatus('active'));
+            $inactive = count($this->model->getByStatus('inactive'));
+            $archived = count($this->model->getByStatus('archivee'));
+            echo <<<HTML
+<div class='stats-container'><h3>📊 Statistiques</h3>
+<div class='stats-grid'>
+<div class='stat-item'><strong>Total :</strong> $total</div>
+<div class='stat-item'><strong>Actives :</strong> $active</div>
+<div class='stat-item'><strong>Inactives :</strong> $inactive</div>
+<div class='stat-item'><strong>Archivées :</strong> $archived</div>
+</div>
+<a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour</a></div>
+<style>
+.stats-container { margin:20px 0; padding:20px; border:1px solid #ddd; border-radius:5px; }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin:20px 0; }
+.stat-item { padding:15px; background:#f8f9fa; border-radius:5px; text-align:center; }
+</style>
+HTML;
+        } catch (Exception $e) {
+            echo "<div class='alert alert-danger'>⚠️ " . htmlspecialchars($e->getMessage()) . "</div>";
+            $this->index();
+        }
+    }
+
+    public function displayMessages() {
+        $s = $_GET['success'] ?? null; $e = $_GET['error'] ?? null;
+        $msg = fn($text, $type) => print("<div class='alert alert-$type'>$text</div>");
+        match ($s) {
+            'created'   => $msg("✅ Annonce créée !", 'success'),
+            'updated'   => $msg("✅ Annonce mise à jour !", 'success'),
+            'deleted'   => $msg("✅ Annonce supprimée !", 'success'),
+            'archived'  => $msg("✅ Annonce archivée !", 'success'),
+            'activated' => $msg("✅ Annonce activée !", 'success'),
+            default     => null
+        };
+        match ($e) {
+            'not_found'      => $msg("⚠️ Annonce introuvable.", 'danger'),
+            'delete_failed'  => $msg("⚠️ Échec de suppression.", 'danger'),
+            'delete_error'   => $msg("⚠️ Erreur de suppression.", 'danger'),
+            'archive_failed' => $msg("⚠️ Échec d'archivage.", 'danger'),
+            'archive_error'  => $msg("⚠️ Erreur d'archivage.", 'danger'),
+            'activate_failed'=> $msg("⚠️ Échec d'activation.", 'danger'),
+            'activate_error' => $msg("⚠️ Erreur d'activation.", 'danger'),
+            default          => null
+        };
+    }
+}

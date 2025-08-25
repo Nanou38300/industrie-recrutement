@@ -1,4 +1,8 @@
-@import "vars", "typo", "en-tete", "login", "candidat";
+@use "sass:meta";
+@use "vars";
+@use "typo";
+@use "en-tete";
+@use "login";
 
 * {
     margin: 0;
@@ -35,7 +39,7 @@ a.scroll-link * {
         margin: 9rem;
 
         .trait-vert {
-            border: 9px solid $vert;
+            border: 9px solid vars.$vert;
             transform: translate(-6rem, -0rem);
         }
         img {
@@ -79,13 +83,13 @@ a.scroll-link * {
         flex-direction: column;
         gap: 1.7rem;
         .tcs-C {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .btn1 {
-            @include boutonVert;
+            @include vars.boutonVert;
         }
         .separateur {
-            border: 0.1rem solid $vert;
+            border: 0.1rem solid vars.$vert;
             width: 11rem;
         }
         h1 {
@@ -129,27 +133,27 @@ a.scroll-link * {
                 justify-content: space-between;
                 font-size: 2rem;
                 gap: 10rem;
-                @include tcsTitre;
+                @include vars.tcsTitre;
               }
         }
     }
     .template-titre1 {
         margin: 9rem;
         .tcs-C {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
         .separateur {
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             width: 60px;    
             transform: translate(14rem, -2rem);
             box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
         } 
     }
     .superposition1 {
-        border: 2px solid $beige;
+        border: 2px solid vars.$beige;
         margin: 9rem;
         height: 40rem;
  
@@ -162,12 +166,12 @@ a.scroll-link * {
         article {
             display: flex;
             flex-direction: column;
-            background: $gris;  
+            background: vars.$gris;  
             width: 40rem;
             transform: translate(25rem, 10rem);
 
             .tcs-C {
-                @include tcsBeige;
+                @include vars.tcsBeige;
                 text-shadow: 2px 2px 5px rgba(230, 214, 214, 0.732);
                 margin-top: 3rem;
             }
@@ -175,33 +179,33 @@ a.scroll-link * {
                 margin: 2rem 9rem 2rem 9rem;
             }
             h2 {
-                @include tcsTitre;
+                @include vars.tcsTitre;
                 margin: 2rem 9rem 2rem 9rem;
             }
         }
     }
     .btn2 {
-        @include boutonVert;
+        @include vars.boutonVert;
         transform: translate(15rem, -12rem);
     
     }
     .template-titre1 {
         margin: 9rem;
         .tcs-C {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
         .separateur2 {
-            border: 1px solid $beige;   
+            border: 1px solid vars.$beige;   
             width: 80px;    
             transform: translate(14rem, -2rem);
             box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
         } 
     }
     .superposition2 {
-        border: 2px solid $beige;
+        border: 2px solid vars.$beige;
         margin: 9rem;
         height: 40rem;
 
@@ -214,25 +218,25 @@ a.scroll-link * {
         article {
             display: flex;
             flex-direction: column;
-            background: $gris;  
+            background: vars.$gris;  
             width: 40rem;
             transform: translate(7rem, 10rem);
             z-index: 2;
             .tcs-C {
-                @include tcsBeige;
+                @include vars.tcsBeige;
                 text-shadow: 2px 2px 5px rgba(230, 214, 214, 0.732);
             }
             p {
                 margin: 2rem 9rem 2rem 9rem;
             }
             h2 {
-                @include tcsTitre;
+                @include vars.tcsTitre;
                 margin: 2rem 9rem 2rem 9rem;
             }
         }
     }
     .btn3 {
-        @include boutonVert;
+        @include vars.boutonVert;
         transform: translate(-3rem, -12rem);
     
     }
@@ -243,13 +247,13 @@ a.scroll-link * {
         margin: 14rem 9rem 9rem 9rem;
         gap: 3rem;
         .tcs-C {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
         .separateur2 {
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             transform: rotate(90deg);
             transform: translate(0rem, -0rem);
             box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
@@ -266,7 +270,7 @@ a.scroll-link * {
                 justify-content: center;
                 text-align: center;
                 align-items: center; 
-                background: $vert;
+                background: vars.$vert;
                 height: 6rem;
                 width: 12rem;
                 color: white;
@@ -283,7 +287,7 @@ a.scroll-link * {
                 justify-content: center;
                 text-align: center;
                 align-items: center; 
-                background: $beige;
+                background: vars.$beige;
                 height: 6rem;
                 width: 12rem;
                 color:black;
@@ -297,7 +301,7 @@ a.scroll-link * {
         flex-direction: column;
         position: relative;
         z-index: 1;
-        background: $gris;
+        background: vars.$gris;
         height: 25rem;
         width: 40rem;
         img {
@@ -317,7 +321,7 @@ a.scroll-link * {
         }
     }
     .temoignage {
-        border: 1px solid $beige;
+        border: 1px solid vars.$beige;
         width: 80%;
         height: 40rem;
         transform: translateY(-10rem);
@@ -332,10 +336,10 @@ a.scroll-link * {
             margin: 10rem;
             
             .tcs-C {
-                @include tcsBeige;
+                @include vars.tcsBeige;
             }
             .titre {
-                @include tcsTitre;
+                @include vars.tcsTitre;
             }
         }
         img {
@@ -351,7 +355,7 @@ a.scroll-link * {
         text-decoration: none;
     }
     .btn1 {
-        @include boutonVert;
+        @include vars.boutonVert;
         align-items: center;
         margin: 2rem;
     }
@@ -366,13 +370,13 @@ a.scroll-link * {
     .template-titre1 {
         margin: 9rem;
         .tcs-C {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
         .separateur {
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             width: 80px;    
             transform: translate(14rem, -2rem);
             box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
@@ -383,13 +387,13 @@ a.scroll-link * {
             text-decoration: none;
         }
         .btn1 {
-            @include boutonVert;
+            @include vars.boutonVert;
             align-items: center;
         }
     }
     .texte {
         margin: 4rem 9rem 9rem 9rem;
-        @include tcsPara;
+        @include vars.tcsPara;
         font-size: 1rem;
         }
     .template-titre2 {
@@ -398,14 +402,14 @@ a.scroll-link * {
         gap: 1rem;
         
         .tcs-C {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
     }
     .separateur2 {
-        border: 1px solid $beige;
+        border: 1px solid vars.$beige;
         transform: rotate(90deg);
         transform: translate(0rem, -0rem);
         box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
@@ -421,15 +425,15 @@ a.scroll-link * {
         margin: 9rem;
         line-height: 0.4;
         .tcsC {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
     }
 
     .separateur {
-        border: 1px solid $beige;
+        border: 1px solid vars.$beige;
         width: 50px;    
         transform: translate(14rem, -3rem);
         box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
@@ -478,7 +482,7 @@ a.scroll-link * {
                 h2 {
                     color: white;
                     text-align: center;
-                    @include tcsTitre;
+                    @include vars.tcsTitre;
                     letter-spacing: 3px; // espace entre les lettres
                     margin: 50px 0 0;
                 }
@@ -496,7 +500,7 @@ a.scroll-link * {
     } 
     .maintenance {
         margin: 9rem;
-        @include flexbox(false, center, row);
+        @include vars.flexbox(false, center, row);
         width: 100%;
         gap: 5rem;
         div {
@@ -508,7 +512,7 @@ a.scroll-link * {
                 height: 15rem;
             }
             .cadre-beige {
-                border: 1px solid $beige;
+                border: 1px solid vars.$beige;
                 height: 15rem;
                 width: auto;
             }
@@ -526,7 +530,7 @@ a.scroll-link * {
             a {
                 text-decoration: none;
                 .btn1 {
-                    @include boutonVert;
+                    @include vars.boutonVert;
                     
                 }
             }
@@ -536,7 +540,7 @@ a.scroll-link * {
     }
     .chimie {
         margin: 9rem;
-        @include flexbox(false, center, row);
+        @include vars.flexbox(false, center, row);
             width: 100%;
             gap: 5rem;
             div {
@@ -548,7 +552,7 @@ a.scroll-link * {
                     height: 15rem;
                 }
                 .cadre-beige {
-                    border: 1px solid $beige;
+                    border: 1px solid vars.$beige;
                     height: 15rem;
                     width: auto;
                 }
@@ -567,7 +571,7 @@ a.scroll-link * {
                     text-decoration: none;
                     .btn1 {
                         margin-top: 2rem;
-                        @include boutonVert;
+                        @include vars.boutonVert;
                     }
                 }
             
@@ -575,7 +579,7 @@ a.scroll-link * {
         }    
     .nucleaire {
         margin: 9rem;
-        @include flexbox(false, center, row);
+        @include vars.flexbox(false, center, row);
         width: 100%;
         gap: 5rem;
             div {
@@ -587,7 +591,7 @@ a.scroll-link * {
                     height: 15rem;
                 }
                 .cadre-beige {
-                    border: 1px solid $beige;
+                    border: 1px solid vars.$beige;
                     width: 20rem;
                     height: 15rem;
                 }
@@ -605,7 +609,7 @@ a.scroll-link * {
                     text-decoration: none;
                     .btn1 {
                         margin-top: 2rem;
-                        @include boutonVert;
+                        @include vars.boutonVert;
                     }
                 }
             }
@@ -624,17 +628,17 @@ a.scroll-link * {
         .bloc-beige {
             height: 15rem;
             width: 15rem;
-            background: $beige;
+            background: vars.$beige;
         }
         .bloc-vert {
             height: 15rem;
             width: 15rem;
-            background: $vert; 
+            background: vars.$vert; 
         }
         .bloc-gris {
             height: 15rem;
             width: 15rem;
-            background: $gris;    
+            background: vars.$gris;    
     }
     .flip-card {
         background-color: transparent;
@@ -676,7 +680,7 @@ a.scroll-link * {
     
     /* Style de la face arrière */
     .flip-card-verso {
-        background-color: $beige;
+        background-color: vars.$beige;
         color: white;
         transform: rotateY(180deg);
         h2 {
@@ -696,18 +700,18 @@ a.scroll-link * {
         }
     }
     .btn1 {
-        @include boutonVert;
+        @include vars.boutonVert;
 }
     .template-titre1 { 
         margin: 3rem 9rem 3rem 9rem;
         .tcs-C {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
         .separateur {
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             width: 80px;    
             transform: translate(20rem, -3rem);
             box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
@@ -720,13 +724,13 @@ a.scroll-link * {
         gap: 30px;
         height: auto;
         .tcsC {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
         .separateur2 {
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             transform: rotate(90deg);
             transform: translate(0rem, -0rem);
             box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(77, 77, 77, 0.087);
@@ -737,7 +741,7 @@ a.scroll-link * {
        margin: 4rem 10rem 1rem 10rem;
         width: 40%;
         padding: 3rem 5rem;
-        border: 0.3rem solid $beige;
+        border: 0.3rem solid vars.$beige;
         box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
         transform: translate(300px, 0px);
         margin: 9rem;
@@ -785,25 +789,25 @@ a.scroll-link * {
     }
     .rect-vert {
         height: 35rem;
-        background: $vert;
-        @include flexbox(center, center, column);
+        background: vars.$vert;
+        @include vars.flexbox(center, center, column);
         gap: 3rem;
         transform: translate(0, -280px);
         z-index: 2;
         .btn2 {
-            @include boutonBeige;
+            @include vars.boutonBeige;
             align-items: center;
         }
         p {
             width: 60%;
             color: white;
-            @include tcsTitre;
+            @include vars.tcsTitre;
             text-align: center;
         }
     }
     .plan-chaudronnerie {
         margin: 9rem;
-        @include flexbox(center, false, row);
+        @include vars.flexbox(center, false, row);
         gap: 4rem;
         img {
             height: 25rem;
@@ -818,7 +822,7 @@ a.scroll-link * {
     }
     .cahier-charge {
         margin: 9rem;
-        @include flexbox(center, false, row);
+        @include vars.flexbox(center, false, row);
         gap: 4rem;
         img {
             height: 40rem;
@@ -836,7 +840,7 @@ a.scroll-link * {
     }
     .cahier-soudage {
         margin: 9rem;
-        @include flexbox(center, false, row);
+        @include vars.flexbox(center, false, row);
         gap: 4rem;
         img {
             height: 40rem;
@@ -873,8 +877,8 @@ a.scroll-link * {
             object-fit: cover;
         }
         .texte-beige {
-            color: $beige;
-            @include tcsPara; 
+            color: vars.$beige;
+            @include vars.tcsPara; 
             font-style: normal;
         }
         p {
@@ -910,28 +914,28 @@ a.scroll-link * {
             transform: translate(400px, 300px);
         }
         .tcsC {
-            @include tcsBeige;
+            @include vars.tcsBeige;
         }
         .titre {
-            @include tcsTitre;
+            @include vars.tcsTitre;
         }
         .separateur {
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             width: 80px;    
             transform: translate(20rem, -3rem);
             box-shadow:  0.1rem 0.1rem 0.1rem 0.1rem rgba(61, 61, 61, 0.087);
         } 
         .btn1 {
-            @include boutonVert;
+            @include vars.boutonVert;
             transform: translate(250px, 10px);
             margin-top: 2rem;
         }
         .article {
             margin: 9rem;
             padding: 9rem;
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             .btn1 {
-                @include boutonVert;
+                @include vars.boutonVert;
                 transform: translate(0px, 10px);
                 margin-top: 2rem;
             }
@@ -939,10 +943,10 @@ a.scroll-link * {
         .article2 {
             margin: 9rem;
             padding: 9rem;
-            border: 1px solid $beige;
-            @include flexbox(end, end, column);
+            border: 1px solid vars.$beige;
+            @include vars.flexbox(end, end, column);
             .btn2 {
-                @include boutonBeige;
+                @include vars.boutonBeige;
                 transform: translate(0px, 10px);
                 margin-top: 2rem;
             }
@@ -953,9 +957,9 @@ a.scroll-link * {
         .article3 {
             margin: 9rem;
             padding: 9rem;
-            border: 1px solid $beige;
+            border: 1px solid vars.$beige;
             .btn1 {
-                @include boutonVert;
+                @include vars.boutonVert;
                 transform: translate(0px, 10px);
                 margin-top: 2rem;
             }
@@ -1023,7 +1027,7 @@ a.scroll-link * {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    @include tcsPara;
+    @include vars.tcsPara;
     font-weight: bold;
     color: #555555;
 }
@@ -1055,7 +1059,7 @@ a.scroll-link * {
     color: #666666;
 }
 .btn {
-    @include boutonBeige;
+    @include vars.boutonBeige;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -1148,18 +1152,18 @@ a.scroll-link * {
         margin-bottom: 2rem;
     }
     .company-name {
-        color: $beige;
+        color: vars.$beige;
         font-size: 1.4rem;
         margin-bottom: 0.5rem;
     }
     .title {
         color: black;
         margin-bottom: 1rem;
-        @include tcsTitre;
+        @include vars.tcsTitre;
     }
     .separator {
         height: 2px;
-        background-color: $beige;
+        background-color: vars.$beige;
         margin: 1rem auto;
         width: 50%;
     }
@@ -1169,9 +1173,9 @@ a.scroll-link * {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    @include tcsPara;
+    @include vars.tcsPara;
     font-weight: bold;
-    color: $beige;
+    color: vars.$beige;
 }
 .form-group input,
 .form-group textarea {
@@ -1190,7 +1194,7 @@ a.scroll-link * {
     resize: vertical;
 }
 .btn {
-    @include boutonBeige;
+    @include vars.boutonBeige;
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -1203,4 +1207,379 @@ a.scroll-link * {
 
 
 
-@import "bulle-flottante","mobile", "footer";
+
+
+
+// .timeline {
+//     display: flex;
+//     gap: 10px;
+//     margin-top: 10px;
+// }
+// .etape {
+//     padding: 5px 10px;
+//     border-radius: 20px;
+//     background-color: #eee;
+// }
+// .etape.active {
+//     background-color: #007bff;
+//     color: white;
+//     font-weight: bold;
+// }
+// .photo-profil {
+//     width: 100px;
+//     border-radius: 50%;
+//     margin-top: 10px;
+// }
+
+
+// // 🎨 Variables
+// $primary: #007bff;
+// $secondary: #6c757d;
+// $danger: #dc3545;
+// $success: #28a745;
+// $light: #f8f9fa;
+// $dark: #343a40;
+// $font-stack: 'Segoe UI', sans-serif;
+
+// // 🧱 Base
+// body {
+//   font-family: $font-stack;
+//   background-color: $light;
+//   color: $dark;
+//   margin: 0;
+//   padding: 0;
+// }
+
+// section {
+//   margin: 30px auto;
+//   padding: 20px;
+//   max-width: 900px;
+//   background: white;
+//   border-radius: 8px;
+//   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+// }
+
+// // 📋 Titres
+// h2 {
+//   font-size: 1.6rem;
+//   margin-bottom: 20px;
+//   color: $primary;
+// }
+
+// // 👤 Profil
+// .profil {
+//   .photo-profil {
+//     width: 120px;
+//     height: 120px;
+//     border-radius: 50%;
+//     object-fit: cover;
+//     margin-top: 10px;
+//     border: 2px solid $primary;
+//   }
+// }
+
+// // 📄 Formulaires
+// form {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 15px;
+
+//   input[type="text"],
+//   input[type="email"],
+//   input[type="tel"],
+//   input[type="file"],
+//   input[type="date"],
+//   select,
+//   textarea {
+//     padding: 10px;
+//     border: 1px solid #ccc;
+//     border-radius: 4px;
+//     font-size: 1rem;
+//   }
+
+//   button {
+//     padding: 10px 20px;
+//     background-color: $primary;
+//     color: white;
+//     border: none;
+//     border-radius: 4px;
+//     cursor: pointer;
+
+//     &:hover {
+//       background-color: darken($primary, 10%);
+//     }
+//   }
+// }
+
+// // 🗑️ Bouton suppression
+// .supprimer-profil {
+//   button {
+//     background-color: $danger;
+
+//     &:hover {
+//       background-color: darken($danger, 10%);
+//     }
+//   }
+// }
+
+// // 📢 Annonces
+// .annonce {
+//   border: 1px solid #eee;
+//   padding: 15px;
+//   border-radius: 6px;
+//   margin-bottom: 20px;
+
+//   h3 {
+//     margin-top: 0;
+//     color: $secondary;
+//   }
+
+//   button {
+//     background-color: $success;
+//   }
+// }
+
+// // 📊 Timeline de candidature
+// .timeline {
+//   display: flex;
+//   gap: 10px;
+//   margin-top: 10px;
+
+//   .etape {
+//     padding: 8px 12px;
+//     border-radius: 20px;
+//     background-color: #eee;
+//     font-size: 0.9rem;
+//     font-weight: bold;
+//     color: #555;
+
+//     &.active {
+//       background-color: $primary;
+//       color: white;
+//     }
+//   }
+// }
+
+// // 📱 Responsive
+// @media (max-width: 600px) {
+//   section {
+//     padding: 15px;
+//   }
+
+//   form {
+//     gap: 10px;
+//   }
+
+//   .timeline {
+//     flex-direction: column;
+//   }
+// }
+
+
+// Compte Candidat - 
+.bloc {
+    margin: 1rem 1rem 2rem 15rem;
+    border: 4px solid vars.$beige;
+    display: flex;
+    flex-direction: row;
+
+.profile-header{
+
+    margin: 5rem 1rem 2rem 5rem;
+    .photo {
+        border: 4px solid vars.$beige;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 90%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 20rem;
+        width: 20rem;
+    }
+    .info {
+        margin: 4rem 0 2rem 4rem;
+    }
+
+}
+.profil {
+    border: 4px solid vars.$beige;
+    .photo {
+        border: 4px solid vars.$beige;
+        display: flex;
+        align-items: center;
+    }
+    .details {
+        border: 4px solid vars.$beige;
+        margin: 9rem 0;
+        background: #594eed;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+}
+.upload-cv {
+    background: vars.$beige;
+    margin: 1rem 1rem 2rem 15rem; 
+    height: 10rem;
+    width: 30rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.modifier-profil {
+    margin: 1rem 1rem 2rem 15rem; 
+}
+.upload-photo {
+    margin: 1rem 1rem 2rem 15rem; 
+}
+// .annonces { 
+//     margin: 1rem 1rem 2rem 15rem;
+//     display: flex;
+//     gap: 1rem;
+// }
+
+// Variables
+$green-dark: #1c3b2f;
+$green-accent: #007b5e;
+$gray-light: #f5f5f5;
+$text-dark: #333;
+$timeline-color: #ccc;
+$timeline-active: $green-accent;
+
+// Conteneur principal
+.candidature {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+  h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: $green-dark;
+  }
+
+  p {
+    margin: 5px 0;
+    color: $text-dark;
+    font-size: 0.95rem;
+
+    strong {
+      color: $green-dark;
+    }
+  }
+
+  .timeline {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative;
+    padding: 10px 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: $timeline-color;
+      z-index: 0;
+    }
+
+    .etape {
+      position: relative;
+      z-index: 1;
+      background-color: $gray-light;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: $text-dark;
+      border: 2px solid $timeline-color;
+      transition: all 0.3s ease;
+
+      &.active {
+        background-color: $timeline-active;
+        color: white;
+        border-color: $timeline-active;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// Section globale
+.annonces {
+  padding: 40px;
+  background-color: rgba(145, 144, 144, 0.131);
+  margin: 1rem 1rem 2rem 15rem;
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 30px;
+    color: $green-dark;
+  }
+
+  p {
+    font-size: 1rem;
+    color: $text-dark;
+  }
+
+    .detail-annonce {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: 1rem 1rem 2rem 1rem;
+        background: #fff;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 20px;
+        margin-bottom: 25px;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        .btn-offre {
+            background-color: #C9AB89;
+            border-radius: 5px;
+            color: white;
+            border: none;
+            height: 2.5rem;
+            width: 8rem;
+        }
+    } 
+}
+
+.toggle-details {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  
+    .icon {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.3s ease;
+    }
+  
+    .annonce.active & .icon {
+      transform: rotate(180deg);
+    }
+  }
+  
+
+
+
+
+
+
+
+@include meta.load-css("bulle-flottante");
+@include meta.load-css("mobile");
+@include meta.load-css("footer");

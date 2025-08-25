@@ -101,7 +101,8 @@ class AnnonceController {
     public function listAnnonces() {
         try {
             $annonces = $this->model->getAll();
-            $this->view->renderListe($annonces);
+            $this->view->renderListe($this->model->getAnnoncesDisponibles());
+
         } catch (Exception $e) {
             echo "<div class='alert alert-danger'>⚠️ Erreur lors du chargement des annonces : " . htmlspecialchars($e->getMessage()) . "</div>";
             // Afficher un formulaire de création en cas d'erreur de base de données

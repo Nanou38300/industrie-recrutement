@@ -10,27 +10,19 @@ class CandidatController
     private CandidatModel $model;
     private CandidatView $view;
 
-    private function redirectIfNotConnected(): bool
-    {
-        if (!isset($_SESSION['utilisateur']) || !isset($_SESSION['utilisateur']['id'])) {
-            echo "Vous allez être redirigé...";
-            header("Location: utilisateur/login");
-            exit;
-        }
-        return true;
-    }
-    
     public function __construct()
     {
         $this->model = new CandidatModel();
         $this->view = new CandidatView();
     }
 
-    private function isConnected(): bool
+    private function redirectIfNotConnected(): void
     {
-        return isset($_SESSION['utilisateur']) && isset($_SESSION['utilisateur']['id']);
+        if (!isset($_SESSION['utilisateur']['id'])) {
+            header("Location: /utilisateur/login");
+            exit;
+        }
     }
-
 
     public function dashboard(): void
     {
@@ -41,48 +33,17 @@ class CandidatController
             'annonces' => $this->model->getAnnoncesDisponibles(),
             'candidatures' => $this->model->getCandidatures($id),
         ];
-
         $this->view->renderDashboard($donnees);
     }
 
     public function profil(): void
     {
         $this->redirectIfNotConnected();
-        $profil = $this->model->getProfil((int)$_SESSION['utilisateur']['id']);
+        $profil = $this->model->getProfil($_SESSION['utilisateur']['id']);
         $this->view->renderProfil($profil);
         $this->view->renderEditForm($profil);
         $this->view->renderUploadForm();
         $this->view->renderDeleteButton();
-    }
-    public function profile() {
-        $userModel = new UserModel();
-        $user = $userModel->getUserById($_SESSION['user_id']);
-        require 'views/profile.php';
-    }
-
-    public function create(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->model->createProfil($_POST);
-            echo "<p>✅ Profil créé avec succès</p>";
-        } else {
-            echo "<h2>Créer mon profil</h2>";
-            echo "<form method='POST'>
-                <label>Nom : <input name='nom' /></label><br>
-                <label>Email : <input name='email' /></label><br>
-                <label>Mot de passe : <input name='mot_de_passe' type='password' /></label><br>
-                <button type='submit'>Créer</button>
-            </form>";
-        }
-    }
-
-    public function delete(): void
-    {
-        $this->redirectIfNotConnected();
-        $id = $_SESSION['utilisateur']['id'];
-        $this->model->deleteProfil($id);
-        session_destroy();
-        echo "<p>🗑️ Profil supprimé</p>";
     }
 
     public function update(): void
@@ -90,47 +51,69 @@ class CandidatController
         $this->redirectIfNotConnected();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->model->updateProfil($_SESSION['utilisateur']['id'], $_POST);
-            header('Location: /candidat/profil');
+            header("Location: /candidat/profil");
             exit;
         }
+    }
+
+    public function delete(): void
+    {
+        $this->redirectIfNotConnected();
+        $this->model->deleteProfil($_SESSION['utilisateur']['id']);
+        session_destroy();
+        header("Location: /utilisateur/login");
+        exit;
     }
 
     public function uploadCV(): void
     {
         $this->redirectIfNotConnected();
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['cv'])) {
-            $cvPath = 'uploads/' . basename($_FILES['cv']['name']);
-            move_uploaded_file($_FILES['cv']['tmp_name'], $cvPath);
-            echo "<p>📄 CV téléchargé avec succès !</p>";
+        if (isset($_FILES['cv'])) {
+            $filename = time() . '-' . basename($_FILES['cv']['name']);
+            $destination = 'uploads/' . $filename;
+
+            if (!is_dir('uploads')) {
+                mkdir('uploads', 0755, true);
+            }
+
+            if (move_uploaded_file($_FILES['cv']['tmp_name'], $destination)) {
+                $this->model->updateCV($_SESSION['utilisateur']['id'], $filename);
+                header("Location: /candidat/profil");
+                exit;
+            } else {
+                echo "<p>❌ Échec du téléchargement du CV.</p>";
+            }
         }
-    }
-    public function uploadPhoto() {
-        if (isset($_FILES['photo'])) {
-            $target = 'uploads/' . basename($_FILES['photo']['name']);
-            move_uploaded_file($_FILES['photo']['tmp_name'], $target);
-    
-            $db = Db::getInstance();
-            $stmt = $db->prepare("UPDATE users SET photo = :photo WHERE id = :id");
-            $stmt->execute([
-                'photo' => $target,
-                'id' => $_SESSION['user_id']
-            ]);
-        }
-        header('Location: index.php?action=profile');
     }
 
-    
-    public function listAnnonces(): void
+    public function uploadPhoto(): void
+    {
+        $this->redirectIfNotConnected();
+        if (isset($_FILES['photo'])) {
+            $filename = time() . '-' . basename($_FILES['photo']['name']);
+            $destination = 'uploads/' . $filename;
+
+            if (!is_dir('uploads')) {
+                mkdir('uploads', 0755, true);
+            }
+
+            if (move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
+                $this->model->updatePhoto($_SESSION['utilisateur']['id'], $destination);
+                header("Location: /candidat/profil");
+                exit;
+            } else {
+                echo "<p>❌ Échec de l’envoi de la photo.</p>";
+            }
+        }
+    }
+
+
+        public function listAnnonces(): void
     {
         $annonces = $this->model->getAnnoncesDisponibles();
         $this->view->renderAnnonces($annonces);
     }
 
-    public function viewAnnonce(int $id): void
-    {
-        $annonce = $this->model->getAnnonceById($id);
-        $this->view->renderAnnonce($annonce);
-    }
 
     public function postuler(int $id): void
     {
@@ -140,10 +123,13 @@ class CandidatController
         exit;
     }
 
-    public function suiviCandidatures(): void
-    {
-        $this->redirectIfNotConnected();
-        $candidatures = $this->model->getCandidatures($_SESSION['utilisateur']['id']);
-        $this->view->renderCandidatures($candidatures);
-    }
+    public function renderSuiviCandidatures(): void
+{
+    $this->redirectIfNotConnected();
+    $id = $_SESSION['utilisateur']['id'];
+    $candidatures = $this->model->getCandidatures($id);
+    $this->view->renderSuiviCandidatures($candidatures);
+}
+
+
 }

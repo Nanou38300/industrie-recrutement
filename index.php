@@ -1,6 +1,8 @@
 <?php
 
+
 declare(strict_types=1);
+ob_start();
 session_start();
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -52,20 +54,24 @@ try {
             include "Pages/{$action}.php";
             break;
 
-        case 'administrateur':
-            $ctrl = new AdministrateurController;
-            match ($step) {
-                'dashboard'       => $ctrl->dashboard($_SESSION['utilisateur']['id']),
-                'profil'          => $ctrl->profil($_SESSION['utilisateur']['id']),
-                'annonces'        => $ctrl->viewAnnonces(),
-                'create-annonce'  => $ctrl->createAnnonce(),
-                'edit-annonce'    => $ctrl->editAnnonce((int)$id),
-                'archive-annonce' => $ctrl->archiveAnnonce((int)$id),
-                'candidatures'    => $ctrl->listCandidatures(),
-                'candidature'     => $ctrl->viewCandidature((int)$id),
-                default           => $ctrl->dashboard($_SESSION['utilisateur']['id']),
-            };
-            break;
+            case 'administrateur':
+                $ctrl = new AdministrateurController;
+                match ($step) {
+                    'dashboard'        => $ctrl->dashboard($_SESSION['utilisateur']['id']),
+                    'profil'           => $ctrl->profil($_SESSION['utilisateur']['id']),
+                    'edit-profil'      => $ctrl->editProfil(),
+                    'delete-profil'    => $ctrl->deleteProfil(),
+                    'annonces'         => $ctrl->viewAnnonces(),
+                    'create-annonce'   => $ctrl->createAnnonce(),
+                    'edit-annonce'     => $ctrl->editAnnonce((int)$id),
+                    'archive-annonce'  => $ctrl->archiveAnnonce((int)$id),
+                    'candidatures'     => $ctrl->listCandidatures(),
+                    'candidature'      => $ctrl->viewCandidature((int)$id),
+                    default            => $ctrl->dashboard($_SESSION['utilisateur']['id']),
+                };
+                break;
+            
+            
 
         case 'candidat':
             $ctrl = new CandidatController;
@@ -76,8 +82,8 @@ try {
                 'upload-cv'       => $ctrl->uploadCV(),
                 'annonces'        => $ctrl->listAnnonces(),
                 'annonce-view'    => $ctrl->viewAnnonce((int)$id),
-                'postuler'        => $ctrl->postuler((int)$id),
-                'candidatures'    => $ctrl->suiviCandidatures(),
+                'postuler'        => $ctrl->postuler((int)$_GET['id']),
+                'candidatures'    => $ctrl->renderSuiviCandidatures(),
                 default           => $ctrl->profil(),
             };
             break;
@@ -218,6 +224,7 @@ try {
 if ($afficherFooter) {
     require_once('assets/templates/footer.php');
 }
+ob_end_flush();
 
 // Ajout de styles CSS de base pour les alertes si elles n'existent pas
 echo "<style>

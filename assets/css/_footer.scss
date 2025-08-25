@@ -1,4 +1,5 @@
-@import "btn-retour-haut";
+@use "btn-retour-haut";
+@use "vars";
 
 .footer-complet {
     display: flex;
@@ -33,7 +34,7 @@
 
         a {
             text-decoration: none;
-            @include tcsTitre;
+            @include vars.tcsTitre;
             font-size: 1.3rem;
             color: black;
             letter-spacing: 0.2rem;

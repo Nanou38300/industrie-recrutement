@@ -160,10 +160,12 @@ class UtilisateurController
     // Méthode pour déconnecter un utilisateur
     public function logoutUtilisateur(): void
     {
-        $this->utilisateurModel->logoutUtilisateur();  // Détruit la session
-        echo '<script>window.location.href = "/";</script>';  // Redirige vers l'accueil
+        session_unset();
+        session_destroy();
+        header("Location: /utilisateur/login");
         exit;
     }
+    
 
     // Méthode pour supprimer un utilisateur (admin uniquement)
     public function deleteUtilisateur($id): void

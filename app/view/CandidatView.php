@@ -4,129 +4,156 @@ namespace App\View;
 
 class CandidatView
 {
+    private function safe(?string $value): string
+    {
+        return htmlspecialchars($value ?? '');
+    }
+
     public function renderDashboard(array $donnees): void
     {
-
+        echo "<section class='dashboard'>";
         $this->renderProfil($donnees['profil']);
+        $this->renderUploadForm();
+        $this->renderEditForm($donnees['profil']);
+        $this->renderDeleteButton();
         $this->renderAnnonces($donnees['annonces']);
-        $this->renderCandidatures($donnees['candidatures']);
-   
+        $this->renderSuiviCandidatures($donnees['candidatures']);
+        echo "</section>";
     }
 
     public function renderProfil(array $profil): void
     {
-        echo "<section class='profil'>";
+        echo "<section class='profile-header'>";
+        echo "<div class='photo'>";
+        $photo = $this->safe($profil['photo_profil'] ?? 'assets/images/default.jpg');
+        echo "<img src='/$photo' alt='Photo de profil' class='photo-profil'>";
+        echo "</div>";
 
-        echo "<h2>👤 Bienvenue</h2>";
-        echo "<section class='infos'>";
-            echo "<section class='info-personnel'>";
-                echo "<p><strong>Nom :</strong> " . htmlspecialchars($profil['nom']) . "</p>";
-                echo "<p><strong>Email :</strong> " . htmlspecialchars($profil['email']) . "</p>";
-                echo "<p><strong>Mot de passe :</strong> " . htmlspecialchars($profil['mot_de_passe']) . "</p>";
-                echo "<p><strong>Téléphone :</strong> " . htmlspecialchars($profil['téléphone']) . "</p>";
-                echo "<p><strong>Ville :</strong> " . htmlspecialchars($profil['ville']) . "</p>";
-            echo "</section><hr>";
+        echo "<div class='info'>";
+        echo "<h2>" . $this->safe($profil['prenom']) . " " . $this->safe($profil['nom']) . "</h2>";
+        echo "<p class='job-title'>" . $this->safe($profil['poste']) . "</p>";
+        echo "</div>";
+        echo "</section>";
 
-            // 📤 Formulaire d’upload de photo
-            echo "<section class='CV'>";
-                echo "<form method='POST' enctype='multipart/form-data' action='candidat/uploadPhoto'>";
-                echo "<input type='file' name='photo' accept='image/*'>";
-                echo "<button type='submit'>Envoyer</button>";
-                echo "</form>";
-            echo "</section><hr>";
+        echo "<section class='details'>";
+        echo "<div class='field'><label>Email</label><p>" . $this->safe($profil['email']) . "</p></div>";
+        echo "<div class='field'><label>Téléphone</label><p>" . $this->safe($profil['telephone']) . "</p></div>";
+        echo "<div class='field'><label>Ville</label><p>" . $this->safe($profil['ville']) . "</p></div>";
+        echo "</section>";
 
-        
-        echo "<section class='photo'>";
-            // 🔄 Utilisation de 'photo_profil' comme nom de la clé
-            $photo = !empty($profil['photo_profil']) ? htmlspecialchars($profil['photo_profil']) : 'default.jpg';
-            echo "<img src='" . $photo . "' alt='Photo de profil' />";
-            
-            echo "<span class='nom-utilisateur'>" . htmlspecialchars($profil['nom']) . "</span>";
-            echo "</section><hr>";
-
-
+        if (!empty($profil['cv'])) {
+            echo "<section class='cv-section'>";
+            echo "<div class='icon'>📄</div>";
+            echo "<div class='cv-info'>";
+            echo "<p>CV ajouté</p>";
+            echo "<p class='date'>" . $this->safe($profil['date_cv'] ?? '') . "</p>";
+            echo "</div>";
+            echo "</section>";
+        }
     }
-    
-public function renderUploadForm(): void
-{
-    echo "<section class='upload-cv'>";
-    echo "<h2>📄 Télécharger mon CV</h2>";
-    echo "<form method='POST' enctype='multipart/form-data' action='/candidat/upload-cv'>
-        <input type='file' name='cv' accept='.pdf,.doc,.docx' />
-        <button type='submit'>Enregistrer</button>
-    </form>";
-    echo "</section><hr>";
-}
 
-    
+    public function renderUploadForm(): void
+    {
+        echo "<section class='upload-cv'>";
+        echo "<h2>📄 Télécharger mon CV</h2>";
+        echo "<form method='POST' enctype='multipart/form-data' action='/candidat/upload-cv'>
+                <input type='file' name='cv' accept='.pdf,.doc,.docx' required />
+                <button type='submit'>Enregistrer</button>
+            </form>";
+        echo "</section><hr>";
+
+        echo "<section class='upload-photo'>";
+        echo "<h2>🖼️ Photo de profil</h2>";
+        echo "<form method='POST' enctype='multipart/form-data' action='/candidat/uploadPhoto'>
+                <input type='file' name='photo' accept='image/*' required />
+                <button type='submit'>Envoyer</button>
+            </form>";
+        echo "</section><hr>";
+    }
+
+    public function renderEditForm(array $profil): void
+    {
+        echo "<section class='modifier-profil'>";
+        echo "<h2>✏️ Modifier mes informations</h2>";
+        echo "<form method='POST' action='/candidat/update'>
+            <label>Nom : <input name='nom' value='" . $this->safe($profil['nom']) . "' /></label><br>
+            <label>Prénom : <input name='prenom' value='" . $this->safe($profil['prenom']) . "' /></label><br>
+            <label>Email : <input name='email' value='" . $this->safe($profil['email']) . "' /></label><br>
+            <label>Téléphone : <input name='telephone' value='" . $this->safe($profil['telephone']) . "' /></label><br>
+            <label>Ville : <input name='ville' value='" . $this->safe($profil['ville']) . "' /></label><br>
+            <label>Poste : <input name='poste' value='" . $this->safe($profil['poste']) . "' /></label><br>
+            <button type='submit'>💾 Enregistrer</button>
+        </form>";
+        echo "</section><hr>";
+    }
+
+    public function renderDeleteButton(): void
+    {
+        echo "<section class='supprimer-profil'>";
+        echo "<form method='POST' action='/candidat/delete'>";
+        echo "<button type='submit' onclick='return confirm(\"Supprimer mon profil ?\")'>🗑️ Supprimer mon compte</button>";
+        echo "</form>";
+        echo "</section><hr>";
+    }
+
     public function renderAnnonces(array $annonces): void
     {
         echo "<section class='annonces'>";
-        echo "<h2>📢 Annonces Disponibles</h2>";
-        if (empty($annonces)) {
-            echo "<p>Aucune annonce disponible pour le moment.</p>";
+            echo "<h2>📢 Annonces Disponibles</h2>";
+            if (empty($annonces)) {
+                echo "<p>Aucune annonce disponible pour le moment.</p>";
+            } else {
+
+                foreach ($annonces as $annonce) {
+                    echo "<div class='detail-annonce'>";
+                
+                    // Résumé de l'annonce
+                    echo "<h3>" . $this->safe($annonce['titre'] ?? 'Sans titre') . "</h3>";
+                    echo "<p><strong>Description :</strong> " . $this->safe($annonce['description'] ?? '') . "</p>";
+                    echo "<p><strong>Lieu :</strong> " . $this->safe($annonce['localisation'] ?? $annonce['lieu'] ?? 'Non précisé') . "</p>";
+                
+                    // Formulaire de candidature
+                    echo "<form method='POST' action='/candidat/postuler?id=" . $this->safe($annonce['id'] ?? '') . "'>";
+                    echo "<button class='btn-offre' type='submit'>POSTULER</button>";
+                    echo "</form>";
+                
+                    echo "</div><hr>";
+                      
+                    // Bouton déroulant
+                    echo "<button class='toggle-details'>";
+                    echo "<img class='icon' src='assets/images/fleche-bas.png' alt='Flèche déroulante'>";
+                    echo "</button>";
+                }
+                
+            }
+        echo "</section>";
+    }
+
+    public function renderSuiviCandidatures(array $candidatures): void
+    {
+        echo "<section class='candidatures'>";
+        echo "<h2>📊 Suivi de mes candidatures</h2>";
+        if (empty($candidatures)) {
+            echo "<p>Aucune candidature envoyée.</p>";
         } else {
-            foreach ($annonces as $annonce) {
-                echo "<div class='annonce'>";
-                echo "<h3>{$annonce['titre']}</h3>";
-                echo "<p><strong>Description :</strong> {$annonce['description']}</p>";
-                echo "<p><strong>Lieu :</strong> {$annonce['lieu']}</p>";
+            foreach ($candidatures as $candidature) {
+                echo "<div class='candidature'>";
+                echo "<h3>" . $this->safe($candidature['titre'] ?? 'Sans titre') . " - " . $this->safe($candidature['reference'] ?? 'Réf. inconnue') . "</h3>";
+                echo "<p><strong>Date :</strong> " . $this->safe($candidature['date_publication'] ?? 'Non renseignée') . "</p>";
+                echo "<p><strong>Lieu :</strong> " . $this->safe($candidature['localisation'] ?? 'Non précisé') . "</p>";
+                echo "<p><strong>Contrat :</strong> " . $this->safe($candidature['type_contrat'] ?? 'Non précisé') . "</p>";
+                echo "<p><strong>Salaire :</strong> " . $this->safe($candidature['salaire'] ?? 'Non précisé') . "</p>";
+
+                $etapes = ['Envoyée', 'Consultée', 'Entretien', 'Réponse'];
+                echo "<div class='timeline'>";
+                foreach ($etapes as $etape) {
+                    $active = ($etape === ($candidature['statut'] ?? '')) ? 'active' : '';
+                    echo "<span class='etape $active'>$etape</span>";
+                }
+                echo "</div>";
                 echo "</div><hr>";
             }
         }
         echo "</section>";
     }
-
-    public function renderCandidatures(array $candidatures): void
-    {
-        echo "<section class='candidatures'>";
-        echo "<h2>📬 Mes Candidatures</h2>";
-        if (empty($candidatures)) {
-            echo "<p>Aucune candidature envoyée.</p>";
-        } else {
-            echo "<ul>";
-            foreach ($candidatures as $candidature) {
-                echo "<strong>{$candidature['poste']}</strong> ";
-                echo "Localisation: {$candidature['localisation']}";
-                echo "Référence : {$candidature['reference']}";
-                echo "Type de contrat : {$candidature['type de contrat']}"; 
-                echo "Salaire : {$candidature['salaire']}";
-                echo "Date de création : {$candidature['date de création']}"; 
-
-
-                echo "Statut : {$candidature['statut']}";
-            }
-            echo "</ul>";
-        }
-        echo "</section>";
-    }
-
-    public function renderEditForm(array $profil): void
-{
-    echo "<section class='modifier-profil'>";
-    echo "<h2>✏️ Modifier mes informations</h2>";
-    echo "<form method='POST' action='/candidat/update'>
-        <label>Nom : <input name='nom' value='{$profil['nom']}' /></label><br>
-        <label>Email : <input name='email' value='{$profil['email']}' /></label><br>";
-    ?>
-        <input type="image" src="assets/images/stylo-modif.png" alt="Modifier" class="btn-image">
-    <?php
-    echo "</form>";
-
-    echo "</section><hr>";
-}
-
-public function renderDeleteButton(): void
-{
-    echo "<section class='supprimer-profil'>";
-    echo "<form method='POST' action='/candidat/delete'>";
-    
-    // 🗑️ Image cliquable à la place du bouton texte
-    echo "<input type='image' src='assets/images/poubelle.png' alt='Supprimer' class='btn-sup' onclick='return confirm(\"Supprimer mon profil ?\")'>";
-
-    echo "</form>";
-    echo "</section><hr>";
-}
-
-
 }

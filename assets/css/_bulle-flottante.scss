@@ -1,3 +1,5 @@
+@use "vars";
+
 .bulle {
     margin: 0;
     padding: 0;
@@ -81,7 +83,7 @@
     margin-left: 10px;
     border-radius: 50%;
     background-color:white;
-    border: 1px solid $beige;
+    border: 1px solid vars.$beige;
     color: white;
     display: flex;
     align-items: center;

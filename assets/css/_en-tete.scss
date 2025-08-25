@@ -1,3 +1,5 @@
+@use "vars";
+
 // menu public 
 #menu-public {
     position: absolute;
@@ -42,11 +44,11 @@
     .nav-principal{
         position: relative;
         margin: 2rem;
-        @include flexbox(center, false, space-between);
+        @include vars.flexbox(center, false, space-between);
         gap: 3rem;
         a {
             text-decoration: none;
-            @include tcsTitre;
+            @include vars.tcsTitre;
             font-size: 1.3rem;
             color: black;
             letter-spacing: 0.2rem;

@@ -2,28 +2,41 @@
 namespace App\View;
 
 class AnnonceView {
-    public function renderListe(array $annonces) {
-        echo "<h2>📋 Liste des annonces</h2>";
-        echo "<a href='?action=annonce&step=create' class='btn btn-primary'>➕ Nouvelle annonce</a><br><br>";
+    public function renderListe(array $annonces): void
+{
+    echo "<section class='annonces'>";
+    echo "<h2>📢 Annonces Disponibles</h2>";
+
+    foreach ($annonces as $annonce) {
+        echo "<div class='annonce'>";
         
-        if (empty($annonces)) {
-            echo "<p>Aucune annonce disponible.</p>";
-            return;
-        }
-        
-        foreach ($annonces as $a) {
-            echo "<div class='annonce-item'>";
-            echo "<strong>{$a['titre']}</strong> - {$a['localisation']} ";
-            echo "<span class='status'>[{$a['statut']}]</span><br>";
-            echo "<small>Publié le : {$a['date_publication']}</small><br>";
-            echo "<div class='actions'>";
-            echo "<a href='?action=annonce&step=view&id={$a['id']}'>👁️ Voir</a> | ";
-            echo "<a href='?action=annonce&step=update&id={$a['id']}'>✏️ Modifier</a> | ";
-            echo "<a href='?action=annonce&step=delete&id={$a['id']}' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cette annonce ?\")'>🗑️ Supprimer</a>";
-            echo "</div>";
-            echo "</div><hr>";
-        }
+        // Bloc résumé
+        echo "<div class='resume'>";
+        echo "<h3>" . htmlspecialchars($annonce['titre'] ?? 'Sans titre') . "</h3>";
+        echo "<p><strong>Lieu :</strong> " . htmlspecialchars($annonce['localisation'] ?? '') . "</p>";
+        echo "<p><strong>Contrat :</strong> " . htmlspecialchars($annonce['type_contrat'] ?? '') . "</p>";
+        echo "<p><strong>Salaire :</strong> " . htmlspecialchars($annonce['salaire'] ?? '') . "</p>";
+        echo "<p><strong>Publié le :</strong> " . htmlspecialchars($annonce['date_publication'] ?? '') . "</p>";
+        echo "<button class='toggle-details'>Voir plus</button>";
+        echo "<form method='POST' action='/candidat/postuler?id=" . htmlspecialchars($annonce['id']) . "'>";
+        echo "<button type='submit'>📨 Postuler</button>";
+        echo "</form>";
+        echo "</div>";
+
+        // Bloc détails masqué
+        echo "<div class='details'>";
+        echo "<h4>Description</h4><p>" . htmlspecialchars($annonce['description'] ?? '') . "</p>";
+        echo "<h4>Missions</h4><p>" . htmlspecialchars($annonce['missions'] ?? '') . "</p>";
+        echo "<h4>Profil</h4><p>" . htmlspecialchars($annonce['profil'] ?? '') . "</p>";
+        echo "<h4>Avantages</h4><p>" . htmlspecialchars($annonce['avantages'] ?? '') . "</p>";
+        echo "</div>";
+
+        echo "</div>";
     }
+
+    echo "</section>";
+}
+
 
     public function renderDetails(array $a) {
         echo "<div class='annonce-details'>";
@@ -212,3 +225,6 @@ class AnnonceView {
         </style>";
     }
 }
+?>
+
+echo "<script src="./assets/js/annonce.js"></script>";

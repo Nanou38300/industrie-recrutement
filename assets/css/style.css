@@ -385,50 +385,6 @@ nav.menu a.active {
     padding: 0.8rem;
   }
 }
-.profil {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 3rem;
-}
-.profil .infos {
-  margin: 7rem;
-}
-.profil .photo {
-  margin: 7rem;
-}
-.profil .upload-cv {
-  background-color: #C9AB89;
-  height: 15rem;
-  width: 25rem;
-}
-.profil .upload-cv h2 {
-  text-align: center;
-  margin: 3rem;
-}
-.profil .upload-cv form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-.profil .upload-cv form button {
-  border: 1px solid #1A3E38;
-  height: 2rem;
-  width: 7rem;
-  font-family: "BEBAS NEUVE";
-  border: none;
-}
-
-.modifier-profil .btn-image {
-  height: 2rem;
-}
-
-.supprimer-profil .btn-sup {
-  height: 2rem;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -1728,12 +1684,182 @@ a.scroll-link * {
   background-color: #baad9a;
 }
 
+.bloc {
+  margin: 1rem 1rem 2rem 15rem;
+  border: 4px solid #C9AB89;
+  display: flex;
+  flex-direction: row;
+}
+.bloc .profile-header {
+  margin: 5rem 1rem 2rem 5rem;
+}
+.bloc .profile-header .photo {
+  border: 4px solid #C9AB89;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20rem;
+  width: 20rem;
+}
+.bloc .profile-header .info {
+  margin: 4rem 0 2rem 4rem;
+}
+.bloc .profil {
+  border: 4px solid #C9AB89;
+}
+.bloc .profil .photo {
+  border: 4px solid #C9AB89;
+  display: flex;
+  align-items: center;
+}
+.bloc .profil .details {
+  border: 4px solid #C9AB89;
+  margin: 9rem 0;
+  background: #594eed;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.upload-cv {
+  background: #C9AB89;
+  margin: 1rem 1rem 2rem 15rem;
+  height: 10rem;
+  width: 30rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modifier-profil {
+  margin: 1rem 1rem 2rem 15rem;
+}
+
+.upload-photo {
+  margin: 1rem 1rem 2rem 15rem;
+}
+
+.candidature {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.candidature h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #1c3b2f;
+}
+.candidature p {
+  margin: 5px 0;
+  color: #333;
+  font-size: 0.95rem;
+}
+.candidature p strong {
+  color: #1c3b2f;
+}
+.candidature .timeline {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  position: relative;
+  padding: 10px 0;
+}
+.candidature .timeline::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ccc;
+  z-index: 0;
+}
+.candidature .timeline .etape {
+  position: relative;
+  z-index: 1;
+  background-color: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #333;
+  border: 2px solid #ccc;
+  transition: all 0.3s ease;
+}
+.candidature .timeline .etape.active {
+  background-color: #007b5e;
+  color: white;
+  border-color: #007b5e;
+  font-weight: bold;
+}
+
+.annonces {
+  padding: 40px;
+  background-color: rgba(145, 144, 144, 0.131);
+  margin: 1rem 1rem 2rem 15rem;
+}
+.annonces h2 {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+  color: #1c3b2f;
+}
+.annonces p {
+  font-size: 1rem;
+  color: #333;
+}
+.annonces .detail-annonce {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 1rem 1rem 2rem 1rem;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 25px;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.annonces .detail-annonce .btn-offre {
+  background-color: #C9AB89;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  height: 2.5rem;
+  width: 8rem;
+}
+
+.toggle-details {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.toggle-details .icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+.annonce.active .toggle-details .icon {
+  transform: rotate(180deg);
+}
+
 .bulle {
   margin: 0;
   padding: 0;
   height: 100vh;
   font-family: sans-serif;
 }
+
 .bulle .floating-bubble {
   position: fixed;
   bottom: 50px;
@@ -1742,6 +1868,7 @@ a.scroll-link * {
   align-items: center;
   z-index: 999;
 }
+
 .bulle .actions {
   display: flex;
   flex-direction: row-reverse; /* ✅ les éléments partent vers la gauche */
@@ -1751,11 +1878,13 @@ a.scroll-link * {
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 }
+
 .bulle .actions.show {
   opacity: 1;
   transform: translateX(0); /* ✅ s’anime à sa position */
   pointer-events: auto;
 }
+
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -1784,16 +1913,20 @@ a.scroll-link * {
   animation: pulse 2s infinite;
   transition: all 0.3s;
 }
+
 .bulle .main-button:hover {
   border: 1px solid white;
 }
+
 .bulle .main-button:active {
   box-shadow: 4px 4px 12px #c5c5c5, -4px -4px 12px #ffffff;
 }
+
 .bulle .main-button img {
   width: 28px;
   height: 28px;
 }
+
 .bulle .action-button {
   width: 50px;
   height: 50px;
@@ -1809,13 +1942,16 @@ a.scroll-link * {
   cursor: pointer;
   transition: transform 0.3s;
 }
+
 .bulle .action-button:hover {
   transform: scale(1.1);
   background-color: white;
 }
+
 .bulle a.action-button {
   text-decoration: none;
 }
+
 .bulle .vcf-notice {
   position: fixed;
   bottom: 80px;
@@ -1866,6 +2002,7 @@ a.scroll-link * {
   border: 2px solid black;
   height: 15rem;
 }
+
 .footer-complet img {
   background: rgb(255, 255, 255);
   position: relative;
@@ -1873,20 +2010,24 @@ a.scroll-link * {
      object-fit: cover;
   height: 6rem;
 }
+
 .footer-complet h4 {
   font-family: "Bebas Neue";
   font-size: 1.5rem;
 }
+
 .footer-complet .contact {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .footer-complet nav {
   position: relative;
   display: flex;
   flex-direction: column;
 }
+
 .footer-complet nav a {
   text-decoration: none;
   font-family: "Bebas Neue";
@@ -1895,11 +2036,13 @@ a.scroll-link * {
   color: black;
   letter-spacing: 0.2rem;
 }
+
 .footer-complet .reseaux {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .footer-complet .reseaux img {
   height: 3rem;
   width: 3rem;
@@ -1913,6 +2056,7 @@ a.scroll-link * {
   padding: 1rem;
   gap: 1rem;
 }
+
 .mentions a {
   text-decoration: none;
 }

@@ -17,5 +17,9 @@ document.querySelectorAll('.toggle-details').forEach(button => {
   });
 });
 
+
+
+
+
 </script>
 

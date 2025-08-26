@@ -68,6 +68,8 @@ try {
                     'candidatures'     => $ctrl->listCandidatures(),
                     'candidature'      => $ctrl->viewCandidature((int)$id),
                     'calendrier'       => $ctrl->calendrier(),
+                    'logout'           => $ctrl->logout(),
+
                     default            => $ctrl->dashboard($_SESSION['utilisateur']['id']),
                 };
                 break;

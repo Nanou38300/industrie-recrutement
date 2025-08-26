@@ -98,62 +98,110 @@ class CandidatView
 
     public function renderAnnonces(array $annonces): void
     {
+        
+        if (isset($_SESSION['message'])) {
+            echo "<div class='alert-success'>" . $_SESSION['message'] . "</div>";
+            unset($_SESSION['message']);
+        }
         echo "<section class='annonces'>";
-            echo "<h2>📢 Annonces Disponibles</h2>";
-            if (empty($annonces)) {
-                echo "<p>Aucune annonce disponible pour le moment.</p>";
-            } else {
+        echo "<h2>📢 Annonces Disponibles</h2>";
 
-                foreach ($annonces as $annonce) {
-                    echo "<div class='detail-annonce'>";
-                
-                    // Résumé de l'annonce
-                    echo "<h3>" . $this->safe($annonce['titre'] ?? 'Sans titre') . "</h3>";
-                    echo "<p><strong>Description :</strong> " . $this->safe($annonce['description'] ?? '') . "</p>";
-                    echo "<p><strong>Lieu :</strong> " . $this->safe($annonce['localisation'] ?? $annonce['lieu'] ?? 'Non précisé') . "</p>";
-                
-                    // Formulaire de candidature
-                    echo "<form method='POST' action='/candidat/postuler?id=" . $this->safe($annonce['id'] ?? '') . "'>";
-                    echo "<button class='btn-offre' type='submit'>POSTULER</button>";
-                    echo "</form>";
-                
-                    echo "</div><hr>";
-                      
-                    // Bouton déroulant
-                    echo "<button class='toggle-details'>";
-                    echo "<img class='icon' src='assets/images/fleche-bas.png' alt='Flèche déroulante'>";
-                    echo "</button>";
-                }
-                
+        echo "<script>
+            function toggleDetails(button) {
+                const details = button.parentElement.nextElementSibling;
+                details.style.display = details.style.display === 'block' ? 'none' : 'block';
             }
+        </script>";
+
+        if (empty($annonces)) {
+            echo "<p>Aucune annonce disponible pour le moment.</p>";
+        } else {
+            foreach ($annonces as $a) {
+                echo "<div class='annonce-wrapper'>";
+
+                // Résumé cliquable
+                echo "<div class='annonce-resume'>";
+                    echo "<h3>" . $this->safe($a['titre'] ?? 'Titre non renseigné') . "</h3>";
+                    echo "<p><strong>Lieu :</strong> " . $this->safe($a['localisation']) . " (" . $this->safe($a['code_postale']) . ")</p>";
+                    echo "<p><strong>Type de contrat :</strong> " . $this->safe($a['type_contrat']) . "</p>";
+                    echo "<p><strong>Salaire :</strong> " . $this->safe($a['salaire']) . "</p>";
+                    echo "<p><strong>Date de publication :</strong> " . $this->safe($a['date_publication']) . "</p>";
+                    echo "<p><strong>Référence :</strong> " . $this->safe($a['reference']) . "</p>";
+
+                        echo "<button onclick='toggleDetails(this)' class='btn-toggle'>";
+                        echo "<img class='img-deroulante' src='/assets/images/fleche-bas.png' alt='Voir les détails'>";
+                        echo "</button>";
+                        
+                        echo "<form method='POST' action='/candidat/postuler?id=" . $this->safe($a['id']) . "'>";
+                        echo "<button class='btn-offre' type='submit'>POSTULER</button>";
+                        echo "</form>";
+                        
+          
+                echo "</div>";
+
+                // Bloc caché
+                echo "<div class='annonce-details' style='display: none;'>";
+                    echo "<p><strong>Description :</strong> " . $this->safe($a['description']) . "</p>";
+                    echo "<p><strong>Missions :</strong> " . $this->safe($a['mission']) . "</p>";
+                    echo "<p><strong>Profil recherché :</strong> " . $this->safe($a['profil_recherche']) . "</p>";
+                    echo "<p><strong>Avantages :</strong> " . $this->safe($a['avantages']) . "</p>";
+                    echo "<form method='POST' action='/candidat/postuler?id=" . $this->safe($a['id']) . "'>";
+
+                    echo "</form>";
+                echo "</div>";
+
+                echo "</div><hr>";
+            }
+        }
+
         echo "</section>";
     }
 
     public function renderSuiviCandidatures(array $candidatures): void
     {
         echo "<section class='candidatures'>";
-        echo "<h2>📊 Suivi de mes candidatures</h2>";
-        if (empty($candidatures)) {
-            echo "<p>Aucune candidature envoyée.</p>";
-        } else {
-            foreach ($candidatures as $candidature) {
-                echo "<div class='candidature'>";
-                echo "<h3>" . $this->safe($candidature['titre'] ?? 'Sans titre') . " - " . $this->safe($candidature['reference'] ?? 'Réf. inconnue') . "</h3>";
-                echo "<p><strong>Date :</strong> " . $this->safe($candidature['date_publication'] ?? 'Non renseignée') . "</p>";
-                echo "<p><strong>Lieu :</strong> " . $this->safe($candidature['localisation'] ?? 'Non précisé') . "</p>";
-                echo "<p><strong>Contrat :</strong> " . $this->safe($candidature['type_contrat'] ?? 'Non précisé') . "</p>";
-                echo "<p><strong>Salaire :</strong> " . $this->safe($candidature['salaire'] ?? 'Non précisé') . "</p>";
+            echo "<h2>Suivi de mes candidatures</h2>";
+            if (empty($candidatures)) {
+                echo "<p>Aucune candidature envoyée.</p>";
+            } else {
+                foreach ($candidatures as $candidature) {
+                    echo "<div class='candidature'>";
+                        echo "<h3>" . $this->safe($candidature['titre'] ?? 'Sans titre') . " - " . $this->safe($candidature['reference'] ?? 'Réf. inconnue') . "</h3>";
+                        echo "<p><strong>Date :</strong> " . $this->safe($candidature['date_publication'] ?? 'Non renseignée') . "</p>";
+                        echo "<p><strong>Lieu :</strong> " . $this->safe($candidature['localisation'] ?? 'Non précisé') . "</p>";
+                        echo "<p><strong>Contrat :</strong> " . $this->safe($candidature['type_contrat'] ?? 'Non précisé') . "</p>";
+                        echo "<p><strong>Salaire :</strong> " . $this->safe($candidature['salaire'] ?? 'Non précisé') . "</p>";
 
-                $etapes = ['Envoyée', 'Consultée', 'Entretien', 'Réponse'];
-                echo "<div class='timeline'>";
-                foreach ($etapes as $etape) {
-                    $active = ($etape === ($candidature['statut'] ?? '')) ? 'active' : '';
-                    echo "<span class='etape $active'>$etape</span>";
-                }
-                echo "</div>";
-                echo "</div><hr>";
-            }
+                                
+                    echo "<div class='suivi-candidature'>";
+                    echo "<h4>SUIVI DE LA CANDIDATURE</h4>";
+                    echo "<p>Le processus de recrutement prend entre 21 et 37 jours. Vous serez informé à chaque étape.</p>";
+                    echo "<div class='timeline-wrapper'>";
+                    echo "<div class='timeline-bar'></div>";
+                    echo "<div class='timeline'>";
+                    
+                    $etapes = ['Envoyée', 'Consultée', 'Entretien', 'Réponse'];
+                    $statutActuel = $candidature['statut'] ?? '';
+                    
+                    $reached = true;
+                    foreach ($etapes as $etape) {
+                        $class = '';
+                        if ($etape === $statutActuel) {
+                            $class = 'active';
+                            $reached = false;
+                        } elseif ($reached) {
+                            $class = 'completed';
+                        }
+                        echo "<div class='etape $class'>$etape</div>";
+                    }
+                    
+                    echo "</div>";
+                    echo "</div>";
+                    
+                    echo "</div>";
+                    echo "</div><hr>";
         }
+    }
         echo "</section>";
     }
 }

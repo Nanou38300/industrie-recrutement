@@ -1743,62 +1743,6 @@ a.scroll-link * {
   margin: 1rem 1rem 2rem 15rem;
 }
 
-.candidature {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-.candidature h3 {
-  font-size: 1.3rem;
-  margin-bottom: 10px;
-  color: #1c3b2f;
-}
-.candidature p {
-  margin: 5px 0;
-  color: #333;
-  font-size: 0.95rem;
-}
-.candidature p strong {
-  color: #1c3b2f;
-}
-.candidature .timeline {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  position: relative;
-  padding: 10px 0;
-}
-.candidature .timeline::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: #ccc;
-  z-index: 0;
-}
-.candidature .timeline .etape {
-  position: relative;
-  z-index: 1;
-  background-color: #f5f5f5;
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  color: #333;
-  border: 2px solid #ccc;
-  transition: all 0.3s ease;
-}
-.candidature .timeline .etape.active {
-  background-color: #007b5e;
-  color: white;
-  border-color: #007b5e;
-  font-weight: bold;
-}
-
 .annonces {
   padding: 40px;
   background-color: rgba(145, 144, 144, 0.131);
@@ -1807,26 +1751,20 @@ a.scroll-link * {
 .annonces h2 {
   font-size: 1.6rem;
   margin-bottom: 30px;
-  color: #1c3b2f;
 }
 .annonces p {
   font-size: 1rem;
-  color: #333;
 }
-.annonces .detail-annonce {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+.annonces .annonce-wrapper {
   margin: 1rem 1rem 2rem 1rem;
   background: #fff;
   border-radius: 5px;
   border: 1px solid #ddd;
   padding: 20px;
   margin-bottom: 25px;
-  align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-.annonces .detail-annonce .btn-offre {
+.annonces .annonce-wrapper .btn-offre {
   background-color: #C9AB89;
   border-radius: 5px;
   color: white;
@@ -1834,23 +1772,189 @@ a.scroll-link * {
   height: 2.5rem;
   width: 8rem;
 }
+.annonces .annonce-wrapper .annonce-details {
+  display: none;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-left: 3px solid #C9AB89;
+  transition: all 0.3s ease;
+}
+.annonces .annonce-wrapper .annonce-details p {
+  display: flex;
+  flex-direction: column;
+}
+.annonces .annonce-wrapper .annonce-details p strong {
+  margin: 2rem 2rem 2rem 0;
+}
+.annonces .annonce-wrapper .annonce-resume {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.annonces .annonce-wrapper .annonce-resume h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.annonces .annonce-wrapper .annonce-resume p {
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.annonces .annonce-wrapper .annonce-resume .img-deroulante {
+  height: 1rem;
+}
 
-.toggle-details {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
+.candidatures {
+  background-color: white;
+  border: 2px solid #C9AB89;
+  border-radius: 8px;
+  padding: 25px;
+  margin: 1rem 1rem 2rem 15rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.candidatures h2 {
+  color: #1A3E38;
+  text-align: center;
+  margin: 2rem;
+}
+.candidatures .suivi-candidature {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #fdfdfd;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.candidatures .timeline-wrapper {
+  position: relative;
+  margin-top: 1rem;
+  padding: 1rem 0;
+}
+.candidatures .timeline-bar {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ccc;
+  z-index: 0;
 }
-.toggle-details .icon {
-  width: 24px;
-  height: 24px;
-  transition: transform 0.3s ease;
+.candidatures .timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
 }
-.annonce.active .toggle-details .icon {
-  transform: rotate(180deg);
+.candidatures .etape {
+  background-color: #eee;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  min-width: 100px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.candidatures .etape.completed {
+  background-color: #C9AB89;
+  color: white;
+  font-weight: bold;
+}
+.candidatures .etape.active {
+  background-color: #C9AB89;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.profil-admin {
+  margin: 1rem 1rem 2rem 15rem;
+}
+
+.form-annonce {
+  background-color: #fdfaf6;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.bloc-form-annonce h2 {
+  color: #1A3E38;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.bloc-form-annonce form {
+  gap: 1.5rem;
+}
+
+.bloc-form-annonce label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  color: #1A3E38;
+}
+
+.bloc-form-annonce input,
+.bloc-form-annonce select,
+.bloc-form-annonce textarea {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+}
+
+.bloc-form-annonce textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.bloc-form-annonce button[type=submit] {
+  background-color: #C9AB89;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bloc-form-annonce button[type=submit]:hover {
+  background-color: #b08f6e;
+}
+
+.bloc-form-annonce {
+  width: 80%;
+  margin: auto;
+}
+.bloc-form-annonce textarea {
+  resize: vertical;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.annonces-admin {
+  margin: 1rem 1rem 2rem 15rem;
+}
+
+.candidatures-admin {
+  margin: 1rem 1rem 2rem 15rem;
+}
+
+.calendrier-admin {
+  margin: 1rem 1rem 2rem 15rem;
 }
 
 .bulle {

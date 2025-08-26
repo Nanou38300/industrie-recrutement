@@ -107,29 +107,29 @@ class CandidatController
         }
     }
 
-
-        public function listAnnonces(): void
-    {
-        $annonces = $this->model->getAnnoncesDisponibles();
-        $this->view->renderAnnonces($annonces);
-    }
-
-
     public function postuler(int $id): void
     {
         $this->redirectIfNotConnected();
         $this->model->envoyerCandidature($_SESSION['utilisateur']['id'], $id);
-        header("Location: /candidat/candidatures");
+        $_SESSION['message'] = "✅ Candidature envoyée avec succès.";
+        header("Location: /candidat/annonces");
         exit;
     }
+    
 
     public function renderSuiviCandidatures(): void
+    {
+        $this->redirectIfNotConnected();
+        $id = $_SESSION['utilisateur']['id'];
+        $candidatures = $this->model->getCandidatures($id);
+        $this->view->renderSuiviCandidatures($candidatures);
+    }
+
+    public function listAnnonces(): void
 {
     $this->redirectIfNotConnected();
-    $id = $_SESSION['utilisateur']['id'];
-    $candidatures = $this->model->getCandidatures($id);
-    $this->view->renderSuiviCandidatures($candidatures);
+    $annonces = $this->model->getAnnoncesDisponibles();
+    $this->view->renderAnnonces($annonces);
 }
-
 
 }

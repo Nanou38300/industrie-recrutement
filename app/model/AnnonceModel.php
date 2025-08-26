@@ -40,16 +40,25 @@ class AnnonceModel
     // ➕ Créer une annonce
     public function create(array $data): bool
     {
+        // Vérification des données essentielles
+        if (empty($data['titre']) || empty($data['description']) || empty($data['id_administrateur'])) {
+            return false;
+        }
+    
+        // Préparation de la requête SQL
         $stmt = $this->db->prepare("
             INSERT INTO {$this->table} (titre, description, date_publication, id_administrateur)
-            VALUES (:titre, :description, NOW(), :id_admin)
+            VALUES (:titre, :description, NOW(), :id_administrateur)
         ");
+    
+        // Exécution avec les données sécurisées
         return $stmt->execute([
-            'titre'       => $data['titre'],
-            'description' => $data['description'],
-            'id_admin'    => $data['id_administrateur']
+            'titre'            => $data['titre'],
+            'description'      => $data['description'],
+            'id_administrateur'=> $data['id_administrateur']
         ]);
     }
+    
 
     // ✏️ Modifier une annonce
     public function update(int $id, array $data): bool

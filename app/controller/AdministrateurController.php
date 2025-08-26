@@ -100,6 +100,12 @@ class AdministrateurController
         echo "<div class='alert alert-danger'>❌ Échec de la suppression du profil.</div>";
     }
 }
+public function logout(): void
+{
+    session_destroy();
+    header("Location: /");
+    exit;
+}
 
     // 📊 Tableau de bord
     public function dashboard(): void

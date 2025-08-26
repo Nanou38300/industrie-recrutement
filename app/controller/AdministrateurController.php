@@ -45,17 +45,27 @@ class AdministrateurController
     public function profil(): void
     {
         $this->redirectIfNotAdmin();
-        $id = $_SESSION['utilisateur']['id'];
-        $profil = $this->userModel->getById($id);
+        $idAdmin = $_SESSION['utilisateur']['id'];
+    
+        $infos = $this->userModel->getById($idAdmin);
+        $statsAnnonces = $this->annonceModel->getStatsByAdmin($idAdmin);
+        $annoncesStats = $this->annonceModel->getAnnoncesAvecStats($idAdmin);
 
-        // Suivi calendrier
-        $mois = date('m');
-        $annee = date('Y');
-        $entretiens = $this->entretienModel->getByMonth((int)$mois, (int)$annee);
-
-        $this->view->renderProfil($profil);
-        $this->calendarView->renderCalendrier($entretiens, $mois, $annee);
+        $rendezVous = $this->entretienModel->getByAdmin($idAdmin); // ← ici
+        $jour = new \DateTimeImmutable();
+        $debutSemaine = $jour->modify('monday this week')->format('Y-m-d');
+        $finSemaine   = $jour->modify('sunday this week')->format('Y-m-d');
+        
+        $entretiensSemaine = $this->entretienModel->getEntretiensSemaine($idAdmin, $debutSemaine, $finSemaine);
+        
+        $this->view->renderProfil([
+            'infos' => $infos,
+            'statsAnnonces' => $statsAnnonces,
+            'rendezVous' => $rendezVous
+        ]);
     }
+    
+    
     public function editProfil(): void
     {
         $this->redirectIfNotAdmin();
@@ -110,9 +120,12 @@ class AdministrateurController
     {
         $this->redirectIfNotAdmin();
         $idAdmin = $_SESSION['utilisateur']['id'];
-        $annonces = $this->annonceModel->getByAdministrateur($idAdmin);
+        $statut = $_GET['statut'] ?? null;
+    
+        $annonces = $this->annonceModel->getByAdministrateur($idAdmin, $statut);
         $this->view->renderAnnonces($annonces);
     }
+    
 
     // ➕ Créer une annonce
     public function createAnnonce(): void
@@ -174,6 +187,25 @@ class AdministrateurController
         $candidature = $this->candidatureModel->findById($id);
         $this->view->renderDetailsCandidature($candidature);
     }
+
+    public function calendrier(): void
+{
+    $this->redirectIfNotAdmin();
+    $idAdmin = $_SESSION['utilisateur']['id'];
+
+    // Récupération des entretiens du jour
+    $aujourdHui = date('Y-m-d');
+    $entretiensDuJour = $this->entretienModel->getByDateAdmin($idAdmin, $aujourdHui);
+
+    // Récupération de l’entretien sélectionné (ex: via GET)
+    $entretienId = $_GET['id'] ?? null;
+    $entretien = $entretienId ? $this->entretienModel->findById($entretienId) : null;
+
+    // Récupération du candidat lié à l’entretien
+    $candidat = $entretien ? $this->userModel->getById($entretien['id_utilisateur']) : [];
+
+    $this->view->renderCalendrier($candidat, $entretien, $entretiensDuJour);
+}
 
     // 📅 Vue calendrier
     public function vueCalendrier(): void

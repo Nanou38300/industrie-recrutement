@@ -67,6 +67,7 @@ try {
                     'archive-annonce'  => $ctrl->archiveAnnonce((int)$id),
                     'candidatures'     => $ctrl->listCandidatures(),
                     'candidature'      => $ctrl->viewCandidature((int)$id),
+                    'calendrier'       => $ctrl->calendrier(),
                     default            => $ctrl->dashboard($_SESSION['utilisateur']['id']),
                 };
                 break;

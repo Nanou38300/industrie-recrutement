@@ -164,7 +164,7 @@ class AnnonceController {
     /**
      * Gère la mise à jour d'annonces
      */
-    public function updateAnnonce(int $id = null) {
+    public function updateAnnonce(?int $id) {
         // Si c'est une soumission POST, on traite la mise à jour
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             try {

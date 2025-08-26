@@ -14,13 +14,11 @@ function isActive($path) {
 
         if ($role === 'administrateur') {
             $menuItems = [
-                '/administrateur/profil' => 'Profil admin',
-                '/administrateur/annonces' => 'Annonces',
-                '/administrateur/create-annonce' => 'Créer une annonce',
-                '/administrateur/edit-annonce' => 'Modifier une annonce',
-                '/administrateur/candidatures' => 'Gérer les utilisateurs',
-                '/administrateur/candidature' => 'Gérer un utilisateur',
-                '/administrateur/logout' => 'Déconnexion'
+                '/administrateur/profil'        => 'Profil',
+                '/administrateur/annonces'      => 'Annonces',
+                '/administrateur/candidatures'  => 'Candidatures',
+                '/administrateur/calendrier'    => 'Calendrier',
+                '/administrateur/logout'        => 'Déconnexion'
             ];
         } elseif ($role === 'candidat') {
             $menuItems = [

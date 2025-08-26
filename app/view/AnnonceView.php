@@ -2,6 +2,49 @@
 namespace App\View;
 
 class AnnonceView {
+
+    public function renderProfil(array $data): void
+{
+    $infos = $data['infos'];
+    $stats = $data['statsAnnonces'];
+    $rendezVous = $data['rendezVous'];
+
+    echo "<section class='admin-profil'>";
+    // Bloc infos personnelles
+    echo "<div class='bloc-infos'>";
+    echo "<img src='/" . htmlspecialchars($infos['photo'] ?? 'default.jpg') . "' alt='Photo'>";
+    echo "<h2>" . htmlspecialchars($infos['nom']) . "</h2>";
+    echo "<p>" . htmlspecialchars($infos['poste']) . " - " . htmlspecialchars($infos['societe']) . "</p>";
+    echo "<p>Email : " . htmlspecialchars($infos['email']) . "</p>";
+    echo "<p>Tél : " . htmlspecialchars($infos['telephone']) . "</p>";
+    echo "<a href='/administrateur/edit-profil'>✏️ Modifier</a>";
+    echo "</div>";
+
+    // Bloc suivi d'annonces
+    echo "<div class='bloc-annonces'>";
+    echo "<h3>📊 Suivi d'annonces</h3>";
+    foreach ($stats as $stat) {
+        echo "<div class='stat-poste'>";
+        echo "<strong>" . htmlspecialchars($stat['poste']) . "</strong><br>";
+        echo "Candidatures : " . $stat['total'] . " | Non lues : " . $stat['non_lues'];
+        echo "</div>";
+    }
+    echo "</div>";
+
+    // Bloc calendrier
+    echo "<div class='bloc-calendrier'>";
+    echo "<h3>📅 Suivi de rendez-vous</h3>";
+    foreach ($rendezVous as $rdv) {
+        echo "<div class='rdv'>";
+        echo "<strong>" . htmlspecialchars($rdv['date_entretien']) . "</strong> : ";
+        echo htmlspecialchars($rdv['nom_candidat']) . " pour le poste de " . htmlspecialchars($rdv['poste']);
+        echo "</div>";
+    }
+    echo "</div>";
+    echo "</section>";
+}
+
+
     public function renderListe(array $annonces): void
 {
     echo "<section class='annonces'>";
@@ -227,4 +270,4 @@ class AnnonceView {
 }
 ?>
 
-echo "<script src="./assets/js/annonce.js"></script>";
+<script src="./assets/js/annonce.js"></script>

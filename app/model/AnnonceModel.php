@@ -74,14 +74,62 @@ class AnnonceModel
     }
 
     // 🔍 Récupérer les annonces d’un administrateur
-    public function getByAdministrateur(int $idAdmin): array
+    public function getByAdministrateur(int $idAdmin, ?string $statut = null): array
     {
-        // ❌ Erreur ici si la colonne n'existe pas
-        // $stmt = $this->db->prepare("SELECT * FROM annonce WHERE id_administrateur = ?");
+        $sql = "SELECT * FROM annonce WHERE id_administrateur = :idAdmin";
+        $params = ['idAdmin' => $idAdmin];
     
-        // ✅ Solution alternative : récupérer toutes les annonces
-        $stmt = $this->db->query("SELECT * FROM annonce ORDER BY date_publication DESC");
+        if ($statut) {
+            $sql .= " AND statut = :statut";
+            $params['statut'] = $statut;
+        }
+    
+        $sql .= " ORDER BY date_publication DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    
+    public function getAnnoncesDisponibles(): array
+    {
+    $stmt = $this->db->query("SELECT * FROM annonce WHERE statut = 'active' ORDER BY date_publication DESC");
+    return $stmt->fetchAll();
+    }
+
+    public function getStatsByAdmin(int $idAdmin): array
+{
+    $stmt = $this->db->prepare("
+        SELECT titre,
+               COUNT(c.id) AS total_candidatures,
+               SUM(CASE WHEN c.statut = 'non_lue' THEN 1 ELSE 0 END) AS non_lues
+        FROM annonce a
+        LEFT JOIN candidature c ON c.id_annonce = a.id
+        GROUP BY titre
+    ");
+    $stmt = $this->db->prepare("SELECT * FROM annonce WHERE id_administrateur = :id AND statut = :statut");
+    $stmt->execute(['id' => $idAdmin, 'statut' => 'active']);
+    
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function getAnnoncesAvecStats(int $idAdmin, int $limit = 4): array
+{
+    $stmt = $this->db->prepare("
+        SELECT a.id, a.titre,
+               COUNT(c.id) AS total_candidatures,
+               SUM(CASE WHEN c.statut = 'non_lue' THEN 1 ELSE 0 END) AS non_lues
+        FROM annonce a
+        LEFT JOIN candidature c ON c.id_annonce = a.id
+        WHERE a.id_administrateur = :idAdmin
+        GROUP BY a.id, a.titre
+        ORDER BY a.date_publication DESC
+        LIMIT :limit
+    ");
+    $stmt->bindValue(':idAdmin', $idAdmin, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

@@ -102,4 +102,19 @@ class EntretienController
         $this->entretienModel->envoyerRappel($id);
         echo "<div class='alert alert-info'>📩 Rappel marqué comme envoyé.</div>";
     }
+
+    public function getByAdmin(int $idAdmin): array
+{
+    $stmt = $this->db->prepare("
+        SELECT e.date_entretien, e.heure, u.nom, u.prenom, a.titre AS poste
+        FROM entretien e
+        JOIN utilisateur u ON u.id = e.id_utilisateur
+        JOIN annonce a ON a.id = e.id_annonce
+        WHERE a.id_administrateur = ?
+        ORDER BY e.date_entretien ASC, e.heure ASC
+    ");
+    $stmt->execute([$idAdmin]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

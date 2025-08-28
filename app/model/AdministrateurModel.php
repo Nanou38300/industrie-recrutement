@@ -36,7 +36,26 @@ class AdministrateurModel
         $stmt->execute([$idAdmin]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    public function getAllRdv(): array
+    {
+        $stmt = $this->db->query("SELECT id, objet AS title, CONCAT(date, 'T', heure) AS start FROM rdv");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function getRdvById(int $id): array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM rdv WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function getCandidatById(int $id): array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM candidats WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
     // 🔹 Statistiques globales des candidatures
     public function getStatsCandidatures(int $idAdmin): array
     {
@@ -69,6 +88,17 @@ class AdministrateurModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function updateStatutCandidature(int $id, string $statut): bool
+    {
+        $stmt = $this->db->prepare("
+            UPDATE candidature SET statut = :statut WHERE id = :id
+        ");
+        return $stmt->execute([
+            'statut' => $statut,
+            'id'     => $id
+        ]);
+    }
+    
     // 🔹 Liste des entretiens planifiés
     public function getCalendrierAdmin(int $idAdmin): array
     {
@@ -97,4 +127,44 @@ class AdministrateurModel
         $stmt->execute([$idAdmin, $date]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function renderListeCandidatures(array $candidatures): void
+{
+    foreach ($candidatures as $c) {
+        echo "<div class='candidature-item'>";
+        echo "<p><strong>Nom :</strong> {$c['nom']} {$c['prenom']}</p>";
+        echo "<p><strong>Statut actuel :</strong> {$c['statut']}</p>";
+
+        // 👉 Ton formulaire ici
+        echo "<form method='POST' action='/candidature/update-statut'>";
+        echo "<input type='hidden' name='id_candidature' value='{$c['id']}'>";
+        echo "<select name='statut'>
+                <option value='en_attente'>En attente</option>
+                <option value='acceptee'>Acceptée</option>
+                <option value='refusee'>Refusée</option>
+              </select>";
+        echo "<button type='submit'>Modifier</button>";
+        echo "</form>";
+
+        echo "</div><hr>";
+    }
+}
+public function renderDetailsCandidature(array $candidature): void
+{
+    echo "<h2>Détail de la candidature</h2>";
+    echo "<p><strong>Nom :</strong> {$candidature['nom']} {$candidature['prenom']}</p>";
+    echo "<p><strong>Statut actuel :</strong> {$candidature['statut']}</p>";
+
+    // 👉 Ton formulaire ici
+    echo "<form method='POST' action='/candidature/update-statut'>";
+    echo "<input type='hidden' name='id_candidature' value='{$candidature['id']}'>";
+    echo "<select name='statut'>
+            <option value='en_attente'>En attente</option>
+            <option value='acceptee'>Acceptée</option>
+            <option value='refusee'>Refusée</option>
+          </select>";
+    echo "<button type='submit'>Modifier</button>";
+    echo "</form>";
+}
+
 }

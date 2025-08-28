@@ -11,28 +11,34 @@ class CandidatureModel
 
     public function __construct()
     {
-        $this->db = (new \App\Database())->getConnection();
+        $this->db = (new Database())->getConnection();
     }
 
     // 📥 Crée une nouvelle candidature
     public function create(array $data): bool
     {
         $stmt = $this->db->prepare("
-            INSERT INTO candidature (id_utilisateur, id_annonce, statut, date_envoi, commentaire_admin)
-            VALUES (:id_utilisateur, :id_annonce, 'Envoyée', CURDATE(), :commentaire_admin)
+            INSERT INTO candidature (
+                id_utilisateur, id_annonce, statut, date_envoi, commentaire_admin
+            ) VALUES (
+                :id_utilisateur, :id_annonce, 'envoyée', CURDATE(), :commentaire_admin
+            )
         ");
+
         return $stmt->execute([
             'id_utilisateur'    => $data['id_utilisateur'],
             'id_annonce'        => $data['id_annonce'],
             'commentaire_admin' => $data['commentaire_admin'] ?? ''
         ]);
     }
+
+    // 📊 Compte toutes les candidatures
     public function countAll(): int
     {
         $stmt = $this->db->query("SELECT COUNT(*) FROM candidature");
         return (int) $stmt->fetchColumn();
     }
-    
+
     // 👁️ Récupère une candidature par son ID
     public function findById(int $id): ?array
     {
@@ -64,7 +70,8 @@ class CandidatureModel
     public function findByUtilisateur(int $idUtilisateur): array
     {
         $stmt = $this->db->prepare("
-            SELECT c.*, a.titre, a.reference, a.localisation, a.type_contrat, a.salaire, a.date_publication
+            SELECT c.statut, c.date_envoi, a.titre, a.reference, a.localisation,
+                   a.type_contrat, a.salaire, a.date_publication
             FROM candidature c
             JOIN annonce a ON c.id_annonce = a.id
             WHERE c.id_utilisateur = :id
@@ -77,11 +84,17 @@ class CandidatureModel
     // ✏️ Mise à jour du statut et commentaire
     public function update(int $id, array $data): bool
     {
+        $statutsValides = ['envoyée', 'consultée', 'entretien', 'recruté', 'refusé'];
+        if (!in_array($data['statut'], $statutsValides)) {
+            return false;
+        }
+
         $stmt = $this->db->prepare("
             UPDATE candidature
             SET statut = :statut, commentaire_admin = :commentaire_admin
             WHERE id = :id
         ");
+
         return $stmt->execute([
             'statut'            => $data['statut'],
             'commentaire_admin' => $data['commentaire_admin'] ?? '',

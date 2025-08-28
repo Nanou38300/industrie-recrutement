@@ -9,6 +9,8 @@ use App\Model\EntretienModel;
 use App\View\AdministrateurView;
 use App\View\CalendrierView;
 
+
+
 class AdministrateurController
 {
     private UtilisateurModel $userModel;
@@ -26,6 +28,7 @@ class AdministrateurController
         $this->entretienModel   = new EntretienModel();
         $this->view             = new AdministrateurView();
         $this->calendarView     = new CalendrierView();
+
 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -193,27 +196,21 @@ public function logout(): void
         $candidature = $this->candidatureModel->findById($id);
         $this->view->renderDetailsCandidature($candidature);
     }
-
     public function calendrier(): void
-{
-    $this->redirectIfNotAdmin();
-    $idAdmin = $_SESSION['utilisateur']['id'];
-
-    // Récupération des entretiens du jour
-    $aujourdHui = date('Y-m-d');
-    $entretiensDuJour = $this->entretienModel->getByDateAdmin($idAdmin, $aujourdHui);
-
-    // Récupération de l’entretien sélectionné (ex: via GET)
-    $entretienId = $_GET['id'] ?? null;
-    $entretien = $entretienId ? $this->entretienModel->findById($entretienId) : null;
-
-    // Récupération du candidat lié à l’entretien
-    $candidat = $entretien ? $this->userModel->getById($entretien['id_utilisateur']) : [];
-
-    $this->view->renderCalendrier($candidat, $entretien, $entretiensDuJour);
-}
-
-    // 📅 Vue calendrier
+    {
+        $this->redirectIfNotAdmin();
+        $idAdmin = $_SESSION['utilisateur']['id'];
+    
+        $aujourdHui = date('Y-m-d');
+        $entretiensDuJour = $this->entretienModel->getByDateAdmin($idAdmin, $aujourdHui);
+    
+        $entretienId = $_GET['id'] ?? null;
+        $entretien = $entretienId ? $this->entretienModel->findById($entretienId) : null;
+        $candidat = $entretien ? $this->userModel->getById($entretien['id_utilisateur']) : [];
+    
+        require 'app/View/calendar.php';
+    }
+    
     public function vueCalendrier(): void
     {
         $this->redirectIfNotAdmin();
@@ -222,6 +219,70 @@ public function logout(): void
         $entretiens = $this->entretienModel->getByMonth((int)$mois, (int)$annee);
         $this->calendarView->renderCalendrier($entretiens, $mois, $annee);
     }
+    
+    public function apiRdv(): void {
+        $model = new \App\Model\EntretienModel();
+        $events = $model->getAllRdv();
+    
+        foreach ($events as &$event) {
+            if (strlen($event['start']) === 16) {
+                $event['start'] .= ':00';
+            }
+        }
+    
+        header('Content-Type: application/json');
+        echo json_encode($events);
+        exit; // ← Ajoute ceci pour stopper tout traitement après
+    }
+    
+    
+    public function viewRdv(int $id): void
+    {
+        $this->redirectIfNotAdmin();
+        $entretien = $this->entretienModel->findById($id);
+        $candidat = $this->userModel->getById($entretien['id_utilisateur']);
+        require 'app/View/rdv-detail.php';
+    }
+    
+    public function creerEntretien(): void
+{
+    $this->redirectIfNotAdmin();
+
+    $dateISO = $_GET['date'] ?? null;
+    $date = $dateISO ? substr($dateISO, 0, 10) : '';
+    $heure = $dateISO ? substr($dateISO, 11, 5) : '';
+
+    $annonces = $this->annonceModel->getByAdmin($_SESSION['utilisateur']['id']);
+    $candidats = $this->userModel->getAllCandidats();
+    echo "<h1>🧪 Test : chargement du formulaire</h1>";
+
+    $this->calendarView->renderFormCreation($date, $heure, $annonces, $candidats);
+}
+
+public function validerEntretien(): void
+{
+    $this->redirectIfNotAdmin();
+
+    $data = [
+        'id_utilisateur'   => $_POST['id_utilisateur'] ?? null,
+        'date_entretien'   => $_POST['date_entretien'] ?? null,
+        'heure'            => $_POST['heure'] ?? null,
+        'type'             => $_POST['type'] ?? '',
+        'lien_visio'       => $_POST['lien_visio'] ?? null,
+        'commentaire'      => $_POST['commentaire'] ?? null
+    ];
+    if ($data['id_utilisateur'] && $data['date_entretien'] && $data['heure'] && $data['type']) {
+        $this->entretienModel->create($data);
+        echo "<div class='alert alert-success'>✅ Entretien planifié avec succès.</div>";
+    } else {
+        echo "<div class='alert alert-danger'>❌ Données manquantes pour planifier l’entretien.</div>";
+    }
+    
+
+    header("Refresh: 2; URL=/administrateur/calendrier");
+    exit;
+}
+
 
     // 🔔 Rappel du jour
     public function rappelDuJour(): void
@@ -233,4 +294,21 @@ public function logout(): void
             $this->calendarView->renderRappel($entretien);
         }
     }
+
+
+    public function updateStatut(): void
+    {
+        $id = $_POST['id_candidature'] ?? null;
+        $statut = $_POST['statut'] ?? null;
+    
+        if ($id && $statut) {
+            $this->model->updateStatutCandidature((int)$id, $statut);
+            $_SESSION['message'] = "✅ Statut mis à jour.";
+        }
+    
+        header("Location: /administrateur/candidatures");
+        exit;
+    }
+    
+
 }

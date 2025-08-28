@@ -122,4 +122,16 @@ class UtilisateurModel
             'ville'     => $data['ville'] ?? ''
         ]);
     }
+
+    public function getAllCandidats(): array
+{
+    $stmt = $this->db->prepare("
+        SELECT * FROM utilisateur
+        WHERE role = 'candidat'
+        ORDER BY nom ASC, prenom ASC
+    ");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

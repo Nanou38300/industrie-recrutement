@@ -62,9 +62,15 @@ class CalendrierView
         echo "<section class='calendrier-admin'>";
         echo "<h2>📅 Calendrier des entretiens - $mois/$annee</h2>";
     
+        echo "<pre>";
+        var_dump($entretiens);
+        echo "</pre>";
+        
+
         if (empty($entretiens)) {
             echo "<p>Aucun entretien prévu ce mois-ci.</p>";
         } else {
+            var_dump($entretiens);
             foreach ($entretiens as $e) {
                 echo "<div class='entretien-item'>";
                 echo "<p><strong>Date :</strong> " . htmlspecialchars($e['date_entretien']) . "</p>";
@@ -170,4 +176,50 @@ class CalendrierView
         echo "</form>";
         echo "</section><hr>";
     }
+
+    public function renderFormCreation(string $date, string $heure, array $annonces, array $candidats): void
+    {
+        echo "<section class='form-entretien'>";
+        echo "<h2>📝 Planifier un entretien</h2>";
+    
+        echo "<form method='POST' action='/administrateur/valider-entretien' style='max-width:600px;margin:auto;'>";
+    
+        // Date
+        echo "<label for='date_entretien'>Date :</label><br>";
+        echo "<input type='date' id='date_entretien' name='date_entretien' value='" . htmlspecialchars($date) . "' required><br><br>";
+    
+        // Heure
+        echo "<label for='heure'>Heure :</label><br>";
+        echo "<input type='time' id='heure' name='heure' value='" . htmlspecialchars($heure) . "' required><br><br>";
+    
+        // Candidat
+        echo "<label for='id_utilisateur'>Candidat :</label><br>";
+        echo "<select id='id_utilisateur' name='id_utilisateur' required>";
+        foreach ($candidats as $c) {
+            echo "<option value='" . htmlspecialchars($c['id']) . "'>" . htmlspecialchars($c['prenom'] . ' ' . $c['nom']) . "</option>";
+        }
+        echo "</select><br><br>";
+    
+        
+        // Type
+        echo "<label for='type'>Type d'entretien :</label><br>";
+        echo "<input type='text' id='type' name='type' placeholder='Visio ou Présentiel' required><br><br>";
+    
+        // Lien visio
+        echo "<label for='lien_visio'>Lien visio (si applicable) :</label><br>";
+        echo "<input type='url' id='lien_visio' name='lien_visio' placeholder='https://...'><br><br>";
+    
+        // Commentaire
+        echo "<label for='commentaire'>Commentaire :</label><br>";
+        echo "<textarea id='commentaire' name='commentaire' rows='5' cols='50' placeholder='Notes, contexte, objectifs...'></textarea><br><br>";
+    
+        // Bouton
+        echo "<button type='submit'>💾 Créer le rendez-vous</button>";
+    
+        echo "</form>";
+        echo "</section>";
+    }
+    
+    
+
 }

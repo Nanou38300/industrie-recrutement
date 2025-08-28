@@ -22,6 +22,7 @@ class AnnonceController {
         $pdo = new PDO($dsn, $user, $pass);
         $this->model = new AnnonceModel($pdo);
         $this->view = new AnnonceView();
+
     }
     
     /**
@@ -407,4 +408,21 @@ class AnnonceController {
         // Traiter la requête normale
         $this->handleRequest();
     }
+
+    public function creerEntretien(): void
+{
+    $this->redirectIfNotAdmin();
+
+    $annonces = $this->annonceModel->getByAdmin($_SESSION['utilisateur']['id']);
+    $candidats = $this->userModel->getAllCandidats();
+    
+    // Traitement de la date et heure depuis l'URL
+    $dateTime = $_GET['date'] ?? '';
+    $date = substr($dateTime, 0, 10);
+    $heure = substr($dateTime, 11, 5);
+    
+    // Affichage du formulaire
+    $this->calendarView->renderFormCreation($date, $heure, $annonces, $candidats);
+}
+
 }

@@ -17,18 +17,26 @@ class EntretienModel
     // ➕ Planifie un nouvel entretien
     public function create(array $data): bool
     {
-        $stmt = $this->db->prepare("
-            INSERT INTO entretien (id_utilisateur, date_entretien, heure, type, lien_visio, rappel_envoye)
-            VALUES (:id_utilisateur, :date_entretien, :heure, :type, :lien_visio, 0)
-        ");
-        return $stmt->execute([
-            'id_utilisateur' => $data['id_utilisateur'],
-            'date_entretien' => $data['date_entretien'],
-            'heure'          => $data['heure'],
-            'type'           => $data['type'],
-            'lien_visio'     => $data['lien_visio'] ?? null
-        ]);
+$stmt = $this->db->prepare("
+    INSERT INTO entretien (
+        id_utilisateur, date_entretien, heure, type, lien_visio, commentaire
+    ) VALUES (
+        :id_utilisateur, :date_entretien, :heure, :type, :lien_visio, :commentaire
+    )
+");
+
+return $stmt->execute([
+    'id_utilisateur' => $data['id_utilisateur'],
+    'date_entretien' => $data['date_entretien'],
+    'heure'          => $data['heure'],
+    'type'           => $data['type'],
+    'lien_visio'     => $data['lien_visio'],
+    'commentaire'    => $data['commentaire']
+]);
+
+        
     }
+    
 
     // 📅 Récupère les entretiens d’un jour donné
     public function getByDate(string $date): array
@@ -71,39 +79,41 @@ class EntretienModel
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-        // 👨‍💼 Récupère les entretiens liés à un administrateur
-        public function getByAdmin(int $idAdmin): array
-        {
-            $stmt = $this->db->prepare("
-                SELECT e.date_entretien, e.heure, e.type, e.lien_visio,
-                       u.nom, u.prenom,
-                       a.titre AS poste
-                FROM entretien e
-                JOIN utilisateur u ON u.id = e.id_utilisateur
-                JOIN annonce a ON a.id = e.id_annonce
-                WHERE a.id_administrateur = :idAdmin
-                ORDER BY e.date_entretien ASC, e.heure ASC
-            ");
-            $stmt->execute(['idAdmin' => $idAdmin]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-        public function getByDateAdmin(int $idAdmin, string $date): array
-        {
-            $stmt = $this->db->prepare("
-                SELECT e.*, u.nom, u.prenom, a.titre AS poste, a.localisation AS lieu
-                FROM entretien e
-                JOIN utilisateur u ON u.id = e.id_utilisateur
-                JOIN annonce a ON a.id = e.id_annonce
-                WHERE a.id_administrateur = :idAdmin AND e.date_entretien = :date
-                ORDER BY e.heure ASC
-            ");
-            $stmt->execute([
-                'idAdmin' => $idAdmin,
-                'date' => $date
-            ]);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-        
+
+    // 👨‍💼 Récupère les entretiens liés à un administrateur
+    public function getByAdmin(int $idAdmin): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT e.date_entretien, e.heure, e.type, e.lien_visio,
+                   u.nom, u.prenom,
+                   a.titre AS poste
+            FROM entretien e
+            JOIN utilisateur u ON u.id = e.id_utilisateur
+            JOIN annonce a ON a.id = e.id_annonce
+            WHERE a.id_administrateur = :idAdmin
+            ORDER BY e.date_entretien ASC, e.heure ASC
+        ");
+        $stmt->execute(['idAdmin' => $idAdmin]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 📅 Récupère les entretiens d’un jour pour un administrateur
+    public function getByDateAdmin(int $idAdmin, string $date): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT e.*, u.nom, u.prenom, a.titre AS poste, a.localisation AS lieu
+            FROM entretien e
+            JOIN utilisateur u ON u.id = e.id_utilisateur
+            JOIN annonce a ON a.id = e.id_annonce
+            WHERE a.id_administrateur = :idAdmin AND e.date_entretien = :date
+            ORDER BY e.heure ASC
+        ");
+        $stmt->execute([
+            'idAdmin' => $idAdmin,
+            'date'    => $date
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // 🔔 Rappels du jour
     public function getRemindersFor(string $date): array
@@ -149,23 +159,39 @@ class EntretienModel
         return $stmt->execute(['id' => $id]);
     }
 
+    // 📆 Entretiens sur une plage hebdomadaire
     public function getEntretiensSemaine(int $idAdmin, string $dateDebut, string $dateFin): array
-{
-    $stmt = $this->db->prepare("
-        SELECT e.date_entretien, e.heure, e.type, u.nom, u.prenom, a.titre AS poste
-        FROM entretien e
-        JOIN utilisateur u ON u.id = e.id_utilisateur
-        JOIN annonce a ON a.id = e.id_annonce
-        WHERE a.id_administrateur = :idAdmin
-          AND e.date_entretien BETWEEN :debut AND :fin
-        ORDER BY e.date_entretien ASC, e.heure ASC
-    ");
-    $stmt->execute([
-        'idAdmin' => $idAdmin,
-        'debut'   => $dateDebut,
-        'fin'     => $dateFin
-    ]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    {
+        $stmt = $this->db->prepare("
+            SELECT e.date_entretien, e.heure, e.type, u.nom, u.prenom, a.titre AS poste
+            FROM entretien e
+            JOIN utilisateur u ON u.id = e.id_utilisateur
+            JOIN annonce a ON a.id = e.id_annonce
+            WHERE a.id_administrateur = :idAdmin
+              AND e.date_entretien BETWEEN :debut AND :fin
+            ORDER BY e.date_entretien ASC, e.heure ASC
+        ");
+        $stmt->execute([
+            'idAdmin' => $idAdmin,
+            'debut'   => $dateDebut,
+            'fin'     => $dateFin
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-}
+    // 📅 Format FullCalendar : tous les RDV
+    public function getAllRdv(): array
+    {
+        $stmt = $this->db->query("
+            SELECT e.id,
+                   e.type AS title,
+                   CONCAT(e.date_entretien, 'T', e.heure) AS start,
+                   u.nom, u.prenom, e.lien_visio
+            FROM entretien e
+            JOIN utilisateur u ON u.id = e.id_utilisateur
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    
+}  

@@ -135,54 +135,58 @@ class AdministrateurView
         echo "</div>"; // fin bloc-annonces-admin
         echo "</section><hr>";
     }
-    
-    public function renderFormAnnonce(?array $annonce = null): void
+    public function renderFormAnnonce(array $annonce = []): void
     {
-        // Détermine l'action du formulaire (création ou modification)
-        $action = $annonce
-            ? "/administrateur/edit-annonce?id=" . $this->safe($annonce['id'] ?? '')
-            : "/administrateur/create-annonce";
+        $titre            = $annonce['titre'] ?? '';
+        $description      = $annonce['description'] ?? '';
+        $mission          = $annonce['mission'] ?? '';
+        $localisation     = $annonce['localisation'] ?? '';
+        $salaire          = $annonce['salaire'] ?? '';
+        $statut           = $annonce['statut'] ?? 'brouillon';
+        $avantages        = $annonce['avantages'] ?? '';
+        $code_postale     = $annonce['code_postale'] ?? '';
+        $type_contrat     = $annonce['type_contrat'] ?? '';
+        $duree_contrat    = $annonce['duree_contrat'] ?? '';
+        $profil_recherche = $annonce['profil_recherche'] ?? '';
+        $secteur_activite = $annonce['secteur_activite'] ?? '';
+        $idAdmin          = $_SESSION['utilisateur']['id'];
     
-        echo "<section class='form-annonce'>";
-        echo "<div class='bloc-form-annonce'>"; // 🔹 Bloc unique
+        echo "<h2>📝 Nouvelle annonce</h2>";
+        echo "<form method='POST' action='/administrateur/create-annonce' style='max-width:700px;margin:auto;'>";
     
-        // Titre du formulaire
-        echo "<h2>" . ($annonce ? "✏️ Modifier l'annonce" : "➕ Nouvelle annonce") . "</h2>";
+        echo "<label>Titre :</label><input type='text' name='titre' value='$titre' required><br><br>";
+        echo "<label>Description :</label><textarea name='description' required>$description</textarea><br><br>";
+        echo "<label>Mission :</label><textarea name='mission' required>$mission</textarea><br><br>";
+        echo "<label>Localisation :</label><input type='text' name='localisation' value='$localisation' required><br><br>";
+        echo "<label>Salaire :</label><input type='text' name='salaire' value='$salaire' required><br><br>";
     
-        // Formulaire principal
-        echo "<form method='POST' action='$action'>";
+        echo "<label>Statut :</label>
+            <select name='statut' required>
+                <option value='activée' " . ($statut === 'activée' ? 'selected' : '') . ">Activée</option>
+                <option value='brouillon' " . ($statut === 'brouillon' ? 'selected' : '') . ">Brouillon</option>
+                <option value='archivée' " . ($statut === 'archivée' ? 'selected' : '') . ">Archivée</option>
+            </select><br><br>";
     
-        // Liste des champs à afficher
-        $fields = [
-            'titre', 'description', 'mission', 'profil_recherche', 'localisation',
-            'code_postale', 'secteur_activite', 'salaire', 'avantages',
-            'type_contrat', 'duree_contrat', 'statut', 'date_publication', 'reference'
-        ];
+        echo "<label>Avantages :</label><textarea name='avantages' required>$avantages</textarea><br><br>";
+        echo "<label>Code postal :</label><input type='number' name='code_postale' value='$code_postale' required><br><br>";
     
-        // Champs à afficher en textarea (plus grands)
-        $largeFields = ['description', 'mission', 'profil_recherche', 'avantages'];
+        echo "<label>Type de contrat :</label>
+            <select name='type_contrat' required>
+                <option value='CDI' " . ($type_contrat === 'CDI' ? 'selected' : '') . ">CDI</option>
+                <option value='CDD' " . ($type_contrat === 'CDD' ? 'selected' : '') . ">CDD</option>
+                <option value='Intérim' " . ($type_contrat === 'Intérim' ? 'selected' : '') . ">Intérim</option>
+            </select><br><br>";
     
-        // Génération dynamique des champs
-        foreach ($fields as $field) {
-            $value = $this->safe($annonce[$field] ?? '');
-            $label = ucfirst(str_replace('_', ' ', $field));
+        echo "<label>Durée du contrat (en mois) :</label><input type='number' name='duree_contrat' value='$duree_contrat'><br><br>";
+        echo "<label>Profil recherché :</label><textarea name='profil_recherche' required>$profil_recherche</textarea><br><br>";
+        echo "<label>Secteur d'activité :</label><textarea name='secteur_activite' required>$secteur_activite</textarea><br><br>";
     
-            echo "<label>$label :";
-            if (in_array($field, $largeFields)) {
-                echo "<textarea name='$field' rows='5' style='width:100%;'>$value</textarea>";
-            } else {
-                echo "<input name='$field' value='$value' required>";
-            }
-            echo "</label><br>";
-        }
+        echo "<input type='hidden' name='id_administrateur' value='$idAdmin'>";
+        echo "<button type='submit'>💾 Publier l’annonce</button>";
     
-        // Bouton de soumission
-        echo "<button type='submit'>💾 Enregistrer</button>";
         echo "</form>";
-    
-        echo "</div>"; // fin bloc-form-annonce
-        echo "</section><hr>";
     }
+    
     
     
     public function renderListeCandidatures(array $candidatures): void
@@ -208,7 +212,7 @@ class AdministrateurView
                 echo "<p><strong>Statut :</strong> " . $this->safe($c['statut'] ?? '') . "</p>";
     
                 // Formulaire de mise à jour du statut
-                echo "<form method='POST' action='/candidature/updateStatut'>";
+                echo "<form method='POST' action='/candidature/update-statut'>";
                 echo "<input type='hidden' name='id' value='" . $this->safe($c['id'] ?? '') . "'>";
                 echo "<select name='statut'>
                         <option value='Envoyée'>Envoyée</option>

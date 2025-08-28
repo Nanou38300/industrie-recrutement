@@ -20,7 +20,6 @@ use App\Controller\{
 
 // Chargement des variables d'environnement
 Dotenv\Dotenv::createImmutable(__DIR__)->load();
-
 // 🔍 Routing parameters
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $segments = array_values(array_filter(explode('/', $requestUri)));
@@ -29,19 +28,25 @@ $action = $_GET['action'] ?? ($segments[0] ?? '');
 $step   = $_GET['step']   ?? ($segments[1] ?? '');
 $id     = $_GET['id']     ?? ($segments[2] ?? '');
 
-// 🖼️ Layout control
-$afficherMenuPublic   = in_array($action, ['accueil', 'bureauEtude', 'domaineExpertise', 'recrutement', 'contact']);
-$afficherMenuConnecte = isset([
-    'administrateur' => true,
-    'candidat'       => true
-][$action]);
+// ➕ Détection d’un appel API (évite d’inclure le layout)
+$isApiCall = ($action === 'administrateur' && $step === 'api-rdv');
 
-$afficherFooter = $afficherMenuPublic;
+// 🖼️ Layout control (uniquement si ce n’est pas un appel API)
+if (!$isApiCall) {
+    $afficherMenuPublic   = in_array($action, ['accueil', 'bureauEtude', 'domaineExpertise', 'recrutement', 'contact']);
+    $afficherMenuConnecte = isset([
+        'administrateur' => true,
+        'candidat'       => true
+    ][$action]);
 
-// Templates head + menu
-require_once('assets/templates/head.php');
-if ($afficherMenuConnecte) require_once('assets/templates/menu-connecte.php');
-if ($afficherMenuPublic)   require_once('assets/templates/menu-public.php');
+    $afficherFooter = $afficherMenuPublic;
+
+    // Templates head + menu
+    require_once('assets/templates/head.php');
+    if ($afficherMenuConnecte) require_once('assets/templates/menu-connecte.php');
+    if ($afficherMenuPublic)   require_once('assets/templates/menu-public.php');
+}
+
 
 // 🎯 Routes
 try {
@@ -68,6 +73,11 @@ try {
                     'candidatures'     => $ctrl->listCandidatures(),
                     'candidature'      => $ctrl->viewCandidature((int)$id),
                     'calendrier'       => $ctrl->calendrier(),
+                    'creer-entretien'   => $ctrl->creerEntretien(),
+                    'valider-entretien' => $ctrl->validerEntretien(),
+                    'rdv'               => $id ? $ctrl->viewRdv((int)$id) : $ctrl->calendrier(),
+                    'api-rdv'           => $ctrl->apiRdv(),
+
                     'logout'           => $ctrl->logout(),
 
                     default            => $ctrl->dashboard($_SESSION['utilisateur']['id']),
@@ -143,6 +153,7 @@ try {
                 'view'   => $ctrl->viewCandidature((int)$id),
                 'delete' => $ctrl->deleteCandidature((int)$id),
                 'suivi'  => $ctrl->suivi(),
+                'update-statut' => $ctrl->updateStatut(),
                 default  => $ctrl->listCandidatures(),
             };
             break;
@@ -151,6 +162,7 @@ try {
             $ctrl = new EntretienController;
             match ($step) {
                 'planifier' => $ctrl->planifierEntretien(),
+                'valider-entretien' => $ctrl->validerEntretien(),
                 'rappel'    => $ctrl->envoyerRappel((int)$id),
                 default     => $ctrl->listEntretiens(),
             };
@@ -176,6 +188,7 @@ try {
                 'jour'         => $ctrl->vueJour($id),
                 'rappel'       => $ctrl->rappelDuJour(),
                 'rendez-vous'  => $ctrl->infoRendezVous($id),
+                'vue-calendrier' => $ctrl->vueCalendrier(),
                 default        => $ctrl->vueSemaine(),
             };
             break;
@@ -224,9 +237,10 @@ try {
 }
 
 // Footer si nécessaire
-if ($afficherFooter) {
+if (!$isApiCall && isset($afficherFooter) && $afficherFooter) {
     require_once('assets/templates/footer.php');
 }
+
 ob_end_flush();
 
 // Ajout de styles CSS de base pour les alertes si elles n'existent pas

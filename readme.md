@@ -186,3 +186,105 @@ git push -u origin main                # Envoie ton projet sur GitHub
 |                        | `postuler`               |                                | `postuler(id)`                         |
 |                        | `candidatures`           |                                | `suiviCandidatures()`                  |
 |                        | *(autre)*                |                                | `profil()`                             |
+
+
+
+
+
+--------------------------------- STRUCTURE DU PROJET --------------------------------------
+🔧 1. AnnonceModel.php
+Ajout de la méthode getByAdmin(int $idAdmin) pour récupérer les annonces liées à un administrateur.
+Amélioration de la méthode create() avec validation des champs obligatoires.
+Nettoyage des appels inutiles à id_annonce dans les formulaires liés aux entretiens.
+
+
+🔧 2. CandidatureModel.php
+Normalisation du champ statut avec les valeurs : envoyée, consultée, entretien, recruté, refusé.
+Ajout de la validation stricte des statuts dans la méthode update().
+Correction de la méthode findByUtilisateur() pour inclure le champ statut.
+
+
+
+🔧 3. EntretienModel.php
+Création de la méthode create(array $data) sans dépendance à id_annonce ou id_candidature.
+Ajout de la méthode getAllRdv() pour alimenter FullCalendar (format requis : title, start, id).
+Correction de la requête SQL dans getAllRdv() (ajout du FROM entretien manquant).
+Ajout de méthodes de récupération par jour, semaine, mois, et administrateur.
+
+
+
+🔧 4. AdministrateurController.php
+Ajout de la méthode vueCalendrier() pour afficher les entretiens du mois.
+Nettoyage de la méthode validerEntretien() : suppression des champs id_annonce et id_candidature, ajout de validation stricte.
+Ajout de la méthode apiRdv() pour exposer les entretiens au format JSON.
+Correction de la méthode creerEntretien() pour transmettre uniquement les données nécessaires au formulaire.
+Ajout des méthodes :
+modifierEntretien(int $id) : affiche un formulaire prérempli et met à jour l’entretien.
+supprimerEntretien(int $id) : supprime l’entretien et retourne un code HTTP 200.
+
+
+
+🔧 5. CalendrierView.php
+Ajout de la méthode renderCalendrier() pour afficher les entretiens mensuels.
+Ajout de la méthode renderFormCreation() avec les champs : date, heure, candidat, type, lien visio, commentaire.
+Ajout de la méthode renderRappels() pour afficher les rappels du jour.
+Ajout de la méthode renderDetails() pour afficher les détails d’un entretien.
+
+
+
+🗃️ 6. Base de données
+Suppression ou mise en NULL des contraintes sur id_annonce et id_candidature dans la table entretien.
+Vérification du type DATE pour le champ date_entretien afin d’assurer la compatibilité avec les filtres mensuels.
+
+
+
+📅 INTÉGRATION DE FULLCALENDAR
+
+1. Ajout du fichier calendar.php
+Chargement de FullCalendar via CDN.
+Initialisation du calendrier en vue hebdomadaire (timeGridWeek).
+Configuration des événements via l’URL /administrateur/api-rdv.
+Ajout des interactions :
+Sélection de créneau → redirection vers le formulaire de création.
+Clic sur événement → menu d’action : voir, modifier, supprimer.
+
+
+
+2. Méthode apiRdv() dans AdministrateurController.php
+Récupère tous les entretiens via EntretienModel::getAllRdv().
+Retourne les données au format JSON (id, title, start).
+Ajout de exit; pour éviter l’injection de HTML parasite.
+
+
+
+3. Correction du layout dans index.php
+Ajout de la variable $isApiCall pour détecter les appels AJAX.
+Désactivation conditionnelle du header, menu et footer pour /administrateur/api-rdv.
+Prévention des erreurs PHP liées à des variables non définies ($afficherFooter, etc.).
+
+
+
+4. Ajout des actions sur événement dans FullCalendar
+Lors du clic sur un événement :
+voir → redirection vers /administrateur/rdv?id=...
+modifier → redirection vers /administrateur/modifier-entretien?id=...
+supprimer → suppression via fetch() vers /administrateur/supprimer-entretien?id=...
+
+
+
+5. Ajout des routes dans index.php
+php
+'modifier-entretien'   => $ctrl->modifierEntretien((int)$id),
+'supprimer-entretien'  => $ctrl->supprimerEntretien((int)$id),
+
+
+6. Préparation de la vue modifier-entretien.php
+Formulaire similaire à celui de création, mais prérempli avec les données existantes.
+Permet à l’administrateur de modifier les informations d’un entretien existant.
+
+
+✅ Résultat final
+Le calendrier FullCalendar est désormais :
+Dynamique et synchronisé avec la base de données
+Interactif pour la création, modification et suppression d’entretiens
+Intégré proprement dans la structure MVC du projet

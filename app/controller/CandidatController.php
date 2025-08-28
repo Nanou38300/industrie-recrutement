@@ -41,7 +41,7 @@ class CandidatController
         $this->redirectIfNotConnected();
         $profil = $this->model->getProfil($_SESSION['utilisateur']['id']);
         $this->view->renderProfil($profil);
-        $this->view->renderEditForm($profil);
+        // $this->view->renderEditForm($profil);
         $this->view->renderUploadForm();
         $this->view->renderDeleteButton();
     }
@@ -107,14 +107,26 @@ class CandidatController
         }
     }
 
+
     public function postuler(int $id): void
-    {
-        $this->redirectIfNotConnected();
-        $this->model->envoyerCandidature($_SESSION['utilisateur']['id'], $id);
-        $_SESSION['message'] = "✅ Candidature envoyée avec succès.";
-        header("Location: /candidat/annonces");
-        exit;
-    }
+{
+    $idUtilisateur = $_SESSION['utilisateur']['id'];
+
+    $resultat = $this->model->postuler($idUtilisateur, $id);
+
+    $_SESSION['popup'] = [
+        'message' => $resultat
+            ? "✅ Votre candidature a bien été envoyée."
+            : "⚠️ Vous avez déjà postulé à cette annonce.",
+        'retour'  => '/candidat/annonces'
+    ];
+
+    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '/candidat/annonces'));
+
+    exit;
+}
+
+    
     
 
     public function renderSuiviCandidatures(): void

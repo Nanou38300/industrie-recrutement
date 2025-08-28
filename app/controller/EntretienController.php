@@ -81,6 +81,14 @@ class EntretienController
         $this->view->renderForm($utilisateurs);
     }
 
+    public function validerEntretien(): void
+{
+    $this->redirectIfNotAdmin();
+    $this->entretienModel->create($_POST);
+    header("Location: /administrateur/calendrier");
+    exit;
+}
+
     // 👁️ Détail d’un entretien
     public function detail(int $id): void
     {

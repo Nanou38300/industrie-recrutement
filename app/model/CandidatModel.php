@@ -68,13 +68,21 @@ class CandidatModel
         return $this->db->query("SELECT * FROM annonce")->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getCandidatures(int $id): array
+    public function getCandidatures(int $idUtilisateur): array
     {
-        $stmt = $this->db->prepare("SELECT * FROM candidature WHERE id_utilisateur = ?");
-        $stmt->execute([$id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare("
+            SELECT a.titre, a.reference, a.date_publication, a.localisation, a.type_contrat, a.salaire,
+                   c.date_envoi, c.statut
+            FROM candidature c
+            JOIN annonce a ON a.id = c.id_annonce
+            WHERE c.id_utilisateur = :id_utilisateur
+            ORDER BY c.date_envoi DESC
+        ");
+        $stmt->execute(['id_utilisateur' => $idUtilisateur]);
+        return $stmt->fetchAll();
     }
-
+    
+    
     
     public function envoyerCandidature(int $idUtilisateur, int $idAnnonce): bool
 {
@@ -88,5 +96,37 @@ class CandidatModel
         'id_annonce'     => $idAnnonce
     ]);
 }
+
+public function postuler(int $idUtilisateur, int $idAnnonce): bool
+{
+    // Vérifie si l'utilisateur a déjà postulé à cette annonce
+    $check = $this->db->prepare("
+        SELECT COUNT(*) FROM candidature
+        WHERE id_utilisateur = :id_utilisateur AND id_annonce = :id_annonce
+    ");
+    $check->execute([
+        'id_utilisateur' => $idUtilisateur,
+        'id_annonce'     => $idAnnonce
+    ]);
+
+    if ($check->fetchColumn() > 0) {
+        // Déjà postulé : ne pas dupliquer
+        return false;
+    }
+
+    // Insère la nouvelle candidature
+    $stmt = $this->db->prepare("
+        INSERT INTO candidature (id_utilisateur, id_annonce)
+        VALUES (:id_utilisateur, :id_annonce)
+    ");
+
+    return $stmt->execute([
+        'id_utilisateur' => $idUtilisateur,
+        'id_annonce'     => $idAnnonce
+    ]);
+}
+
+
+
 
 }

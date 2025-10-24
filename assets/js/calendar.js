@@ -3,3 +3,5 @@ select: function(info) {
     window.location.href = `/administrateur/creer-entretien?date=${date}`;
   }
   
+
+  

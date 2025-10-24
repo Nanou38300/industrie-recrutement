@@ -24,11 +24,15 @@ class CandidatView
     {
         echo "<section class='profile-header'>";
 
-            // 📸 Photo en premier
-            echo "<div class='photo-profil'>";
-                $photo = $this->safe($profil['photo_profil'] ?? 'assets/images/default.jpg');
-                echo "<img src='/$photo' alt='Photo de profil' class='photo-candidat'>";
-            echo "</div>";
+        // 📸 Photo en premier
+        echo "<div class='photo-profil'>";
+            $photo = $this->safe($profil['photo_profil'] ?? 'assets/images/default.jpg');
+            echo "<img src='/$photo' alt='Photo de profil' class='photo-candidat'>";
+            echo "<input type=\"file\" name=\"photo_profil\" accept=\"image/*\" required>";
+        echo "</div>";
+        
+
+
 
         // 👤 Nom + LinkedIn + ✏️
             echo "<div class='identite'>";

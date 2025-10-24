@@ -9,21 +9,25 @@ use Exception;
 class AnnonceController {
     private AnnonceModel $model;
     private AnnonceView $view;
-    public function __construct() {
-        
-        // Construction manuelle du DSN à partir des variables de l'environnement
-        $host = $_ENV['DB_HOST_LOCAL'];
-        $dbname = $_ENV['DB_NAME_LOCAL'];
-        $user = $_ENV['DB_USER_LOCAL'];
-        $pass = $_ENV['DB_PASSWORD_LOCAL'];
-    
-        $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
-    
-        $pdo = new PDO($dsn, $user, $pass);
-        $this->model = new AnnonceModel($pdo);
-        $this->view = new AnnonceView();
 
+// App/Controller/AnnonceController.php
+public function __construct(?AnnonceModel $model = null, ?AnnonceView $view = null) {
+    if ($model && $view) {
+        $this->model = $model;
+        $this->view  = $view;
+        return;
     }
+
+    $host = $_ENV['DB_HOST_LOCAL'] ?? 'localhost';
+    $dbname = $_ENV['DB_NAME_LOCAL'] ?? '';
+    $user = $_ENV['DB_USER_LOCAL'] ?? '';
+    $pass = $_ENV['DB_PASSWORD_LOCAL'] ?? '';
+
+    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
+    $pdo = new PDO($dsn, $user, $pass);
+    $this->model = new AnnonceModel($pdo);
+    $this->view  = new AnnonceView();
+}
     
     /**
      * Méthode par défaut qui s'exécute si aucune action n'est spécifiée

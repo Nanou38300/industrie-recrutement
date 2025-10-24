@@ -1,3 +1,433 @@
 
+//page accueil
+@media screen and (max-width: 750px) and (orientation: portrait) {
+#P1 {
+    .hero {
+        img {
+            height: 70vh;
+        }
+    }
+    .bloc-redirection {
+        width: 100%;
+        margin: 0;
+        gap: 0;
+        .trait-vert {
+            transform: translate(0rem, 0rem);
+        }
+        .card {
+            margin: 1rem;
+            width: 40%;
+            gap: 0.5rem;
+            > div {
+                height: 10rem;
+                p {
+                    font-size: 0.8rem;
+                    transform: translate(14px, -74px);
+                }
+            }
+        }
+        img {
+            height: 10rem;
+            width: 10rem;
+        }
+    }
+    .texte1 {
+      gap: 1.4rem;  
+      p {
+        margin-top: 1rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .separateur {
+        width: 7rem;
+        transform: translate(0);
+      }
+      .btn1 {
+        margin: 0;
+        font-size: 0.65rem;
+      }
+    }
+    figure {
+        img {
+            height: 15rem;
+        }
+        figcaption {
+            width: 70%;
+            .chiffre-compteur {
+                gap: 0;
+                .compteur {
+                    font-size: 2rem;
+                }
+            }
+            .texte-compteur {
+                font-size:  1rem;
+                gap: 2rem;
+                text-align: center;
+            }
+        }
+    }
+    .template-titre1 {
+        margin: 4rem 2rem;
+        .tcs-C {
+            font-size: 0.9rem;
+        }
+        .titre {
+            font-size: 1.2rem;
+        }
+    } 
   
+    .separateur {
+        transform: translate(10rem, -2rem);
+    }
+    // .separateur2 {
+    //     width: 4rem;
+    //     transform: translate(10rem, -2rem);
+    // }
+    .superposition1 {
+        margin: 0.2rem;
+        height: auto;
+        width: 18rem;
+        img {
+            height: 15rem;
+            width: 15rem;
+            transform: translate(21px, -549px);
+        }
+        article {
+        width: 19rem;
+        transform: translate(3.4rem, 14rem);
+        p, h2 {
+            padding: 2rem;
+            margin: 0;
+        }
+        h2 {
+            font-size: 1.6rem;
+        }
+        }
+        .btn2 {
+            transform: translate(9rem, 1rem);
+            font-size:0.7rem;
+        }
+    }
+    .superposition2 {
+        margin: 4.2rem;
+        height: auto;
+        width: 18rem;
+        img {
+            height: 15rem;
+            width: 15rem;
+            transform: translate(15px, -566px);
+        }
+        > article {
+            width: 19rem;
+            transform: translate(-4.6rem, 13rem);
+            p, h2 {
+                padding: 2rem;
+                margin: 0;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+        .btn3 {
+            transform: translate(3rem, 1rem);
+            font-size:0.7rem;
+        }
+    }   
+    .template-titre2 {
+        margin: 4rem 2rem;
+        .tcs-C {
+            font-size: 0.9rem;
+        }
+        .titre {
+            font-size: 1.2rem;
+        }
+        .separateur2 {
 
+           transform: translate(-1rem, 0rem);
+        }
+    }
+    .cadre-vert {
+        display: none;
+    }
+    .citation {
+        width: 100%;
+        transform: translate(0);
+        .citation-texte {
+            font-size: 0.9rem;
+        }
+        .prenom {
+            margin: 2rem;
+        }
+    }
+    .temoignage {
+        transform: translate(0);
+        h3 {
+            margin: 2rem;
+            font-size: 1.2rem;
+        }
+        .template-titre2 {
+            margin: 4rem 2rem;
+            .tcs-C {
+                font-size: 0.9rem;
+            }
+            .titre {
+                font-size: 1.2rem;
+            }
+        }
+        .temoignage-texte {
+            margin: 2rem;
+        }
+        img {
+            width: 6rem;
+            height: 2rem;
+            margin: 0;
+        }
+    }
+    }
+}
+
+//page bureau etude
+@media screen and (max-width: 750px) and (orientation: portrait) {
+    #P2 {
+        .hero {
+            img {
+                height: 70vh;
+            }
+        }
+        .template-titre1 {
+            margin: 4rem 2rem;
+            .tcs-C {
+                font-size: 0.9rem;
+            }
+            .titre {
+                font-size: 1.2rem;
+            }
+        } 
+        .texte {
+            font-size: 0.9rem;
+            margin: 2rem;
+        }
+        .btn1 {
+            margin: 0;
+            font-size: 0.65rem;
+        }
+        .activite {
+            margin: 2rem;
+            line-height: 0.9;
+            .template-titre2 {
+                margin: 4rem 2rem;
+                .tcs-C {
+                    font-size: 0.9rem;
+                }
+                .titre {
+                    font-size: 1.2rem;
+                }
+                .separateur2 {
+        
+                   transform: translate(-1rem, 0rem);
+                }
+            }
+        }
+        .trois-images {
+            margin: 1rem;
+            gap: 2px;
+            .carte {
+                height: 300px;  
+            .filtre {
+            h2 {
+                font-size: 1.6rem;
+                }
+                }
+            }
+          
+        }
+        .maintenance, .chimie, .nucleaire {
+            margin: 1rem;
+            align-items: start;
+            flex-direction: column;
+        div {
+            display: flex;
+            flex-direction: row;
+            img {
+                width: 10rem;
+                height: 10rem;
+            }
+            .cadre-beige {
+                transform: translate(-60px, 43px);
+                height: 10rem;
+                width: 10rem;
+            }
+        }
+        article {
+            width: 90%;
+            padding: 2rem;
+        }
+        }
+        .section-flip {
+            width: 100%;
+            gap: 1rem;
+            margin: 1rem;
+            img, .bloc-beige, .bloc-vert, .bloc-gris, .flip-card{
+                height: 10rem;
+                width: 10rem;
+            }
+             
+
+        }
+    }
+}
+
+//page expertise 
+@media screen and (max-width: 750px) and (orientation: portrait) {
+    #P3 {
+        .hero {
+            img {
+                height: 70vh;
+            }
+        }
+        .template-titre1 {
+            margin: 4rem 2rem;
+            .tcs-C {
+                font-size: 0.9rem;
+            }
+            .titre {
+                font-size: 1.2rem;
+            }
+            .separateur {
+                transform: translate(10rem, -2rem);
+            }
+        } 
+        .redirection {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            transform: translate(0);
+            .plan{
+                gap: 4rem;
+                margin-top: 2rem;
+            }
+            .icone {
+                height: 3rem;
+                width: 3rem;
+            }
+            .cahiers {
+                align-items: center;
+                gap: 2.2rem;
+            }
+            .fleches {
+                .fleche {
+                height: 3rem;
+                width: 3rem; 
+                }
+            }
+        }
+        .rect-vert {
+            width: 100%;
+            transform: translate(0, -65px);
+            height: 35rem;
+            p {
+                font-size: 1.4rem;
+            }
+        }
+        .template-titre2 {
+            margin: 4rem 2rem;
+            .tcs-C {
+                font-size: 0.9rem;
+            }
+            .titre {
+                font-size: 1.2rem;
+            }
+            .separateur2 {
+    
+               transform: translate(-1rem, 0rem);
+            }
+        }
+        .plan-chaudronnerie, .cahier-soudage {
+            flex-direction: column;
+            margin: 1rem;
+            img {
+                height: auto;
+            }
+            .texte-chaudronnerie {
+                gap: 1.5rem;
+            }
+        }
+        .cahier-charge {
+            flex-direction: column-reverse;
+            margin: 1rem;
+            img {
+                height: auto;
+            }
+            .texte-chaudronnerie {
+                gap: 1.5rem;
+            }
+        }
+    }
+}
+
+//page recrutement
+@media screen and (max-width: 750px) and (orientation: portrait) {
+   #P4 {
+    .hero {
+        img {
+            height: 70vh;
+        }
+    }
+    .picto-processus {
+        flex-direction: column;
+        .fleche {
+            transform: rotate(90deg);
+            margin: 0 auto;
+        }
+        .etape-process {
+            width: 100%;
+            margin: 1rem;
+        }
+    }
+    .template-titre1 {
+        margin: 4rem 2rem;
+        .tcs-C {
+            font-size: 0.9rem;
+        }
+        .titre {
+            font-size: 1.2rem;
+        }
+        .separateur {
+            transform: translate(10rem, -2rem);
+        }
+        .btn1 {
+            transform: translate(0);
+        }
+        img {
+            transform: translate(38px, 39px);
+            height: 15rem;
+            width: 15rem;
+        }
+        .article, .article2, .article3 {
+            margin: 1rem;
+            padding: 2rem;
+            width: 100%;
+        }
+    } 
+   }
+}
+
+//page contact
+@media screen and (max-width: 750px) and (orientation: portrait) {
+    #P5 {
+        .hero {
+            img {
+                height: 70vh;
+            }
+        }
+        .P {
+            flex-direction: column;
+            margin: 0;
+            .coordonnees {
+                width: 100%;
+            }
+        }
+     
+    }
+}

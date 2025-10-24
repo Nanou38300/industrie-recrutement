@@ -14,6 +14,15 @@
    }
 }
 
+
+@media (max-width: 768px) {
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.2rem; }
+    h3 { font-size: 1.4rem; }
+    h4 { font-size: 1.1rem; }
+    p, li { font-size: 0.9rem;}
+}
+
 // enleve les soulignements sur les liens de redirection.
 a.scroll-link,
 a.scroll-link * {
@@ -108,7 +117,6 @@ a.scroll-link * {
         gap: 2rem;
         img {
             object-fit: cover;
-            width: 100%;
             height: 30rem;
             opacity: 0.5;
             width: 100%;
@@ -157,7 +165,6 @@ a.scroll-link * {
         border: 2px solid vars.$beige;
         margin: 9rem;
         height: 40rem;
- 
         img {
             object-fit: cover;
             height: 23rem;
@@ -170,7 +177,6 @@ a.scroll-link * {
             background: vars.$gris;  
             width: 40rem;
             transform: translate(25rem, 10rem);
-
             .tcs-C {
                 @include vars.tcsBeige;
                 text-shadow: 2px 2px 5px rgba(230, 214, 214, 0.732);
@@ -209,7 +215,11 @@ a.scroll-link * {
         border: 2px solid vars.$beige;
         margin: 9rem;
         height: 40rem;
-
+        .tcs-C {
+            @include vars.tcsBeige;
+            text-shadow: 2px 2px 5px rgba(230, 214, 214, 0.732);
+            margin-top: 3rem;
+        }
         img {
             object-fit: cover;
             height: 23rem;
@@ -739,7 +749,6 @@ a.scroll-link * {
     }
 
     .redirection {
-       margin: 4rem 10rem 1rem 10rem;
         width: 40%;
         padding: 3rem 5rem;
         border: 0.3rem solid vars.$beige;
@@ -859,6 +868,10 @@ a.scroll-link * {
 //  Page recrutement
 #P4 {  
     width: 100%; 
+    h1 {
+        text-align: center;
+        margin: 2rem;
+    }
     .hero {
         img {
             object-fit: cover;
@@ -1068,9 +1081,11 @@ a.scroll-link * {
 .btn:hover {
     background-color: #baad9a;
 }
+
+
+
 //Page Contact
 #P5 {
-    
     .hero {
         img {
             object-fit: cover;
@@ -1478,7 +1493,12 @@ a.scroll-link * {
 .profil-admin {
     margin: 1rem 1rem 2rem 15rem;
 }
-
+.form-profil-admin {
+    margin: 1rem 1rem 2rem 15rem;
+}
+.delete-profil {
+    margin: 1rem 1rem 2rem 15rem;
+}
 
 // Compte Admin - page Annonce
 .form-annonce {
@@ -1556,15 +1576,28 @@ a.scroll-link * {
 
 
 
-  .annonces-admin {
-    margin: 1rem 1rem 2rem 15rem;
-}
+  
+// Compte Admin - Page Candidature 
+
 .candidatures-admin {
-    margin: 1rem 1rem 2rem 15rem;
+    display: flex;
+
+    .bloc-candidatures-admin {
+        margin: 1rem 1rem 2rem 15rem;
+        .candidature-item {
+            display: flex;
+            flex-direction: row;
+            padding: 2rem;
+            gap: 1rem;
+            p {
+                display: flex;
+                
+            }
+        }
+    }
+
 }
-.calendrier-admin {
-    margin: 1rem 1rem 2rem 15rem;
-}
+
 
 .popup-overlay {
     position: fixed;
@@ -1603,9 +1636,11 @@ a.scroll-link * {
     text-decoration: none;
     font-weight: bold;
   }
-  
-// Compte Admin - Page Candidature 
 
+
+  .calendrier-admin {
+    margin: 1rem 1rem 2rem 15rem;
+}
 
 // Compte Admin - page Calendrier 
 .form-entretien {

@@ -13,7 +13,7 @@
     <img src="assets/images/P4-hero.png" loading= "lazy" alt="une image d'un soudeur en position">
 </section>
 
-
+<h1>Processus de recrutement</h1>
 <section class="picto-processus">
   
     <div class="etape-process">

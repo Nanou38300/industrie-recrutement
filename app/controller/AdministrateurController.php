@@ -310,5 +310,43 @@ public function validerEntretien(): void
         exit;
     }
     
+    public function editEntretien(): void
+{
+    $this->redirectIfNotAdmin();
+
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        echo "<div class='alert alert-danger'>❌ Entretien introuvable.</div>";
+        return;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'date_entretien' => $_POST['date_entretien'] ?? null,
+            'heure'          => $_POST['heure'] ?? null,
+            'type'           => $_POST['type'] ?? '',
+            'lien_visio'     => $_POST['lien_visio'] ?? null,
+            'commentaire'    => $_POST['commentaire'] ?? null
+        ];
+
+        if ($data['date_entretien'] && $data['heure'] && $data['type']) {
+            $success = $this->entretienModel->update((int)$id, $data);
+
+            if ($success) {
+                echo "<div class='alert alert-success'>✅ Entretien mis à jour.</div>";
+                header("Refresh: 2; URL=/administrateur/vue-calendrier");
+                exit;
+            } else {
+                echo "<div class='alert alert-danger'>❌ Échec de la mise à jour.</div>";
+            }
+        } else {
+            echo "<div class='alert alert-warning'>⚠️ Champs obligatoires manquants.</div>";
+        }
+    }
+
+    $entretien = $this->entretienModel->findById((int)$id);
+    $this->calendarView->renderFormModification($entretien);
+}
+
 
 }

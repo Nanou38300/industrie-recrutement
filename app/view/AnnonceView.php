@@ -266,8 +266,14 @@ class AnnonceView {
         .status { color: #28a745; font-weight: bold; }
         .actions a { margin-right: 10px; }
         </style>";
+
+
+    echo '<script src="./assets/js/annonce.js"></script>';
     }
+
+
 }
+
+
 ?>
 
-<script src="./assets/js/annonce.js"></script>

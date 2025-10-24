@@ -17,26 +17,42 @@ class EntretienModel
     // ➕ Planifie un nouvel entretien
     public function create(array $data): bool
     {
-$stmt = $this->db->prepare("
-    INSERT INTO entretien (
-        id_utilisateur, date_entretien, heure, type, lien_visio, commentaire
-    ) VALUES (
-        :id_utilisateur, :date_entretien, :heure, :type, :lien_visio, :commentaire
-    )
-");
+        $stmt = $this->db->prepare("
+            INSERT INTO entretien (
+                id_utilisateur, date_entretien, heure, type, lien_visio, commentaire
+            ) VALUES (
+                :id_utilisateur, :date_entretien, :heure, :type, :lien_visio, :commentaire
+            )
+        ");
 
-return $stmt->execute([
-    'id_utilisateur' => $data['id_utilisateur'],
-    'date_entretien' => $data['date_entretien'],
-    'heure'          => $data['heure'],
-    'type'           => $data['type'],
-    'lien_visio'     => $data['lien_visio'],
-    'commentaire'    => $data['commentaire']
-]);
-
-        
+        return $stmt->execute([
+            'id_utilisateur' => $data['id_utilisateur'],
+            'date_entretien' => $data['date_entretien'],
+            'heure'          => $data['heure'],
+            'type'           => $data['type'],
+            'lien_visio'     => $data['lien_visio'],
+            'commentaire'    => $data['commentaire']
+        ]);
     }
-    
+
+    // 📅 Format FullCalendar enrichi
+    public function getAllRdv(): array
+    {
+        $stmt = $this->db->query("
+            SELECT e.id,
+                   CONCAT(e.date_entretien, 'T', e.heure) AS start,
+                   CONCAT(e.heure, ' - ', COALESCE(u.prenom, ''), ' ', COALESCE(u.nom, ''), ' - ', COALESCE(a.titre, '')) AS title,
+                   CASE
+                       WHEN e.type = 'Visio' THEN '#7F847D'
+                       WHEN e.type = 'Présentiel' THEN '#C9AB89'
+                       ELSE '#7F847D'
+                   END AS color
+            FROM entretien e
+            LEFT JOIN utilisateur u ON u.id = e.id_utilisateur
+            LEFT JOIN annonce a ON a.id = e.id_annonce
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // 📅 Récupère les entretiens d’un jour donné
     public function getByDate(string $date): array
@@ -137,7 +153,13 @@ return $stmt->execute([
     // 👁️ Détail d’un entretien
     public function findById(int $id): ?array
     {
-        $stmt = $this->db->prepare("SELECT * FROM entretien WHERE id = :id");
+        $stmt = $this->db->prepare("
+            SELECT e.*, u.nom, u.prenom, a.titre AS poste
+            FROM entretien e
+            LEFT JOIN utilisateur u ON u.id = e.id_utilisateur
+            LEFT JOIN annonce a ON a.id = e.id_annonce
+            WHERE e.id = :id
+        ");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -179,19 +201,27 @@ return $stmt->execute([
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // 📅 Format FullCalendar : tous les RDV
-    public function getAllRdv(): array
-    {
-        $stmt = $this->db->query("
-            SELECT e.id,
-                   e.type AS title,
-                   CONCAT(e.date_entretien, 'T', e.heure) AS start,
-                   u.nom, u.prenom, e.lien_visio
-            FROM entretien e
-            JOIN utilisateur u ON u.id = e.id_utilisateur
-        ");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
-    
-}  
+    // ✏️ Met à jour un entretien existant
+public function update(int $id, array $data): bool
+{
+    $stmt = $this->db->prepare("
+        UPDATE entretien
+        SET date_entretien = :date_entretien,
+            heure = :heure,
+            type = :type,
+            lien_visio = :lien_visio,
+            commentaire = :commentaire
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        'date_entretien' => $data['date_entretien'],
+        'heure'          => $data['heure'],
+        'type'           => $data['type'],
+        'lien_visio'     => $data['lien_visio'],
+        'commentaire'    => $data['commentaire'],
+        'id'             => $id
+    ]);
+}
+
+}

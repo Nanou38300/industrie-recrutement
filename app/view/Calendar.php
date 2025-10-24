@@ -10,40 +10,51 @@
             max-width: 1000px;
             margin: 2rem auto;
         }
+        .fc-event-title {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <h1 style="text-align:center;">📅 Calendrier des rendez-vous</h1>
     <div id="calendar"></div>
+
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
 
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        locale: 'fr',
-        selectable: true,
-        editable: false,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'timeGridWeek,timeGridDay'
-        },
-        events: '/administrateur/api-rdv',
-        select: function(info) {
-            const date = info.startStr;
-            if (confirm(`Créer un RDV le ${date} ?`)) {
-                window.location.href = `/administrateur/creer-entretien?date=${date}`;
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            locale: 'fr',
+            selectable: true,
+            editable: false,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+            },
+            events: '/administrateur/api-rdv',
+
+            select: function(info) {
+                const date = info.startStr;
+                if (confirm(`Créer un RDV le ${date} ?`)) {
+                    window.location.href = `/administrateur/creer-entretien?date=${date}`;
+                }
+            },
+
+            eventClick: function(info) {
+                window.location.href = `/administrateur/rdv?id=${info.event.id}`;
+            },
+
+            eventDidMount: function(info) {
+                // Ajout d’un tooltip au survol
+                const tooltip = `${info.event.title}\nType : ${info.event.extendedProps.type || ''}`;
+                info.el.setAttribute('title', tooltip);
             }
-        },
-        eventClick: function(info) {
-            window.location.href = `/administrateur/rdv?id=${info.event.id}`;
-        }
+        });
+
+        calendar.render();
     });
-
-    calendar.render();
-});
-</script>
-
+    </script>
 </body>
 </html>

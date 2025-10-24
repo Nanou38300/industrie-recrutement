@@ -103,7 +103,7 @@
 
 <section class="superposition2">
 <article>
-    <p>TCS Chaudronnerie</p>
+    <p class="tcs-C">TCS Chaudronnerie</p>
     <h2>Etiam scelerisque, lacus eu luctus blandit, tellus diam.</h2>
     <p>Vivamus lectus neque, tincidunt et consequat id, mattis vel diam. Fusce nisl justo, malesuada eu tellus vitae, lacinia cursus enim. Aenean neque elit, varius et dui in, rhoncus tincidunt ante. Suspendisse tortor libero.</p>
     <p>Vivamus lectus neque, tincidunt et consequat id, mattis vel diam. Fusce nisl justo, malesuada eu tellus vitae, lacinia cursus enim. Aenean neque elit, varius et dui in, rhoncus tincidunt ante. Suspendisse tortor libero.</p>

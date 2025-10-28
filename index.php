@@ -60,30 +60,44 @@ try {
             break;
 
             case 'administrateur':
-                $ctrl = new AdministrateurController;
-                match ($step) {
-                    'dashboard'        => $ctrl->dashboard($_SESSION['utilisateur']['id']),
-                    'profil'           => $ctrl->profil($_SESSION['utilisateur']['id']),
-                    'edit-profil'      => $ctrl->editProfil(),
-                    'delete-profil'    => $ctrl->deleteProfil(),
-                    'annonces'         => $ctrl->viewAnnonces(),
-                    'create-annonce'   => $ctrl->createAnnonce(),
-                    'edit-annonce'     => $ctrl->editAnnonce((int)$id),
-                    'archive-annonce'  => $ctrl->archiveAnnonce((int)$id),
-                    'candidatures'     => $ctrl->listCandidatures(),
-                    'candidature'      => $ctrl->viewCandidature((int)$id),
-                    'calendrier'       => $ctrl->calendrier(),
-                    'creer-entretien'   => $ctrl->creerEntretien(),
-                    'valider-entretien' => $ctrl->validerEntretien(),
-                    'rdv'               => $id ? $ctrl->viewRdv((int)$id) : $ctrl->calendrier(),
-                    'api-rdv'           => $ctrl->apiRdv(),
+    $ctrl = new AdministrateurController;
 
-                    'logout'           => $ctrl->logout(),
+    match ($step) {
+        // Profil & sessions
+        'dashboard'        => $ctrl->dashboard($_SESSION['utilisateur']['id']),
+        'profil'           => $ctrl->profil($_SESSION['utilisateur']['id']),
+        'edit-profil'      => $ctrl->editProfil(),
+        'delete-profil'    => $ctrl->deleteProfil(),
+        'logout'           => $ctrl->logout(),
 
-                    default            => $ctrl->dashboard($_SESSION['utilisateur']['id']),
-                };
-                break;
-            
+        // Annonces
+        'annonces'         => $ctrl->viewAnnonces(),
+        'create-annonce'   => $ctrl->createAnnonce(),
+        'edit-annonce'     => $ctrl->editAnnonce((int)$id),
+        'delete-annonce'   => $ctrl->deleteAnnonce((int)$id),
+        'archive-annonce'  => $ctrl->archiveAnnonce((int)$id),
+
+        // Candidatures
+        'candidatures'     => $ctrl->listCandidatures(),
+        'candidature'      => $ctrl->viewCandidature((int)$id),
+
+        // Calendrier & entretiens
+        'calendrier'       => $ctrl->calendrier(),
+        'rdv'              => $id ? $ctrl->viewRdv((int)$id) : $ctrl->calendrier(),
+        'creer-entretien'  => $ctrl->creerEntretien(),
+        'valider-entretien'=> $ctrl->validerEntretien(),
+        'edit-entretien'   => $ctrl->editEntretien(),     // GET = affiche le formulaire ; POST = enregistre
+        'delete-entretien' => $ctrl->deleteEntretien(),   // POST = supprime
+        'api-rdv'          => $ctrl->apiRdv(),
+
+        // Alias tolérants (facultatif)
+        'editEntretien'    => $ctrl->editEntretien(),
+        'deleteEntretien'  => $ctrl->deleteEntretien(),
+
+        // Par défaut
+        default            => $ctrl->dashboard($_SESSION['utilisateur']['id']),
+    };
+    break;
             
 
         case 'candidat':
@@ -93,6 +107,7 @@ try {
                 'update'          => $ctrl->update(),
                 'delete'          => $ctrl->delete(),
                 'upload-cv'       => $ctrl->uploadCV(),
+                'uploadPhoto' => $ctrl->uploadPhoto(),
                 'annonces'        => $ctrl->listAnnonces(),
                 'annonce-view'    => $ctrl->viewAnnonce((int)$id),
                 'postuler'        => $ctrl->postuler((int)$_GET['id']),
@@ -146,22 +161,28 @@ try {
             };
             break;
 
-        case 'candidature':
-            $ctrl = new CandidatureController;
-            match ($step) {
-                'submit' => $ctrl->submitCandidature(),
-                'view'   => $ctrl->viewCandidature((int)$id),
-                'delete' => $ctrl->deleteCandidature((int)$id),
-                'suivi'  => $ctrl->suivi(),
-                'update-statut' => $ctrl->updateStatut(),
-                default  => $ctrl->listCandidatures(),
-            };
-            break;
+            case 'candidature':
+                $ctrl = new CandidatureController;
+            
+                match ($step) {
+                    'submit'         => $ctrl->submitCandidature(),
+                    'view'           => $ctrl->viewCandidature((int)$id),
+                    'delete'         => $ctrl->deleteCandidature((int)$id),
+                    'suivi'          => $ctrl->suivi(),
+                    'update-statut'  => $ctrl->updateStatut(),  // ✅ existant
+                    'updateStatut'   => $ctrl->updateStatut(),  // ✅ alias camelCase
+                    default          => $ctrl->listCandidatures(),
+                };
+                break;
 
         case 'entretien':
             $ctrl = new EntretienController;
             match ($step) {
                 'planifier' => $ctrl->planifierEntretien(),
+                'edit-entretien'    => $ctrl->editEntretien(),     // ✅ GET (affichage) et POST (enregistrement)
+                'delete-entretien'  => $ctrl->deleteEntretien(),   // ✅ POST suppression
+                'editEntretien'     => $ctrl->editEntretien(),
+                'deleteEntretien'   => $ctrl->deleteEntretien(),
                 'valider-entretien' => $ctrl->validerEntretien(),
                 'rappel'    => $ctrl->envoyerRappel((int)$id),
                 default     => $ctrl->listEntretiens(),

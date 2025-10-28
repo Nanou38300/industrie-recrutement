@@ -1,85 +1,97 @@
+<?php
+// Sécurisation / valeurs par défaut
+$photo    = $candidat['photo_profil'] ?? 'assets/images/default.jpg';
+$photoUrl = '/' . ltrim($photo, '/');
+
+$nom      = htmlspecialchars($candidat['nom']     ?? '', ENT_QUOTES, 'UTF-8');
+$prenom   = htmlspecialchars($candidat['prenom']  ?? '', ENT_QUOTES, 'UTF-8');
+$email    = htmlspecialchars($candidat['email']   ?? '', ENT_QUOTES, 'UTF-8');
+$tel      = htmlspecialchars($candidat['telephone'] ?? '', ENT_QUOTES, 'UTF-8');
+$poste    = htmlspecialchars($entretien['poste']  ?? ($candidat['poste'] ?? ''), ENT_QUOTES, 'UTF-8');
+
+$dateEnt  = htmlspecialchars($entretien['date_entretien'] ?? '', ENT_QUOTES, 'UTF-8');
+$heureEnt = htmlspecialchars($entretien['heure']         ?? '', ENT_QUOTES, 'UTF-8');
+$typeEnt  = htmlspecialchars($entretien['type']          ?? '', ENT_QUOTES, 'UTF-8');
+$lienVisio= $entretien['lien_visio'] ?? '';
+$comment  = nl2br(htmlspecialchars($entretien['commentaire'] ?? '', ENT_QUOTES, 'UTF-8'));
+
+// CV (on stocke uniquement le "nom de fichier" en BDD)
+$cvFile   = $candidat['cv'] ?? '';
+$cvName   = htmlspecialchars(basename($cvFile), ENT_QUOTES, 'UTF-8');
+$cvAbs    = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/') . '/uploads/' . basename($cvFile);
+$cvUrl    = '/uploads/' . $cvName;
+?>
+
 <section class="rdv-detail">
-    <h2>Détail de l’entretien</h2>
+  <h2>Détail de l’entretien</h2>
 
-    <div class="fiche-candidat">
-        <img src="/<?= htmlspecialchars($candidat['photo_profil'] ?? 'assets/images/default.jpg') ?>" class="photo-candidat" alt="Photo">
-        <div>
-            <h3><?= htmlspecialchars($candidat['prenom'] ?? '') ?> <?= htmlspecialchars($candidat['nom'] ?? '') ?></h3>
-            <p><strong>Email :</strong> <?= htmlspecialchars($candidat['email'] ?? '') ?></p>
-            <p><strong>Téléphone :</strong> <?= htmlspecialchars($candidat['telephone'] ?? '') ?></p>
-            <p><strong>Poste :</strong> <?= htmlspecialchars($entretien['poste'] ?? '') ?></p>
-        </div>
+  <!-- FICHE CANDIDAT -->
+  <div class="fiche-candidat" style="display:flex;gap:16px;align-items:flex-start;">
+    <img src="<?= htmlspecialchars($photoUrl, ENT_QUOTES, 'UTF-8') ?>"
+         class="photo-candidat"
+         alt="Photo"
+         style="max-width:120px;border-radius:8px;">
+
+    <div>
+      <h3><?= $prenom ?> <?= $nom ?></h3>
+      <p><strong>Email :</strong> <?= $email ?></p>
+      <p><strong>Téléphone :</strong> <?= $tel ?></p>
+      <p><strong>Poste :</strong> <?= $poste ?></p>
+
+      <?php if ($cvFile !== ''): ?>
+        <?php if (is_file($cvAbs)): ?>
+          <p><strong>CV :</strong>
+            <a href="<?= htmlspecialchars($cvUrl, ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Voir le CV</a>
+          </p>
+        <?php else: ?>
+          <p><strong>CV :</strong>
+            <em>Fichier introuvable : <?= $cvName ?></em>
+          </p>
+        <?php endif; ?>
+      <?php else: ?>
+        <p><strong>CV :</strong> <em>Non fourni</em></p>
+      <?php endif; ?>
     </div>
+  </div>
 
-    <div class="rdv-info">
-        <p><strong>Date :</strong> <?= htmlspecialchars($entretien['date_entretien'] ?? '') ?></p>
-        <p><strong>Heure :</strong> <?= htmlspecialchars($entretien['heure'] ?? '') ?></p>
-        <p><strong>Type :</strong> <?= htmlspecialchars($entretien['type'] ?? '') ?></p>
-        <p><strong>Lien Visio :</strong> 
-            <?php if (!empty($entretien['lien_visio'])): ?>
-                <a href="<?= htmlspecialchars($entretien['lien_visio']) ?>" target="_blank">Accéder</a>
-            <?php else: ?>
-                <em>Non renseigné</em>
-            <?php endif; ?>
-        </p>
-        <p><strong>Commentaire :</strong> <?= nl2br(htmlspecialchars($entretien['commentaire'] ?? '')) ?></p>
-    </div>
+  <!-- INFOS RDV -->
+  <div class="rdv-info" style="margin-top:16px;">
+    <p><strong>Date :</strong> <?= $dateEnt ?></p>
+    <p><strong>Heure :</strong> <?= $heureEnt ?></p>
+    <p><strong>Type :</strong> <?= $typeEnt ?></p>
+    <p><strong>Lien Visio :</strong>
+      <?php if (!empty($lienVisio)): ?>
+        <a href="<?= htmlspecialchars($lienVisio, ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Accéder</a>
+      <?php else: ?>
+        <em>Non renseigné</em>
+      <?php endif; ?>
+    </p>
+    <p><strong>Commentaire :</strong> <?= $comment ?></p>
+  </div>
 
-    <div class="rdv-actions">
-        <form method="GET" action="/administrateur/edit-entretien" style="display:inline-block;">
-            <input type="hidden" name="id" value="<?= htmlspecialchars($entretien['id']) ?>">
-            <button type="submit">✏️ Modifier</button>
-        </form>
+  <!-- ACTIONS -->
+  <div class="rdv-actions" style="display:flex;gap:12px;margin-top:16px;">
 
-        <form method="POST" action="/administrateur/delete-entretien" style="display:inline-block;" onsubmit="return confirm('Confirmer la suppression de ce rendez-vous ?');">
-            <input type="hidden" name="id" value="<?= htmlspecialchars($entretien['id']) ?>">
-            <button type="submit">🗑️ Supprimer</button>
-        </form>
-    </div>
+    <!-- Bouton Modifier -->
+    <form method="GET" action="/administrateur/edit-entretien" class="form-edit">
+      <input type="hidden" name="id" value="<?= htmlspecialchars((string)($entretien['id'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+      <button type="submit" class="btn-edit">
+        <img src="/assets/images/stylo.png" alt="modifier" class="icon-btn">
+        Modifier
+      </button>
+    </form>
+
+    <!-- Bouton Supprimer -->
+    <form method="POST"
+          action="/administrateur/delete-entretien"
+          onsubmit="return confirm('Confirmer la suppression de ce rendez-vous ?');"
+          class="form-delete">
+      <input type="hidden" name="id" value="<?= htmlspecialchars((string)($entretien['id'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
+      <button type="submit" class="btn-delete">
+        <img src="/assets/images/poubelle.png" alt="supprimer" class="icon-btn">
+        Supprimer
+      </button>
+    </form>
+
+  </div>
 </section>
-
-<style>
-.fiche-candidat {
-    margin: 1rem 1rem 2rem 15rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: #C9AB89;
-    padding: 1rem;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-.photo-candidat {
-    margin: 1rem 1rem 2rem 15rem;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-.rdv-info {
-    margin: 1rem 1rem 2rem 15rem;
-    margin-top: 2rem;
-    background: #fff;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-.rdv-actions {
-    margin: 1rem 1rem 2rem 15rem;
-    margin-top: 1rem;
-    display: flex;
-    gap: 1rem;
-}
-.rdv-actions button {
-    margin: 1rem 1rem 2rem 15rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background-color: #1A3E38;
-    color: white;
-}
-.rdv-actions button:hover {
-    background-color: #C9AB89;
-}
-</style>

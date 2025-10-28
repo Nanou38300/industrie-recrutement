@@ -87,15 +87,17 @@ class UtilisateurModel
     // 🔍 Récupération par ID
     public function getById(int $id): ?array
     {
-        try {
-            $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = :id");
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-        } catch (\PDOException $e) {
-            error_log("Erreur getById($id) : " . $e->getMessage());
-            return null;
-        }
+        $stmt = $this->db->prepare("
+            SELECT 
+                id, nom, prenom, email, telephone, ville, poste,
+                photo_profil,      -- important
+                cv, date_cv        -- important
+            FROM utilisateur
+            WHERE id = ?
+            LIMIT 1
+        ");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
     // ✏️ Mise à jour complète du profil

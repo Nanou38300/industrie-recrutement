@@ -23,60 +23,74 @@ class CandidatView
     public function renderProfil(array $profil): void
     {
         echo "<section class='profile-header'>";
-
-        // 📸 Photo en premier
+    
+        // Photo en premier
         echo "<div class='photo-profil'>";
             $photo = $this->safe($profil['photo_profil'] ?? 'assets/images/default.jpg');
-            echo "<img src='/$photo' alt='Photo de profil' class='photo-candidat'>";
-            echo "<input type=\"file\" name=\"photo_profil\" accept=\"image/*\" required>";
-        echo "</div>";
+            echo "<img src='/" . ltrim($photo, '/') . "' alt='Photo de profil' class='photo-candidat'>";
         
-
-
-
-        // 👤 Nom + LinkedIn + ✏️
-            echo "<div class='identite'>";
-                echo "<h2>" . $this->safe($profil['prenom']) . " " . $this->safe($profil['nom']) . "</h2>";
-                echo "<a href='" . $this->safe($profil['linkedin'] ?? '#') . "' target='_blank'>
-                        <img class='linkedin' src='/assets/images/linkedin.png' alt='LinkedIn' class='linkedin-icon'>
-                    </a>";
-                echo "<a href='/candidat/edit?champ=nom' class='edit-icon'>✏️</a>";
-            echo "</div>";
-
-        // 🏷️ Poste
-            echo "<p class='job-title'>" . $this->safe($profil['poste']) . "
+    
+    
+        // Nom + LinkedIn + ✏️
+        echo "<div class='identite'>";
+            echo "<h2>" . $this->safe($profil['prenom'] ?? '') . " " . $this->safe($profil['nom'] ?? '') . "</h2>";
+            echo "<a href='" . $this->safe($profil['linkedin'] ?? '#') . "' target='_blank'>
+                    <img class='linkedin' src='/assets/images/linkedin.png' alt='LinkedIn' class='linkedin-icon'>
+                  </a>";
+            echo "<a href='/candidat/edit?champ=nom' class='edit-icon'>✏️</a>";
+        echo "</div>";
+        echo "</div>";
+        // Poste
+        echo "<p class='job-title'>" . $this->safe($profil['poste'] ?? '') . "
                 <a href='/candidat/edit?champ=poste' class='edit-icon'>✏️</a></p>";
-
-        // 📧 Email
-            echo "<div class='field'><label>Email</label><p>" . $this->safe($profil['email']) . "</p>
+    
+        // Email
+        echo "<div class='field'><label>Email</label><p>" . $this->safe($profil['email'] ?? '') . "</p>
                 <a href='/candidat/edit?champ=email' class='edit-icon'>✏️</a></div>";
-
-        // 📞 Téléphone
-            echo "<div class='field'><label>Téléphone</label><p>" . $this->safe($profil['telephone']) . "</p>
+    
+        // Téléphone
+        echo "<div class='field'><label>Téléphone</label><p>" . $this->safe($profil['telephone'] ?? '') . "</p>
                 <a href='/candidat/edit?champ=telephone' class='edit-icon'>✏️</a></div>";
-
-        // 🏙️ Ville
-            echo "<div class='field'><label>Ville</label><p>" . $this->safe($profil['ville']) . "</p>
+    
+        // Ville
+        echo "<div class='field'><label>Ville</label><p>" . $this->safe($profil['ville'] ?? '') . "</p>
                 <a href='/candidat/edit?champ=ville' class='edit-icon'>✏️</a></div>";
-
-        // 📄 CV
-        if (!empty($profil['cv'])) {
-            echo "<section class='cv-section'>";
-                echo "<div class='icon'>📄</div>";
-                    echo "<div class='cv-info'>";
-                    echo "<p>CV ajouté</p>";
-                    echo "<p class='date'>" . $this->safe($profil['date_cv'] ?? '') . "</p>";
-                echo "</div>";
-            echo "</section>";
+    
+        // CV
+        echo "<section class='cv-section'>";
+        $cvFile = $profil['cv'] ?? ''; // en BDD on stocke uniquement le nom du fichier (ex: 1730112345-mon-cv.pdf)
+    
+        if ($cvFile !== '') {
+            // Chemin absolu disque pour vérifier l'existence
+            $abs = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/') . '/uploads/' . basename($cvFile);
+    
+            echo "<div class='icon'>📄</div>";
+            echo "<div class='cv-info'>";
+    
+            if (is_file($abs)) {
+                echo "<p>CV ajouté</p>";
+                echo "<p class='date'>" . $this->safe($profil['date_cv'] ?? '') . "</p>";
+                echo "<p><a href='/uploads/" . $this->safe(basename($cvFile)) . "' target='_blank' rel='noopener'>Voir mon CV</a></p>";
+            } else {
+                // Le nom est en BDD mais le fichier n'est pas sur disque
+                echo "<p><strong>CV :</strong> <em>fichier introuvable : " . $this->safe($cvFile) . "</em></p>";
+            }
+    
+            echo "</div>";
+        } else {
+            // Aucun CV enregistré
+            echo "<div class='icon'>📄</div>";
+            echo "<div class='cv-info'><p><em>Aucun CV enregistré</em></p></div>";
         }
-
+        echo "</section>";
+    
         echo "</section>";
     }
 
     public function renderUploadForm(): void
     {
         echo "<section class='upload-cv'>";
-        echo "<h2>📄 Télécharger mon CV</h2>";
+        echo "<h2>Télécharger mon CV</h2>";
         echo "<form method='POST' enctype='multipart/form-data' action='/candidat/upload-cv'>
                 <input type='file' name='cv' accept='.pdf,.doc,.docx' required />
                 <button type='submit'>Enregistrer</button>
@@ -84,7 +98,7 @@ class CandidatView
         echo "</section><hr>";
 
         echo "<section class='upload-photo'>";
-        echo "<h2>🖼️ Photo de profil</h2>";
+        echo "<h2>Photo de profil</h2>";
         echo "<form method='POST' enctype='multipart/form-data' action='/candidat/uploadPhoto'>
                 <input type='file' name='photo' accept='image/*' required />
                 <button type='submit'>Envoyer</button>
@@ -116,7 +130,7 @@ class CandidatView
         
 
         echo "<section class='annonces'>";
-        echo "<h2>📢 Annonces Disponibles</h2>";
+        echo "<h2>Annonces Disponibles</h2>";
 
         echo "<script>
             function toggleDetails(button) {
@@ -137,7 +151,6 @@ class CandidatView
                 echo "<p><strong>Type de contrat :</strong> " . $this->safe($a['type_contrat']) . "</p>";
                 echo "<p><strong>Salaire :</strong> " . $this->safe($a['salaire']) . "</p>";
                 echo "<p><strong>Date de publication :</strong> " . $this->safe($a['date_publication']) . "</p>";
-                echo "<p><strong>Référence :</strong> " . $this->safe($a['reference']) . "</p>";
 
                 echo "<button onclick='toggleDetails(this)' class='btn-toggle'>
                         <img class='img-deroulante' src='/assets/images/fleche-bas.png' alt='Voir les détails'>
@@ -184,27 +197,36 @@ class CandidatView
                 echo "<p>Le processus de recrutement prend entre 21 et 37 jours. Vous serez informé à chaque étape.</p>";
                 echo "<div class='timeline-wrapper'>";
                 echo "<div class='timeline-bar'></div>";
-                echo "<div class='timeline'>";
-    
-                $etapes = ['envoyée', 'consultée', 'entretien', 'recruté', 'refusé'];
+                echo "<div class='suivi-candidature'>";
+echo "<h4>SUIVI DE LA CANDIDATURE</h4>";
+echo "<p>Le processus de recrutement prend entre 21 et 37 jours. Vous serez informé à chaque étape.</p>";
+echo "<div class='timeline-wrapper'>";
+echo "<div class='timeline-bar'></div>";
+echo "<div class='timeline'>";
 
-                $statutActuel = $candidature['statut'] ?? '';
-    
-                $reached = true;
-                foreach ($etapes as $etape) {
-                    $class = '';
-                    if ($etape === $statutActuel) {
-                        $class = 'active';
-                        $reached = false;
-                    } elseif ($reached) {
-                        $class = 'completed';
-                    }
-                    echo "<div class='etape $class'>$etape</div>";
-                }
-    
-                echo "</div>"; // fin timeline
-                echo "</div>"; // fin timeline-wrapper
-                echo "</div>"; // fin suivi-candidature
+$etapes = ['envoyée', 'consultée', 'entretien', 'recruté', 'refusé'];
+$statutActuel = mb_strtolower(trim((string)($candidature['statut'] ?? '')));
+
+// Pour gérer les couleurs :
+// - 'completed' pour toutes les étapes avant le statut actuel
+// - 'active'    pour l'étape == statut actuel
+// - 'pending'   pour les étapes après
+$phase = 'completed';
+foreach ($etapes as $etape) {
+    if ($etape === $statutActuel) {
+        $class = 'active';
+        $phase = 'pending'; // les suivantes seront "pending"
+    } else {
+        $class = ($phase === 'completed') ? 'completed' : 'pending';
+    }
+
+    echo "<div class='etape {$class}'>" . htmlspecialchars(ucfirst($etape), ENT_QUOTES, 'UTF-8') . "</div>";
+}
+
+echo "</div>"; // timeline
+echo "</div>"; // timeline-wrapper
+echo "</div>"; // suivi-candidature
+              
                 echo "</div><hr>"; // fin candidature
             }
         }
@@ -213,3 +235,4 @@ class CandidatView
     }
     
 }
+

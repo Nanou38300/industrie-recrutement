@@ -22,7 +22,7 @@ class AnnonceView {
 
     // Bloc suivi d'annonces
     echo "<div class='bloc-annonces'>";
-    echo "<h3>📊 Suivi d'annonces</h3>";
+    echo "<h3>Suivi d'annonces</h3>";
     foreach ($stats as $stat) {
         echo "<div class='stat-poste'>";
         echo "<strong>" . htmlspecialchars($stat['poste']) . "</strong><br>";
@@ -33,7 +33,7 @@ class AnnonceView {
 
     // Bloc calendrier
     echo "<div class='bloc-calendrier'>";
-    echo "<h3>📅 Suivi de rendez-vous</h3>";
+    echo "<h3>Suivi de rendez-vous</h3>";
     foreach ($rendezVous as $rdv) {
         echo "<div class='rdv'>";
         echo "<strong>" . htmlspecialchars($rdv['date_entretien']) . "</strong> : ";
@@ -48,7 +48,7 @@ class AnnonceView {
     public function renderListe(array $annonces): void
 {
     echo "<section class='annonces'>";
-    echo "<h2>📢 Annonces Disponibles</h2>";
+    echo "<h2>Annonces Disponibles</h2>";
 
     foreach ($annonces as $annonce) {
         echo "<div class='annonce'>";
@@ -68,9 +68,10 @@ class AnnonceView {
 
         // Bloc détails masqué
         echo "<div class='details'>";
-        echo "<h4>Description</h4><p>" . htmlspecialchars($annonce['description'] ?? '') . "</p>";
-        echo "<h4>Missions</h4><p>" . htmlspecialchars($annonce['missions'] ?? '') . "</p>";
-        echo "<h4>Profil</h4><p>" . htmlspecialchars($annonce['profil'] ?? '') . "</p>";
+       // détails
+echo "<h4>Description</h4><p>" . htmlspecialchars($annonce['description'] ?? '') . "</p>";
+echo "<h4>Missions</h4><p>" . htmlspecialchars($annonce['mission'] ?? '') . "</p>"; 
+echo "<h4>Profil</h4><p>" . htmlspecialchars($annonce['profil_recherche'] ?? '') . "</p>";
         echo "<h4>Avantages</h4><p>" . htmlspecialchars($annonce['avantages'] ?? '') . "</p>";
         echo "</div>";
 
@@ -111,11 +112,11 @@ class AnnonceView {
         echo "<div class='info-item'><strong>Avantages :</strong> {$a['avantages']}</div>";
         echo "<div class='info-item'><strong>Type de contrat :</strong> {$a['type_contrat']}</div>";
         echo "<div class='info-item'><strong>Durée :</strong> {$a['duree_contrat']}</div>";
-        echo "<div class='info-item'><strong>Référence :</strong> {$a['reference']}</div>";
+
         echo "</div>";
         
         echo "<div class='actions'>";
-        echo "<a href='?action=annonce' class='btn btn-secondary'>⬅️ Retour à la liste</a> ";
+        echo "<a href='?action=annonce' class='btn btn-secondary'>Retour à la liste</a> ";
         echo "<a href='?action=annonce&step=update&id={$a['id']}' class='btn btn-primary'>✏️ Modifier</a>";
         echo "</div>";
         echo "</div>";
@@ -212,10 +213,6 @@ class AnnonceView {
         echo "<legend>Informations administratives</legend>";
         echo "<div class='form-row'>";
         echo "<div class='form-group'>";
-        echo "<label for='reference'>Référence:</label>";
-        echo "<input type='text' id='reference' name='reference' value='" . htmlspecialchars($data['reference'] ?? '') . "'>";
-        echo "</div>";
-        echo "<div class='form-group'>";
         echo "<label for='date_publication'>Date de publication *:</label>";
         echo "<input type='date' id='date_publication' name='date_publication' value='" . htmlspecialchars($data['date_publication'] ?? date('Y-m-d')) . "' required>";
         echo "</div>";
@@ -225,10 +222,10 @@ class AnnonceView {
         echo "<div class='form-group'>";
         echo "<label for='statut'>Statut *:</label>";
         echo "<select id='statut' name='statut' required>";
-        $statuts = ['active', 'inactive', 'archivee'];
-        foreach ($statuts as $statut) {
-            $selected = (($data['statut'] ?? 'active') === $statut) ? 'selected' : '';
-            echo "<option value='$statut' $selected>" . ucfirst($statut) . "</option>";
+        $statuts = ['activée', 'brouillon', 'archivée'];
+        foreach ($statuts as $s) {
+            $selected = (($data['statut'] ?? 'activée') === $s) ? 'selected' : '';
+            echo "<option value='{$s}' {$selected}>" . ucfirst($s) . "</option>";
         }
         echo "</select>";
         echo "</div>";
@@ -241,32 +238,14 @@ class AnnonceView {
         
         // Actions
         echo "<div class='form-actions'>";
-        echo "<button type='submit' class='btn btn-primary'>💾 Enregistrer</button> ";
-        echo "<a href='?action=annonce' class='btn btn-secondary'>❌ Annuler</a>";
+        echo "<button type='submit' class='btn btn-primary'>Enregistrer</button> ";
+        echo "<a href='?action=annonce' class='btn btn-secondary'>Annuler</a>";
         echo "</div>";
         
         echo "</form>";
         echo "</div>";
         
-        // CSS basique pour améliorer l'apparence
-        echo "<style>
-        .form-container { max-width: 800px; margin: 0 auto; padding: 20px; }
-        .annonce-form fieldset { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
-        .annonce-form legend { padding: 0 10px; font-weight: bold; }
-        .form-group { margin-bottom: 15px; }
-        .form-row { display: flex; gap: 15px; }
-        .form-row .form-group { flex: 1; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        .form-actions { text-align: center; margin-top: 20px; }
-        .btn { padding: 10px 20px; margin: 5px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; }
-        .btn-primary { background-color: #007bff; color: white; }
-        .btn-secondary { background-color: #6c757d; color: white; }
-        .annonce-item { margin-bottom: 15px; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
-        .status { color: #28a745; font-weight: bold; }
-        .actions a { margin-right: 10px; }
-        </style>";
-
+ 
 
     echo '<script src="./assets/js/annonce.js"></script>';
     }

@@ -154,11 +154,18 @@ class EntretienModel
     public function findById(int $id): ?array
     {
         $stmt = $this->db->prepare("
-            SELECT e.*, u.nom, u.prenom, a.titre AS poste
+            SELECT 
+                e.id,
+                e.id_utilisateur,   
+                e.id_annonce,
+                e.date_entretien,
+                e.heure,
+                e.type,
+                e.lien_visio,
+                e.commentaire
             FROM entretien e
-            LEFT JOIN utilisateur u ON u.id = e.id_utilisateur
-            LEFT JOIN annonce a ON a.id = e.id_annonce
             WHERE e.id = :id
+            LIMIT 1
         ");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;

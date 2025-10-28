@@ -13,11 +13,11 @@
     <img src="assets/images/P4-hero.png" loading= "lazy" alt="une image d'un soudeur en position">
 </section>
 
-<h1>Processus de recrutement</h1>
+<h1>Notre processus de recrutement</h1>
 <section class="picto-processus">
   
     <div class="etape-process">
-        <img src="assets/images/P4_pictodossier.png" alt="un picto de dossier">
+        <img src="assets/images/P4_pictodossier.webp" alt="un picto de dossier">
         <p class="texte-beige">Tri des candidatures pour identifier les profils correspondant aux critères.</p>
         <p>Délai entre 3 à 7 jours.
         (Analyse des CV et tri des candidatures).</p>
@@ -27,7 +27,7 @@
 
 
     <div class="etape-process">
-        <img src="assets/images/P4_pictotri.png" alt="un picto de tris de candidatures">
+        <img src="assets/images/P4_pictotri.webp" alt="un picto de tris de candidatures">
         <p class="texte-beige">Entretiens individuels.</p>
         <p>Délai entre 7 à 10 jours.
         (Organisation et réalisation des entretiens, incluant la coordination des plannings).</p>
@@ -37,7 +37,7 @@
 
  
     <div class="etape-process">
-        <img src="assets/images/P4_pictoentretien.png" alt="un picto de deux personnes qui discutent">
+        <img src="assets/images/P4_pictoentretien.webp" alt="un picto de deux personnes qui discutent">
         <p class="texte-beige">Entretiens individuels.</p>
         <p>Délai entre 7 à 10 jours.
         (Organisation et réalisation des entretiens, incluant la coordination des plannings).</p>
@@ -47,7 +47,7 @@
 
  
     <div class="etape-process">
-        <img src="assets/images/P4_pictochoix.png" alt="un picto de trois personnes les mains en l'air tenant deux pieces de puzels">
+        <img src="assets/images/P4_pictochoix.webp" alt="un picto de trois personnes les mains en l'air tenant deux pieces de puzels">
         <p class="texte-beige">Choix finale
         & Intégration.</p>
         <p>Délai entre 7 à 10 jours.
@@ -69,7 +69,7 @@
         <p>Pour accéder aux informations relatives au suivi de votre candidature, il est nécessaire de créer un compte personnel sur notre plateforme. Ce compte vous permettra de consulter l'état de votre dossier, d'obtenir des mises à jour en temps réel et de rester informé de l'avancée de votre candidature. La création d'un compte est rapide et sécurisée, et elle garantit une gestion personnalisée et confidentielle de votre processus de recrutement.</p>
     </article>
 
-    <button class="btn1">CRÉATION COMPTE</button>
+    <a href="/utilisateur/create"><button class="btn1">CRÉATION COMPTE</button></a>
 </section>
 
 <section  class="template-titre1">
@@ -85,7 +85,7 @@
         <p>C.D.I</p>
         <p>25.03.2025</p>
         <p>Rattaché au responsable de production, vous mettez en œuvre des techniques de pliage, cintrage à froid, roulage et vérinage pour former des tôles. Ces pièces ainsi façonnées sont assemblées par soudage et boulonnage pour créer des structures métalliques.</p>
-        <button class="btn1">POSTULER</button>
+        <a href="/utilisateur/create"><button class="btn1">POSTULER</button></a>
     </article>
 
 
@@ -96,7 +96,7 @@
         <p>C.D.I</p>
         <p>14.03.2025</p>
         <p>Rattaché au responsable de production, vous mettez en œuvre des techniques de pliage, cintrage à froid, roulage et vérinage pour former des tôles. Ces pièces ainsi façonnées sont assemblées par soudage et boulonnage pour créer des structures métalliques.</p>
-        <button class="btn2">POSTULER</button>
+        <a href="/utilisateur/create"><button class="btn2">POSTULER</button></a>
     </article>
   
 
@@ -106,7 +106,7 @@
         <p>C.D.I</p>
         <p>09.03.2025</p>
         <p>Rattaché au responsable de production, vous mettez en œuvre des techniques de pliage, cintrage à froid, roulage et vérinage pour former des tôles. Ces pièces ainsi façonnées sont assemblées par soudage et boulonnage pour créer des structures métalliques.</p>
-        <button class="btn1">POSTULER</button>
+        <a href="/utilisateur/create"><button class="btn1">POSTULER</button></a>
     </article>
     </section>
 <!-- 

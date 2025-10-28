@@ -39,32 +39,42 @@ class CandidatureModel
         return (int) $stmt->fetchColumn();
     }
 
-    // 👁️ Récupère une candidature par son ID
-    public function findById(int $id): ?array
-    {
-        $stmt = $this->db->prepare("
-            SELECT c.*, u.nom, u.prenom, a.titre, a.reference
-            FROM candidature c
-            JOIN utilisateur u ON c.id_utilisateur = u.id
-            JOIN annonce a ON c.id_annonce = a.id
-            WHERE c.id = :id
-        ");
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-    }
+  // 👁️ Récupère une candidature par son ID
+public function findById(int $id): ?array
+{
+    $stmt = $this->db->prepare("
+        SELECT 
+            c.*,
+            u.nom, u.prenom,
+            u.cv      AS cv_filename,
+            u.date_cv AS cv_uploaded_at,
+            a.titre, a.reference
+        FROM candidature c
+        JOIN utilisateur u ON c.id_utilisateur = u.id
+        JOIN annonce a ON c.id_annonce = a.id
+        WHERE c.id = :id
+    ");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
 
-    // 📋 Liste complète des candidatures (admin)
-    public function findAll(): array
-    {
-        $stmt = $this->db->query("
-            SELECT c.*, u.nom, u.prenom, a.titre, a.reference
-            FROM candidature c
-            JOIN utilisateur u ON c.id_utilisateur = u.id
-            JOIN annonce a ON c.id_annonce = a.id
-            ORDER BY c.date_envoi DESC
-        ");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+// 📋 Liste complète des candidatures (admin)
+public function findAll(): array
+{
+    $stmt = $this->db->query("
+        SELECT 
+            c.*,
+            u.nom, u.prenom,
+            u.cv      AS cv_filename,
+            u.date_cv AS cv_uploaded_at,
+            a.titre, a.reference
+        FROM candidature c
+        JOIN utilisateur u ON c.id_utilisateur = u.id
+        JOIN annonce a ON c.id_annonce = a.id
+        ORDER BY c.date_envoi DESC
+    ");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     // 📊 Liste des candidatures d’un utilisateur (candidat)
     public function findByUtilisateur(int $idUtilisateur): array
@@ -84,17 +94,19 @@ class CandidatureModel
     // ✏️ Mise à jour du statut et commentaire
     public function update(int $id, array $data): bool
     {
+        $data['statut'] = mb_strtolower(trim((string)($data['statut'] ?? ''))); // ← normalisation
+    
         $statutsValides = ['envoyée', 'consultée', 'entretien', 'recruté', 'refusé'];
-        if (!in_array($data['statut'], $statutsValides)) {
+        if (!in_array($data['statut'], $statutsValides, true)) {
             return false;
         }
-
+    
         $stmt = $this->db->prepare("
             UPDATE candidature
             SET statut = :statut, commentaire_admin = :commentaire_admin
             WHERE id = :id
         ");
-
+    
         return $stmt->execute([
             'statut'            => $data['statut'],
             'commentaire_admin' => $data['commentaire_admin'] ?? '',

@@ -19,7 +19,7 @@ class CalendrierController
         }
     }
 
-    // 🔐 Vérifie si connecté
+    // Vérifie si connecté
     private function redirectIfNotConnected(): void
     {
         if (!isset($_SESSION['utilisateur']['id'])) {
@@ -28,7 +28,7 @@ class CalendrierController
         }
     }
 
-    // 📅 Vue semaine
+    // Vue semaine
     public function vueSemaine(): void
     {
         $this->redirectIfNotConnected();
@@ -38,7 +38,7 @@ class CalendrierController
         $this->view->renderSemaine($rendezVous, $semaine, $annee);
     }
 
-    // 📆 Vue jour
+    // Vue jour
     public function vueJour(string $date): void
     {
         $this->redirectIfNotConnected();
@@ -46,7 +46,7 @@ class CalendrierController
         $this->view->renderJour($rendezVous, $date);
     }
 
-    // 🔔 Rappel du jour
+    // Rappel du jour
     public function rappelDuJour(): void
     {
         $this->redirectIfNotConnected();
@@ -55,7 +55,7 @@ class CalendrierController
         $this->view->renderRappels($rappels);
     }
 
-    // 📌 Détail d’un rendez-vous
+    // Détail d’un rendez-vous
     public function infoRendezVous(int $id): void
     {
         $this->redirectIfNotConnected();
@@ -67,7 +67,7 @@ class CalendrierController
         }
     }
 
-    // 🗓️ Planifier un entretien
+    // Planifier un entretien
     public function planifierEntretien(): void
     {
         $this->redirectIfNotConnected();
@@ -85,7 +85,7 @@ class CalendrierController
         }
     }
 
-    // 📋 Liste des entretiens
+    // Liste des entretiens
     public function listEntretiens(): void
     {
         $this->redirectIfNotConnected();
@@ -93,7 +93,7 @@ class CalendrierController
         $this->view->renderListe($entretiens);
     }
 
-    // 📧 Envoyer un rappel
+    // Envoyer un rappel
     public function envoyerRappel(int $id): void
     {
         $this->redirectIfNotConnected();

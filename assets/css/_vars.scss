@@ -5,6 +5,7 @@
     width: 12rem;
     font-family: "BEBAS NEUVE";
     border: none;
+    cursor: pointer;
 }
 
 @mixin boutonBeige {
@@ -14,6 +15,7 @@
   width: 12rem;
   font-family: "BEBAS NEUVE";
   border: none;
+  cursor: pointer;
 }
 
 @mixin tcsBeige {

@@ -16,23 +16,22 @@
 <div class="bloc-redirection">
     <div class="trait-vert"></div>
     <section class="card">
-        
         <div>
             <img src="./assets/images/P1_casque.jpeg" loading= "lazy" alt="une image de casque de soudeur">
-            <a href="index.php?action=bureauEtude"><p>QUI SOMMES NOUS ?</p>
+            <a href="index.php?action=bureauEtude"><p>NOTRE BUREAU <br> D'ÉTUDE</p>
             <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a>
         </div>
         
         
         <div>
             <img src="./assets/images/P1_soudeuse.jpeg" loading= "lazy" alt="une image de soudeur.">
-            <a href="index.php?action=expertise"><p>NOS DOMAINES <br> D'EXPERTISES</p>
+            <a href="index.php?action=recrutement"><p>NOS OFFRES <br> D'EMPLOI</p>
             <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a>
         </div>
             
         <div>
             <img src="./assets/images/P1_tuyauterie.jpeg" loading= "lazy" alt="une image de tuyauterie.">
-            <a href="index.php?action=expertise"><p>NOS RÉALISATIONS</p>
+            <a href="/domaineExpertise"><p>NOS DOMAINES <br> D'EXPERTISES</p>
             <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a>
         </div>
             

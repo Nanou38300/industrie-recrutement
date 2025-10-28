@@ -46,7 +46,7 @@
 </section>
 <section class="rect-vert">
     <p>Cras posuere id mauris quis maximus. Maecenas sagittis sit amet ligula quis laoreet. Suspendisse scelerisque molestie odio nec mattis.</p>
-    <button class="btn2">CONTACTEZ-NOUS</button>
+    <a href="contact"><button class="btn2">CONTACTEZ-NOUS</button></a>
 </section> 
 
 <section class="template-titre2">
@@ -81,7 +81,7 @@
             </div>
 
             <p>Chaque projet bénéficie d’un accompagnement sur-mesure, intégrant la veille normative, les calculs réglementaires et la maîtrise documentaire nécessaire à la validation technique.</p>
-            <button class="btn1">CONTACTEZ-NOUS</button>
+            <a href="contact"><button class="btn1">CONTACTEZ-NOUS</button></a>
         </article>
 </section>
 
@@ -128,7 +128,7 @@
     <p>Chaque document est soumis à des processus de relecture et de validation rigoureux, dans un objectif de sûreté, durabilité et traçabilité complète</p>
     </div>
 
-    <button class="btn1">CONTACTEZ-NOUS</button>
+    <a href="contact"><button class="btn1">CONTACTEZ-NOUS</button></a>
     </div>
 
 </article>
@@ -159,7 +159,7 @@
     Les Qualifications de Mode Opératoire de Soudage (QMOS) validées par des essais destructifs ou non destructifs, garantissent que chaque procédé est conforme aux normes en vigueur (ISO 15614, EN ISO 9606…).
     Les qualifications soudeur, les procédures de contrôle, et les rapports d’essai complètent ce référentiel.
     Ce document technique assure une traçabilité complète, une maîtrise des risques, et une parfaite transparence envers nos clients et organismes de contrôle.</p> 
-    <button class="btn1">CONTACTEZ-NOUS</button>
+    <a href="contact"><button class="btn1">CONTACTEZ-NOUS</button></a>
 </article>
 </section>
 

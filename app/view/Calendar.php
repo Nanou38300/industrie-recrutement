@@ -5,18 +5,10 @@
     <title>Calendrier des rendez-vous</title>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <style>
-        #calendar {
-            max-width: 1000px;
-            margin: 2rem auto;
-        }
-        .fc-event-title {
-            font-weight: bold;
-        }
-    </style>
+
 </head>
 <body>
-    <h1 style="text-align:center;">📅 Calendrier des rendez-vous</h1>
+    <h1 class="titre-calendrier">Calendrier des rendez-vous</h1>
     <div id="calendar"></div>
 
     <script>

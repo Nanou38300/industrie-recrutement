@@ -9,11 +9,11 @@ class EntretienView
         return htmlspecialchars($value ?? '');
     }
 
-    // 📅 Affiche le calendrier mensuel
+    // Affiche le calendrier mensuel
     public function renderCalendrier(array $entretiens, string $mois, string $annee): void
     {
         echo "<section class='calendrier-admin'>";
-        echo "<h2>📅 Calendrier des entretiens - $mois/$annee</h2>";
+        echo "<h2>Calendrier des entretiens - $mois/$annee</h2>";
 
         if (empty($entretiens)) {
             echo "<p>Aucun entretien prévu ce mois-ci.</p>";
@@ -25,7 +25,7 @@ class EntretienView
                 echo "<p><strong>Type :</strong> " . $this->safe($e['type']) . "</p>";
                 echo "<form method='GET' action='/entretien/detail'>
                         <input type='hidden' name='id' value='" . $this->safe($e['id']) . "'>
-                        <button type='submit'>👁️ Voir détail</button>
+                        <button type='submit'>Voir détail</button>
                       </form>";
                 echo "</div><hr>";
             }
@@ -34,23 +34,23 @@ class EntretienView
         echo "</section>";
     }
 
-    // 🔔 Affiche les rappels du jour
+    // Affiche les rappels du jour
     public function renderRappel(array $entretien): void
     {
         echo "<section class='rappel-entretien'>";
-        echo "<h3>🔔 Rappel RDV</h3>";
+        echo "<h3>Rappel RDV</h3>";
         echo "<p><strong>Date :</strong> " . $this->safe($entretien['date_entretien']) . "</p>";
         echo "<p><strong>Heure :</strong> " . $this->safe($entretien['heure']) . "</p>";
         echo "<p><strong>Type :</strong> " . $this->safe($entretien['type']) . "</p>";
         echo "<p><strong>Visio :</strong> " . $this->safe($entretien['lien_visio']) . "</p>";
         echo "<form method='POST' action='/entretien/envoyer-rappel'>
                 <input type='hidden' name='id' value='" . $this->safe($entretien['id']) . "'>
-                <button type='submit'>📩 Marquer comme envoyé</button>
+                <button type='submit'>Marquer comme envoyé</button>
               </form>";
         echo "</section><hr>";
     }
 
-    // 📝 Formulaire de planification
+    // Formulaire de planification
     public function renderForm(array $utilisateurs): void
     {
         echo "<section class='form-entretien'>";
@@ -83,33 +83,33 @@ class EntretienView
                 <input type='text' name='lien_visio'>
               </label><br>";
 
-        echo "<button type='submit'>💾 Enregistrer</button>";
+        echo "<button type='submit'>Enregistrer</button>";
         echo "</form>";
         echo "</section><hr>";
     }
 
-    // 👁️ Détail d’un entretien + fiche candidat
+    // Détail d’un entretien + fiche candidat
     public function renderFicheEntretien(array $entretien, array $candidat): void
     {
         echo "<section class='fiche-entretien'>";
-        echo "<h2>👁️ Détail de l'entretien</h2>";
+        echo "<h2>Détail de l'entretien</h2>";
         echo "<p><strong>Date :</strong> " . $this->safe($entretien['date_entretien']) . "</p>";
         echo "<p><strong>Heure :</strong> " . $this->safe($entretien['heure']) . "</p>";
         echo "<p><strong>Type :</strong> " . $this->safe($entretien['type']) . "</p>";
         echo "<p><strong>Lien Visio :</strong> " . $this->safe($entretien['lien_visio']) . "</p>";
 
-        echo "<h3>👤 Candidat</h3>";
+        echo "<h3>Candidat</h3>";
         echo "<p><strong>Nom :</strong> " . $this->safe($candidat['prenom']) . " " . $this->safe($candidat['nom']) . "</p>";
         echo "<p><strong>Email :</strong> " . $this->safe($candidat['email']) . "</p>";
         echo "<p><strong>Téléphone :</strong> " . $this->safe($candidat['telephone']) . "</p>";
         echo "</section><hr>";
     }
 
-    // 📆 Vue jour (optionnelle)
+    // Vue jour (optionnelle)
     public function renderJour(array $entretiens, string $date): void
     {
         echo "<section class='jour-entretien'>";
-        echo "<h2>📅 Entretiens du " . $this->safe($date) . "</h2>";
+        echo "<h2Entretiens du " . $this->safe($date) . "</h2>";
 
         if (empty($entretiens)) {
             echo "<p>Aucun entretien prévu ce jour-là.</p>";
@@ -120,7 +120,7 @@ class EntretienView
                 echo "<p><strong>Type :</strong> " . $this->safe($e['type']) . "</p>";
                 echo "<form method='GET' action='/entretien/detail'>
                         <input type='hidden' name='id' value='" . $this->safe($e['id']) . "'>
-                        <button type='submit'>👁️ Voir détail</button>
+                        <button type='submit'>Voir détail</button>
                       </form>";
                 echo "</div><hr>";
             }

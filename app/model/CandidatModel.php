@@ -51,11 +51,12 @@ class CandidatModel
         return $stmt->execute(['photo' => $path, 'id' => $id]);
     }
 
-    public function updateCV(int $id, string $filename): bool
-    {
-        $stmt = $this->db->prepare("UPDATE utilisateur SET cv = :cv, date_cv = NOW() WHERE id = :id");
-        return $stmt->execute(['cv' => $filename, 'id' => $id]);
-    }
+// App/Model/CandidatModel.php
+public function updateCV(int $id, string $filename): bool
+{
+    $stmt = $this->db->prepare("UPDATE utilisateur SET cv = :cv, date_cv = NOW() WHERE id = :id");
+    return $stmt->execute(['cv' => $filename, 'id' => $id]);
+}
 
     public function deleteProfil(int $id): void
     {

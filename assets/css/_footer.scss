@@ -9,7 +9,7 @@
     gap: 2rem;
     background: #ffffff;
     width: 100%;
-    border: 2px solid black;
+    border-top: 2px solid black;
     height: 15rem;
         img {
             background: rgb(255, 255, 255);
@@ -36,7 +36,7 @@
             text-decoration: none;
             @include vars.tcsTitre;
             font-size: 1.3rem;
-            color: black;
+            color: vars.$vert;
             letter-spacing: 0.2rem;
         }
     }
@@ -60,13 +60,13 @@
     justify-content: center;
     padding: 1rem;
     gap: 1rem;
-    a {
-        text-decoration: none;
+        a {
+          color: black;
     }
 }
 
 
-// Responsive styles
+// Responsive 
 @media screen and (max-width: 1024px) {
     .footer-complet {
       flex-direction: column;
@@ -124,12 +124,24 @@
       .reseaux img {
         height: 2rem;
         width: 2rem;
+        div {
+          display: flex;
+          gap: 0.8rem;
+        }
+      }
+      .separateur-footer {
+        border: 1px solid vars.$vert;
+        width: 20%;
+        transform: translate(0);
       }
     }
-  
     .mentions {
+      flex-direction: row;
       padding: 0.5rem;
-      font-size: 0.9rem;
+      font-size: 0.7rem;
+      p {
+        font-size: 0.7rem;
+      }
     }
   }
   

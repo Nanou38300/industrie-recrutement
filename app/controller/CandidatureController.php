@@ -88,12 +88,20 @@ class CandidatureController
     public function updateStatut(): void
     {
         $this->redirectIfNotConnected();
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['statut'])) {
-            $this->model->update((int)$_POST['id'], [
-                'statut' => $_POST['statut'],
-                'commentaire_admin' => $_POST['commentaire_admin'] ?? ''
+            $id      = (int) $_POST['id'];
+            $statut  = mb_strtolower(trim((string)$_POST['statut'])); // ← normalisation
+            $comment = $_POST['commentaire_admin'] ?? '';
+    
+            $ok = $this->model->update($id, [
+                'statut'            => $statut,
+                'commentaire_admin' => $comment
             ]);
-            echo "<div class='alert alert-success'>✅ Statut mis à jour.</div>";
+    
+            echo $ok
+                ? "<div class='alert alert-success'>✅ Statut mis à jour.</div>"
+                : "<div class='alert alert-danger'>❌ Statut invalide.</div>";
         }
     }
 }

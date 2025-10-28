@@ -78,12 +78,21 @@ class AdministrateurController
             $success = $this->userModel->updateProfil($id, $_POST);
     
             if ($success) {
-                echo "<div class='alert alert-success'>✅ Profil mis à jour avec succès.</div>";
+                // (Optionnel) si ta vue profil lit la session quelque part :
+                $_SESSION['utilisateur']['email']      = $_POST['email']      ?? $_SESSION['utilisateur']['email'];
+                $_SESSION['utilisateur']['prenom']     = $_POST['prenom']     ?? $_SESSION['utilisateur']['prenom'];
+                $_SESSION['utilisateur']['nom']        = $_POST['nom']        ?? $_SESSION['utilisateur']['nom'];
+                $_SESSION['utilisateur']['telephone']  = $_POST['telephone']  ?? $_SESSION['utilisateur']['telephone'];
+    
+                // PRG : on redirige vers la page profil (GET)
+                header('Location: /administrateur/profil');
+                exit;
             } else {
                 echo "<div class='alert alert-danger'>❌ Échec de la mise à jour du profil.</div>";
             }
         }
     
+        // GET : afficher le formulaire avec les données fraiches
         $profil = $this->userModel->getById($id);
         $this->view->renderFormProfil($profil);
     }
@@ -130,7 +139,19 @@ public function logout(): void
         $this->redirectIfNotAdmin();
         $idAdmin = $_SESSION['utilisateur']['id'];
         $statut = $_GET['statut'] ?? null;
-    
+
+        // Petit gestionnaire de flash via query-string
+        if (!empty($_GET['flash'])) {
+            switch ($_GET['flash']) {
+                case 'created':      echo "<div class='alert alert-success'>✅ Annonce créée.</div>"; break;
+                case 'updated':      echo "<div class='alert alert-success'>✅ Annonce mise à jour.</div>"; break;
+                case 'deleted':      echo "<div class='alert alert-success'>✅ Annonce supprimée.</div>"; break;
+                case 'delete_failed':echo "<div class='alert alert-danger'>❌ Échec de la suppression.</div>"; break;
+                case 'not_found':    echo "<div class='alert alert-warning'>⚠️ Annonce introuvable.</div>"; break;
+                case 'bad_request':  echo "<div class='alert alert-warning'>⚠️ Requête invalide.</div>"; break;
+            }
+        }
+
         $annonces = $this->annonceModel->getByAdministrateur($idAdmin, $statut);
         $this->view->renderAnnonces($annonces);
     }
@@ -142,17 +163,21 @@ public function logout(): void
         $this->redirectIfNotAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->annonceModel->create($_POST);
+            $ok = $this->annonceModel->create($_POST);
 
-            if ($result !== false) {
-                echo "<div class='alert alert-success'>✅ Annonce créée avec succès.</div>";
-            } else {
-                echo "<div class='alert alert-danger'>❌ Échec de la création. Vérifiez les champs obligatoires.</div>";
+            if ($ok) {
+                // PRG : redirection vers la liste avec message flash
+                header("Location: /administrateur/annonces?flash=created");
+                exit;
             }
+
+            echo "<div class='alert alert-danger'>❌ Échec de la création. Vérifiez les champs obligatoires.</div>";
         }
 
-        $this->view->renderFormAnnonce();
+        // GET : affichage du formulaire en mode "create"
+        $this->view->renderFormAnnonce([], 'create');
     }
+
 
     // ✏️ Modifier une annonce
     public function editAnnonce(int $id): void
@@ -160,17 +185,50 @@ public function logout(): void
         $this->redirectIfNotAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $success = $this->annonceModel->update($id, $_POST);
+            // Ceinture et bretelles : privilégie l'id POST si présent
+            $targetId = isset($_POST['id']) ? (int)$_POST['id'] : $id;
 
-            if ($success) {
-                echo "<div class='alert alert-success'>✅ Annonce mise à jour.</div>";
-            } else {
-                echo "<div class='alert alert-danger'>❌ Échec de la mise à jour.</div>";
+            $ok = $this->annonceModel->update($targetId, $_POST);
+            if ($ok) {
+                // PRG
+                header("Location: /administrateur/annonces?flash=updated");
+                exit;
             }
+
+            echo "<div class='alert alert-danger'>❌ Échec de la mise à jour.</div>";
         }
 
+        // GET : récupérer l’annonce et afficher le formulaire en mode "update"
         $annonce = $this->annonceModel->getById($id);
-        $this->view->renderFormAnnonce($annonce);
+        if (!$annonce) {
+            header("Location: /administrateur/annonces?flash=not_found");
+            exit;
+        }
+
+        $this->view->renderFormAnnonce($annonce, 'update');
+    }
+
+    // App/Controller/AdministrateurController.php
+    public function deleteAnnonce(): void
+    {
+        $this->redirectIfNotAdmin();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id'])) {
+            header("Location: /administrateur/annonces?flash=bad_request");
+            exit;
+        }
+
+        $id = (int)$_POST['id'];
+        $annonce = $this->annonceModel->getById($id);
+
+        if (!$annonce) {
+            header("Location: /administrateur/annonces?flash=not_found");
+            exit;
+        }
+
+        $ok = $this->annonceModel->delete($id);
+        header("Location: /administrateur/annonces?flash=" . ($ok ? "deleted" : "delete_failed"));
+        exit;
     }
 
     // 📦 Archiver une annonce
@@ -237,12 +295,31 @@ public function logout(): void
     
     
     public function viewRdv(int $id): void
-    {
-        $this->redirectIfNotAdmin();
-        $entretien = $this->entretienModel->findById($id);
-        $candidat = $this->userModel->getById($entretien['id_utilisateur']);
-        require 'app/View/rdv-detail.php';
+{
+    $this->redirectIfNotAdmin();
+
+    $entretien = $this->entretienModel->findById($id);
+    if (!$entretien) {
+        echo "<div class='alert alert-danger'>❌ Entretien introuvable (id={$id}).</div>";
+        return;
     }
+
+    // 🔐 Récupération robuste de l'id utilisateur
+    $utilisateurId = (int)($entretien['id_utilisateur'] ?? 0);
+    if ($utilisateurId <= 0) {
+        echo "<div class='alert alert-danger'>❌ Entretien trouvé, mais aucun candidat associé (id_utilisateur manquant).</div>";
+        // Tu peux sortir ici OU afficher une page réduite sans fiche-candidat.
+        return;
+    }
+
+    $candidat = $this->userModel->getById($utilisateurId);
+    if (!$candidat) {
+        echo "<div class='alert alert-danger'>❌ Candidat introuvable (id={$utilisateurId}).</div>";
+        return;
+    }
+
+    require 'app/View/rdv-detail.php';
+}
     
     public function creerEntretien(): void
 {
@@ -298,12 +375,18 @@ public function validerEntretien(): void
 
     public function updateStatut(): void
     {
-        $id = $_POST['id_candidature'] ?? null;
+        $this->redirectIfNotAdmin();
+    
+        $id = $_POST['id_candidature'] ?? $_POST['id'] ?? null;
         $statut = $_POST['statut'] ?? null;
+        $commentaire = $_POST['commentaire_admin'] ?? '';
     
         if ($id && $statut) {
-            $this->model->updateStatutCandidature((int)$id, $statut);
-            $_SESSION['message'] = "✅ Statut mis à jour.";
+            $ok = $this->candidatureModel->update((int)$id, [
+                'statut' => $statut,
+                'commentaire_admin' => $commentaire
+            ]);
+            $_SESSION['message'] = $ok ? "✅ Statut mis à jour." : "❌ Échec de la mise à jour.";
         }
     
         header("Location: /administrateur/candidatures");
@@ -311,42 +394,61 @@ public function validerEntretien(): void
     }
     
     public function editEntretien(): void
-{
-    $this->redirectIfNotAdmin();
-
-    $id = $_GET['id'] ?? null;
-    if (!$id) {
-        echo "<div class='alert alert-danger'>❌ Entretien introuvable.</div>";
-        return;
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $data = [
-            'date_entretien' => $_POST['date_entretien'] ?? null,
-            'heure'          => $_POST['heure'] ?? null,
-            'type'           => $_POST['type'] ?? '',
-            'lien_visio'     => $_POST['lien_visio'] ?? null,
-            'commentaire'    => $_POST['commentaire'] ?? null
-        ];
-
-        if ($data['date_entretien'] && $data['heure'] && $data['type']) {
-            $success = $this->entretienModel->update((int)$id, $data);
-
-            if ($success) {
-                echo "<div class='alert alert-success'>✅ Entretien mis à jour.</div>";
-                header("Refresh: 2; URL=/administrateur/vue-calendrier");
-                exit;
-            } else {
-                echo "<div class='alert alert-danger'>❌ Échec de la mise à jour.</div>";
-            }
-        } else {
-            echo "<div class='alert alert-warning'>⚠️ Champs obligatoires manquants.</div>";
+    {
+        $this->redirectIfNotAdmin();
+    
+        // Récupère l'id en GET (affichage) ou POST (soumission)
+        $id = $_GET['id'] ?? $_POST['id'] ?? null;
+        if (!$id) {
+            echo "<div class='alert alert-danger'>❌ Entretien introuvable (id manquant).</div>";
+            return;
         }
+        $id = (int)$id;
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'date_entretien' => $_POST['date_entretien'] ?? null,
+                'heure'          => $_POST['heure'] ?? null,
+                'type'           => $_POST['type'] ?? '',
+                'lien_visio'     => $_POST['lien_visio'] ?? null,
+                'commentaire'    => $_POST['commentaire'] ?? null
+            ];
+    
+            if ($data['date_entretien'] && $data['heure'] && $data['type']) {
+                $success = $this->entretienModel->update($id, $data);
+                header("Location: /administrateur/calendrier?flash=entretien_updated");
+exit;
+            } else {
+                echo "<div class='alert alert-warning'>⚠️ Champs obligatoires manquants.</div>";
+            }
+        }
+    
+        $entretien = $this->entretienModel->findById($id);
+        if (!$entretien) {
+            echo "<div class='alert alert-danger'>❌ Entretien introuvable.</div>";
+            return;
+        }
+        $this->calendarView->renderFormModification($entretien);
     }
-
-    $entretien = $this->entretienModel->findById((int)$id);
-    $this->calendarView->renderFormModification($entretien);
-}
-
+    
+    public function deleteEntretien(): void
+    {
+        $this->redirectIfNotAdmin();
+    
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /administrateur/vue-calendrier?flash=bad_request");
+            exit;
+        }
+    
+        $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+        if ($id <= 0) {
+            header("Location: /administrateur/vue-calendrier?flash=bad_request");
+            exit;
+        }
+    
+        $ok = $this->entretienModel->delete($id);
+        header("Location: /administrateur/calendrier?flash=" . ($ok ? "entretien_deleted" : "entretien_delete_failed"));
+exit;
+    }
 
 }

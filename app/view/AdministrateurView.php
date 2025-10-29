@@ -13,7 +13,7 @@ class AdministrateurView
     // Affiche les informations du profil administrateur
     public function renderProfil(array $profil): void
     {
-        // 👉 Accepte soit un tableau plat, soit ['infos' => [...]]
+        // Accepte soit un tableau plat, soit ['infos' => [...]]
         $data = isset($profil['infos']) && is_array($profil['infos']) ? $profil['infos'] : $profil;
     
         echo "<section class='profil-admin'>";
@@ -35,7 +35,7 @@ class AdministrateurView
                     <strong>' . $label . ' :</strong> ' . $this->safe($valeur) . '
                   </p>';
         }
-    
+
         echo "<form method='GET' action='/administrateur/edit-profil' style='margin-top: 20px;'>";
         echo "<button type='submit' class='btn btn-primary'>Modifier mon profil</button>";
         echo "</form>";
@@ -286,11 +286,11 @@ public function renderFormAnnonce(array $annonce = [], string $mode = 'create'):
             // Formulaire de mise à jour
             echo "<form method='POST' action='/candidature/update-statut'>
                     <input type='hidden' name='id' value='" . $this->safe((string)($c['id'] ?? '')) . "'>
-                    <label style='display:block;margin:6px 0;'>
-                        <span style='display:inline-block;width:130px;'>Nouveau statut :</span>
+                    <label>
+                        <span>Nouveau statut :</span>
                         <select name='statut'>{$options}</select>
                     </label>
-                    <label style='display:block;margin:6px 0;'>
+                    <label>
                         <span style='display:inline-block;width:130px;'>Commentaire :</span>
                         <input type='text' name='commentaire_admin' value='" . $this->safe($c['commentaire_admin'] ?? '') . "' placeholder='Commentaire'>
                     </label>
@@ -301,7 +301,7 @@ public function renderFormAnnonce(array $annonce = [], string $mode = 'create'):
             $commentAffiche = trim((string)($c['commentaire_admin'] ?? '')) !== ''
                 ? $this->safe($c['commentaire_admin'])
                 : "<em>Aucun commentaire</em>";
-            echo "<p class='commentaire-admin' style='margin-top:8px;'>💬 {$commentAffiche}</p>";
+            echo "<p class='commentaire-admin'>💬 {$commentAffiche}</p>";
 
             echo "</div><hr>";
         }

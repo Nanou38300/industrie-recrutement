@@ -35,7 +35,7 @@ if ($role === 'administrateur') {
 
     <div class="bar-top">
         <a href="/accueil" class="logo-link" aria-label="Aller à l'accueil">
-            <img src="assets/images/LOGO.svg" alt="Logo de l'entreprise">
+            <img src="assets/images/TCS.svg" alt="Logo de l'entreprise">
         </a>
         <label for="nav-toggle-connecte" class="burger" aria-label="Ouvrir le menu" aria-controls="nav-connecte" aria-expanded="false">
             <span></span><span></span><span></span>
@@ -50,7 +50,7 @@ if ($role === 'administrateur') {
         </div>
         <div class="logoconnecte">
             <a href="/accueil" aria-label="Aller à l'accueil">
-                <img src="assets/images/LOGO.svg" alt="Logo de l'entreprise">
+                <img src="assets/images/TCS.svg" alt="Logo de l'entreprise">
             </a>
         </div>
     </nav>

@@ -13,12 +13,13 @@ function isActive($path) {
     <!-- Toggle mobile -->
     <input type="checkbox" id="nav-toggle-public" class="nav-toggle" aria-hidden="true">
 
+
     <div class="bar-top">
         <div class="logo">
             <div class="rectangle-header" aria-hidden="true"></div>
             <div class="diagonale-header" aria-hidden="true"></div>
             <a href="/accueil" class="logo-link" aria-label="Aller à l'accueil">
-                <img src="assets/images/LOGO.svg" alt="Logo de l'entreprise">
+                <img src="assets/images/TCS.svg" alt="Logo de l'entreprise">
             </a>
         </div>
 
@@ -33,7 +34,7 @@ function isActive($path) {
         <a href="/domaineExpertise"  class="<?= isActive('/domaineExpertise') ?>">Notre expertise</a>
         <a href="/recrutement"       class="<?= isActive('/recrutement') ?>">Recrutement</a>
         <a href="/contact"           class="<?= isActive('/contact') ?>">Contact</a>
-
+        
         <div class="separateur-header" aria-hidden="true"></div>
 
         <div class="icone-login">
@@ -46,5 +47,6 @@ function isActive($path) {
                 <p>Inscription</p>
             </a>
         </div>
+ 
     </nav>
 </header>

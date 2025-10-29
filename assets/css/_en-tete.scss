@@ -169,7 +169,7 @@
   cursor: pointer; padding: 4px; border-radius: 8px;
 }
 .burger span {
-  display: block; height: 3px; background: #222; transition: transform .25s ease, opacity .2s ease, width .25s ease;
+  display: block; height: 3px; background: white; transition: transform .25s ease, opacity .2s ease, width .25s ease;
   width: 100%;
 }
 
@@ -184,7 +184,7 @@
     // .rectangle-header { width: 9rem; height: 4.5rem; background: #fff; position: absolute; left: 0; top: -1rem; z-index: 0; }
     // .diagonale-header { width: 0; height: 0; border-bottom: 4.5rem solid #fff; border-right: 4.5rem solid transparent; position: absolute; left: 8rem; top: -1rem; z-index: 0; }
     .logo-link { position: relative; z-index: 1; display: inline-flex; align-items: center; }
-    img { height: 2.25rem; object-fit: contain; }
+    img { height: 3rem; object-fit: contain; }
   }
 
   .nav-principal {
@@ -218,13 +218,11 @@
 /* ========== CONNECTE ========== */
 #menu-connecte {
   background: #1E3D3A; color: #eee;
-  position: fixed; 
-  z-index: 99;
-  top: 0;
+
   .bar-top {
     display: flex; align-items: center; justify-content: space-between; gap: 1rem;
     padding: .75rem 1rem; background: #1E3D3A;
-    .logo-link img { height: 2rem; object-fit: contain; }
+    .logo-link img { height: 3rem; object-fit: contain; }
   }
 
   nav.menu {
@@ -244,7 +242,7 @@
     }
 
     .logoconnecte { height: 4rem; display: flex; justify-content: center; align-items: center;
-      img { height: 5rem; }
+      img { height:4rem; }
     }
   }
 

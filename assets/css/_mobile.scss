@@ -565,40 +565,57 @@ h2 {
 // Compte candidat
 // deshboard - annonce
 @media screen and (max-width: 750px) and (orientation: portrait) {
-    .profile-header {
-        padding: 1rem;
-        margin: 3rem 0;
-        .photo-profil {
-            height: 10rem;
-            margin: 2rem auto;
-            width: 10rem;
-        }
-        .identite {
-            text-align: center;
-        }
-        .linkedin {
-            height: 2rem;
-            text-align: center;
-        }
-        .field {
-            text-align: center;
-        }
-      
-    }
-    .upload-cv, .upload-photo{
-        width: 100%;
+    //page profil
+    .profil-candidat {
         margin: 0;
+        padding: 0;
+    .photo-profil {
         form {
-            text-align: center;
+            flex-direction: column;
+            input[type="file"]  {
+                font-size: 0.65rem;
+            }
+            button {
+                padding: 8px 9px;
+                font-weight: 400;
+            }
         }
     }
-    .supprimer-profil {
-        text-align: center;
+    .profil-info {
+        margin: 8px 22px;
+    }
+    .cv-section {
+        margin: 8px 22px;
+        form {
+            input[type="file"]  {
+                font-size: 0.65rem;
+            }
         button {
-            @include vars.boutonVert
+            padding: 8px 9px;
+            font-weight: 400;
+        }
         }
     }
-
+    .profil-actions {
+        margin: 8px 22px;
+        form {
+            .btn-primary,.btn-danger   {
+                padding: 7px 0px;
+            }
+        }
+    }
+    }
+    .form-profil-candidat {
+        margin: 0;
+        .form-group {
+            label, input {
+                font-size: 0.85rem;
+            }
+        }
+    .form-actions .btn-primary {
+        font-size: 0.80rem;
+    }
+    }
     //page annonce 
     .annonces {
         padding: 1rem;
@@ -606,12 +623,27 @@ h2 {
         .annonce-wrapper {
             .annonce-resume {
                 flex-direction: column;
+                h3 {
+                    font: 1.1rem;
+                }
                 p {
                     flex-direction: row;
+                    font-size: 0.85rem;
+                }
+                    .btn-offre {
+                        font-size: 0.7rem;
+                        height: 2.2rem;
+                        width: 5rem;
+                    }
+                }
+            }
+            .annonce-details {
+                p {
+                    font-size: 0.9rem;
                 }
             }
         }
-    }
+    
     //page candidature 
     .candidatures {
         padding: 1rem;
@@ -620,10 +652,6 @@ h2 {
             .timeline-wrapper {
                 padding: 1rem 0;
                 height: auto;
-                
-                .timeline-bar {
-                    
-                }
                 .timeline {
                     flex-direction: column;
                 }

@@ -100,21 +100,22 @@ try {
     break;
             
 
-        case 'candidat':
-            $ctrl = new CandidatController;
-            match ($step) {
-                'profil'          => $ctrl->profil(),
-                'update'          => $ctrl->update(),
-                'delete'          => $ctrl->delete(),
-                'upload-cv'       => $ctrl->uploadCV(),
-                'uploadPhoto' => $ctrl->uploadPhoto(),
-                'annonces'        => $ctrl->listAnnonces(),
-                'annonce-view'    => $ctrl->viewAnnonce((int)$id),
-                'postuler'        => $ctrl->postuler((int)$_GET['id']),
-                'candidatures'    => $ctrl->renderSuiviCandidatures(),
-                default           => $ctrl->profil(),
-            };
-            break;
+    case 'candidat':
+        $ctrl = new CandidatController;
+        match ($step) {
+            'profil'          => $ctrl->profil(),
+            'edit-profil'     => $ctrl->editProfil(),     
+            'update'          => $ctrl->update(),
+            'delete'          => $ctrl->delete(),
+            'upload-cv'       => $ctrl->uploadCV(),
+            'uploadPhoto'     => $ctrl->uploadPhoto(),
+            'annonces'        => $ctrl->listAnnonces(),
+            'annonce-view'    => $ctrl->viewAnnonce((int)$id),
+            'postuler'        => $ctrl->postuler((int)$_GET['id']),
+            'candidatures'    => $ctrl->renderSuiviCandidatures(),
+            default           => $ctrl->profil(),
+        };
+        break;
 
         case 'annonce':
             $ctrl = new AnnonceController;

@@ -36,19 +36,45 @@ class CandidatController
         $this->view->renderDashboard($donnees);
     }
 
-    public function profil(): void
-    {
-        $this->redirectIfNotConnected();
-        $profil = $this->model->getProfil($_SESSION['utilisateur']['id']);
-        $this->view->renderProfil($profil);
-        // $this->view->renderEditForm($profil);
-        $this->view->renderUploadForm();
-        $this->view->renderDeleteButton();
+// CandidatController.php
+
+public function profil(): void
+{
+    $this->redirectIfNotConnected();
+    $profil = $this->model->getProfil((int)$_SESSION['utilisateur']['id']);
+    $this->view->renderProfil($profil);
+}
+
+public function editProfil(): void
+{
+    $this->redirectIfNotConnected();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Enregistrement global (tous les champs)
+        $ok = $this->model->updateProfil((int)$_SESSION['utilisateur']['id'], [
+            'nom'       => $_POST['nom']       ?? '',
+            'prenom'    => $_POST['prenom']    ?? '',
+            'email'     => $_POST['email']     ?? '',
+            'telephone' => $_POST['telephone'] ?? '',
+            'poste'     => $_POST['poste']     ?? '',
+            'ville'     => $_POST['ville']     ?? '',
+            'linkedin'  => $_POST['linkedin']  ?? '',
+        ]);
+
+        $_SESSION['flash'] = $ok ? 'Profil mis à jour.' : 'Échec de la mise à jour.';
+        header('Location: /candidat/profil');
+        exit;
     }
+
+    // GET → afficher le formulaire prérempli
+    $profil = $this->model->getProfil((int)$_SESSION['utilisateur']['id']);
+    $this->view->renderFormProfilCandidat($profil);
+}
 
     public function update(): void
     {
         $this->redirectIfNotConnected();
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->model->updateProfil($_SESSION['utilisateur']['id'], $_POST);
             header("Location: /candidat/profil");
@@ -59,87 +85,114 @@ class CandidatController
     public function delete(): void
     {
         $this->redirectIfNotConnected();
-        $this->model->deleteProfil($_SESSION['utilisateur']['id']);
-        session_destroy();
-        header("Location: /utilisateur/login");
+    
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /candidat/profil'); exit;
+        }
+    
+        $userId = (int)$_SESSION['utilisateur']['id'];
+        $ok = $this->model->deleteUtilisateur($userId);
+    
+        if ($ok) {
+            session_destroy();
+            header('Location: /');
+        } else {
+            $_SESSION['flash'] = "La suppression a échoué.";
+            header('Location: /candidat/profil');
+        }
         exit;
     }
-
     public function uploadCV(): void
     {
         $this->redirectIfNotConnected();
     
-        if (!isset($_FILES['cv']) || ($_FILES['cv']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-            echo "<p>❌ Aucun fichier reçu.</p>";
-            return;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_FILES['cv']['name'])) {
+            header('Location: /candidat/profil'); exit;
         }
     
-        // 1) Validation basique du type/extension
-        $allowedExt = ['pdf','doc','docx'];
-        $original   = $_FILES['cv']['name'] ?? 'cv';
-        $ext        = strtolower(pathinfo($original, PATHINFO_EXTENSION));
-        if (!in_array($ext, $allowedExt, true)) {
-            echo "<p>❌ Format non autorisé. Extensions acceptées : .pdf, .doc, .docx</p>";
-            return;
+        $allowed = ['pdf','doc','docx'];
+        $orig = $_FILES['cv']['name'];
+        $ext  = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
+        if (!in_array($ext, $allowed, true)) {
+            $_SESSION['flash'] = "Format non supporté (pdf, doc, docx).";
+            header('Location: /candidat/profil'); exit;
         }
     
-        // 2) Sanitize + nom unique (on ne stocke QUE le nom dans la BDD)
-        $base      = pathinfo($original, PATHINFO_FILENAME);
-        $slugBase  = preg_replace('~[^a-z0-9_-]+~i', '-', $base);
-        $filename  = time() . '-' . trim($slugBase, '-') . '.' . $ext;
+        $root = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/');
+        $dir  = $root . '/uploads';
+        if (!is_dir($dir)) @mkdir($dir, 0775, true);
     
-        // 3) Dossier de destination public
-        $dir = $_SERVER['DOCUMENT_ROOT'] . '/uploads';
-        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
-            echo "<p>❌ Impossible de créer le dossier d’upload.</p>";
-            return;
+        $userId = (int)$_SESSION['utilisateur']['id'];
+    
+        // supprime l’ancien CV s’il existe
+        $old = $this->model->getCurrentCV($userId); // ex: '1730...-cv.pdf'
+        if ($old) {
+            $oldAbs = $dir . '/' . basename($old);
+            if (is_file($oldAbs)) @unlink($oldAbs);
         }
     
-        $tmp         = $_FILES['cv']['tmp_name'];
-        $destination = $dir . '/' . $filename;
+        $base = preg_replace('~[^a-zA-Z0-9._-]~', '_', pathinfo($orig, PATHINFO_FILENAME));
+        $name = time() . '-' . trim($base, '_-') . '.' . $ext;
+        $dest = $dir . '/' . $name;
     
-        // 4) Déplacement du fichier
-        if (!is_uploaded_file($tmp) || !move_uploaded_file($tmp, $destination)) {
-            echo "<p>❌ Échec du déplacement du fichier.</p>";
-            return;
-        }
-    
-        // 5) Permissions raisonnables (lecture web)
-        @chmod($destination, 0644);
-    
-        // 6) On enregistre UNIQUEMENT le nom du fichier en BDD (pas le chemin)
-        $ok = $this->model->updateCV($_SESSION['utilisateur']['id'], $filename);
+        $ok = is_uploaded_file($_FILES['cv']['tmp_name']) && move_uploaded_file($_FILES['cv']['tmp_name'], $dest);
         if (!$ok) {
-            echo "<p>❌ Échec de l’enregistrement du CV en base.</p>";
-            return;
+            $_SESSION['flash'] = "Échec de l’upload du CV.";
+            header('Location: /candidat/profil'); exit;
         }
+        @chmod($dest, 0644);
     
-        // 7) PRG : retour page profil
-        header("Location: /candidat/profil");
-        exit;
+        // On stocke uniquement le NOM de fichier en BDD
+        $this->model->updateCV($userId, $name);
+    
+        $_SESSION['flash'] = "CV mis à jour.";
+        header('Location: /candidat/profil'); exit;
     }
 
-    public function uploadPhoto(): void
-    {
-        $this->redirectIfNotConnected();
-        if (isset($_FILES['photo'])) {
-            $filename = time() . '-' . basename($_FILES['photo']['name']);
-            $destination = 'uploads/' . $filename;
+public function uploadPhoto(): void
+{
+    $this->redirectIfNotConnected();
 
-            if (!is_dir('uploads')) {
-                mkdir('uploads', 0755, true);
-            }
-
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $destination)) {
-                $this->model->updatePhoto($_SESSION['utilisateur']['id'], $destination);
-                header("Location: /candidat/profil");
-                exit;
-            } else {
-                echo "<p>❌ Échec de l’envoi de la photo.</p>";
-            }
-        }
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_FILES['photo']['name'])) {
+        header('Location: /candidat/profil'); exit;
     }
 
+    $allowed = ['jpg','jpeg','png','gif','webp'];
+    $orig = $_FILES['photo']['name'];
+    $ext  = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowed, true)) {
+        $_SESSION['flash'] = "Format image non supporté (jpg, png, gif, webp).";
+        header('Location: /candidat/profil'); exit;
+    }
+
+    $root = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/');
+    $dir  = $root . '/uploads';
+    if (!is_dir($dir)) @mkdir($dir, 0775, true);
+
+    // supprime l’ancienne photo si elle existe
+    $userId = (int)$_SESSION['utilisateur']['id'];
+    $oldRel = $this->model->getCurrentPhoto($userId); // ex: 'uploads/xxx.jpg'
+    if ($oldRel) {
+        $oldAbs = $root . '/' . ltrim($oldRel, '/');
+        if (is_file($oldAbs)) @unlink($oldAbs);
+    }
+
+    $base = preg_replace('~[^a-zA-Z0-9._-]~', '_', pathinfo($orig, PATHINFO_FILENAME));
+    $name = time() . '-' . trim($base, '_-') . '.' . $ext;
+    $dest = $dir . '/' . $name;
+
+    $ok = is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $dest);
+    if (!$ok) {
+        $_SESSION['flash'] = "Échec de l’upload de la photo.";
+        header('Location: /candidat/profil'); exit;
+    }
+    @chmod($dest, 0644);
+
+    $this->model->updatePhoto($userId, 'uploads/' . $name);
+
+    $_SESSION['flash'] = "Photo mise à jour.";
+    header('Location: /candidat/profil'); exit;
+}
 
     public function postuler(int $id): void
 {

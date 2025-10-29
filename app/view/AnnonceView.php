@@ -62,7 +62,7 @@ class AnnonceView {
         echo "<p><strong>Publié le :</strong> " . htmlspecialchars($annonce['date_publication'] ?? '') . "</p>";
         echo "<button class='toggle-details'>Voir plus</button>";
         echo "<form method='POST' action='/candidat/postuler?id=" . htmlspecialchars($annonce['id']) . "'>";
-        echo "<button type='submit'>📨 Postuler</button>";
+        echo "<button type='submit'> Postuler</button>";
         echo "</form>";
         echo "</div>";
 

@@ -9,11 +9,11 @@ class CandidatureView
         return htmlspecialchars($value ?? '');
     }
 
-    // 📋 Liste des candidatures (admin)
+    // Liste des candidatures (admin)
     public function renderListe(array $candidatures): void
     {
         echo "<section class='liste-candidatures'>";
-        echo "<h2>📋 Toutes les candidatures</h2>";
+        echo "<h2>Toutes les candidatures</h2>";
     
         if (empty($candidatures)) {
             echo "<p>Aucune candidature enregistrée.</p>";
@@ -26,7 +26,7 @@ class CandidatureView
                 echo "<p><strong>Date :</strong> " . $this->safe($c['date_envoi'] ?? '') . "</p>";
                 echo "<p><strong>Statut :</strong> " . $this->safe($c['statut'] ?? '') . "</p>";
     
-                // 🔗 Lien vers le CV si dispo (priorité à l'alias cv_filename)
+                // Lien vers le CV si dispo (priorité à l'alias cv_filename)
                 $cvFile = $c['cv_filename'] ?? $c['cv'] ?? '';
                 if ($cvFile !== '') {
                     $abs = $_SERVER['DOCUMENT_ROOT'] . '/uploads/' . basename($cvFile);
@@ -37,7 +37,7 @@ class CandidatureView
                     }
                 }
     
-                // 🔽 Select des statuts cohérents avec le Model (valeurs en minuscule)
+                // Select des statuts cohérents avec le Model (valeurs en minuscule)
                 $statuts = ['envoyée','consultée','entretien','recruté','refusé'];
                 $options = '';
                 foreach ($statuts as $s) {
@@ -45,7 +45,7 @@ class CandidatureView
                     $options .= "<option value='{$s}'{$selected}>" . ucfirst($s) . "</option>";
                 }
     
-                // 📝 Formulaire de mise à jour (tout à l’intérieur du <form>)
+                // Formulaire de mise à jour (tout à l’intérieur du <form>)
                 echo "<form method='POST' action='/candidature/updateStatut'>
                         <input type='hidden' name='id' value='" . $this->safe((string)($c['id'] ?? '')) . "'>
                         <label style='display:block;margin:6px 0;'>
@@ -56,10 +56,10 @@ class CandidatureView
                             <span style='display:inline-block;width:120px;'>Commentaire :</span>
                             <input type='text' name='commentaire_admin' value='" . $this->safe($c['commentaire_admin'] ?? '') . "' placeholder='Commentaire'>
                         </label>
-                        <button type='submit'>💾 Mettre à jour</button>
+                        <button type='submit'>Mettre à jour</button>
                       </form>";
     
-                // 💬 Ligne commentaire (lecture) sous la carte — toujours affichée
+                // Ligne commentaire (lecture) sous la carte — toujours affichée
                 $commentAffiche = trim((string)($c['commentaire_admin'] ?? '')) !== ''
                     ? $this->safe($c['commentaire_admin'])
                     : "<em>Aucun commentaire</em>";
@@ -72,11 +72,11 @@ class CandidatureView
         echo "</section>";
     }
 
-    // 👁️ Détail d’une candidature
+    // Détail d’une candidature
     public function renderDetails(array $c): void
     {
         echo "<section class='details-candidature'>";
-        echo "<h2>👁️ Détail de la candidature</h2>";
+        echo "<h2>Détail de la candidature</h2>";
         echo "<p><strong>Nom :</strong> " . $this->safe($c['prenom']) . " " . $this->safe($c['nom']) . "</p>";
         echo "<p><strong>Poste :</strong> " . $this->safe($c['titre']) . "</p>";
         echo "<p><strong>Référence :</strong> " . $this->safe($c['reference']) . "</p>";
@@ -89,7 +89,7 @@ class CandidatureView
         echo "</section><hr>";
     }
 
-    // 📊 Suivi des candidatures (candidat)
+    // Suivi des candidatures (candidat)
     public function renderSuivi(array $candidatures): void
     {
         echo "<section class='suivi-candidatures'>";

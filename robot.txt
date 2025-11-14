@@ -1,0 +1,35 @@
+# robots.txt - TCS Chaudronnerie
+
+User-agent: *
+# --- Laisse indexer tout par défaut
+Disallow:
+
+# --- Bloque back-office et espaces privés
+Disallow: /administrateur
+Disallow: /index.php?action=administrateur
+Disallow: /candidat
+Disallow: /index.php?action=candidat
+Disallow: /utilisateur
+Disallow: /index.php?action=utilisateur
+Disallow: /entretien
+Disallow: /index.php?action=entretien
+# API interne
+Disallow: /*?*step=api-rdv
+
+# --- Empêche l’indexation de répertoires techniques
+Disallow: /vendor/
+Disallow: /node_modules/
+Disallow: /assets/templates/
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /package.json
+Disallow: /package-lock.json
+
+# --- (Important) Autorise les assets nécessaires au rendu
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/images/
+Allow: /assets/fonts/
+
+# --- Facultatif: canonicalisation par le sitemap
+Sitemap: https://www.ton-domaine.tld/sitemap.xml

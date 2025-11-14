@@ -1,159 +1,4 @@
 
-
-// // menu public 
-// #menu-public {
-//     position: absolute;
-//     display: flex;
-//     transform: translate(0px, 650px);
-//     gap: 4rem;
-//     background: white;
-//     width: 100%;
-//     .logo {
-//         display: flex;
-//         .diagonale-header {
-//             width  : 0;
-//             height : 0;
-//             border-bottom : 10rem solid white;
-//             border-right  : 10rem solid transparent;
-//             transform: translate(240px, -150px);
-//     }
-//         .rectangle-header {
-//             width  : 15rem;
-//             height : 10rem;
-//             background: white;
-//             transform: translate(0px, -150px);
-//             position: absolute;
-//         }
-//         // img {
-//         //     background: white;
-//         //     position: relative;
-//         //     object-fit: cover;
-//         //     height: 10rem;
-//         //     width: 10rem;
-//         //     transform: translate(-80px, -150px);
-//         // }
-//         img {
-//             background: white;
-//             position: relative;
-//             object-fit: cover;
-//             height: 6rem;
-//             transform: translate(-130px, -110px);
-//         }
-//     }
-
-//     .nav-principal{
-//         position: relative;
-//         margin: 2rem;
-//         @include vars.flexbox(center, false, space-between);
-//         gap: 3rem;
-//         a {
-//             text-decoration: none;
-//             @include vars.tcsTitre;
-//             font-size: 1.3rem;
-//             color: black;
-//             letter-spacing: 0.2rem;
-//         }
-//     }
-
-
-// .separateur-header {
-//     border: 1px solid black;
-//     width: 72%;
-//     margin-left: 20%;
-//     transform: translate(110px, 750px);
-//     display:none;
-// }
-// }
-// .icone-login {
-//   position: absolute;
-//   display: flex;
-//   gap: 1rem;
-//   transform: translate(50px, -0px);
-//   .log {
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
-//     gap: 1rem;
-//     color: black;
-//   img {
-//     height: 2rem;
-//     width: 2rem;
-//     object-fit: cover;
-//   }
-
-// }
-// }
-
-
-
-
-// // .menu {
-
-// //     display: flex;
-// //     flex-direction: column;
-// //     gap: 7rem;
-// //     background: $vert;
-// //     color: white;
-    
-// // }
-
-// #menu-connecte {
-//     width: 220px;
-//     height: 100vh;
-//     background-color: #1E3D3A;
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: space-between;
-//     padding: 40px 20px;
-//     box-sizing: border-box;
-//     font-family: 'BEBAS NUEUVE', sans-serif;
-//     position: fixed;
-//   }
-  
-//   nav.menu {
-//     display: flex;
-//     flex-direction: column;
-//   }
-  
-//   nav.menu a {
-//     color: #eee;
-//     font-size: 18px;
-//     text-transform: uppercase;
-//     text-decoration: none;
-//     margin: 15px 0;
-//     padding: 10px 15px;
-//     display: inline-block;
-//     transition: all 0.2s ease-in-out;
-//   }
-  
-//   nav.menu a:hover {
-//     background-color: rgba(255, 255, 255, 0.1);
-//     color: #A3C6BE;
-//   }
-  
-//   nav.menu a.active {
-//     background-color: white;
-//     color: #333;
-//     font-weight: bold;
-//     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-//   }
-  
-//   .logoconnecte {
-//     height: 6rem;
-//     display: flex;
-//     justify-content: center;
-//   }
-
-  
-//   .separateur-header {
-//     width: 100%;
-//     height: 3px;
-//     background-color: #A3C6BE;
-//   }
-  
-
-
 @use "vars";
 
 /* ========== COMMUN ========== */
@@ -165,56 +10,192 @@
 .nav-toggle { position: absolute; opacity: 0; pointer-events: none; }
 
 .burger {
-  width: 40px; height: 32px; display: flex; flex-direction: column; justify-content: space-between;
+  width: 40px; height: 32px; display: flex; flex-direction: column; justify-content: space-between;margin-right: 3rem;
   cursor: pointer; padding: 4px; border-radius: 8px;
-}
-.burger span {
-  display: block; height: 3px; background: white; transition: transform .25s ease, opacity .2s ease, width .25s ease;
-  width: 100%;
+  span {
+    display: block; height: 3px; background: white; transition: transform .25s ease, opacity .2s ease, width .25s ease;
+    width: 100%;
+  }
 }
 
-/* ========== PUBLIC ========== */
+
+/* ========== PUBLIC HEADER ========== */
 #menu-public {
-  position: sticky; top: 0; z-index: 50; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 
-  .bar-top { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem; }
-
-  .logo {
-    position: relative; display: flex; align-items: center;
-    // .rectangle-header { width: 9rem; height: 4.5rem; background: #fff; position: absolute; left: 0; top: -1rem; z-index: 0; }
-    // .diagonale-header { width: 0; height: 0; border-bottom: 4.5rem solid #fff; border-right: 4.5rem solid transparent; position: absolute; left: 8rem; top: -1rem; z-index: 0; }
-    .logo-link { position: relative; z-index: 1; display: inline-flex; align-items: center; }
-    img { height: 3rem; object-fit: contain; }
+  /* --- Barre haute : logo + burger --- */
+  .bar-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .75rem 1rem;
   }
 
-  .nav-principal {
-    display: grid; gap: 1rem; padding: 0 1rem 1rem; grid-template-columns: 1fr;
+  .logo {
+    display: flex;
+    align-items: center;
+    
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      img {
+        margin-left: 3rem;
+      }
+    }
+    img {
+      height: 3rem;
+      object-fit: contain;
+    }
+  }
 
+  /* --- NAV : cachée par défaut sur mobile --- */
+  .nav-principal {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 0 1rem 1rem;
+    gap: 1rem;
+
+    /* ---- Liens du menu ---- */
     a {
+      position: relative;
+      display: inline-block;
       text-decoration: none;
       @include vars.tcsTitre;
-      font-size: 1.1rem; color: #111; letter-spacing: .12rem;
-      padding: .5rem .25rem; border-radius: .5rem;
-      &.active { background: #111; color: #fff; }
+      font-size: 1rem;
+      color: #111;
+      letter-spacing: 0.12rem;
+      padding: 0.5rem 0.25rem;
+      border-radius: 0.5rem;
+  
+      /* Trait animé */
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        width: 0%;
+        height: 2px;
+        background-color: vars.$beige;
+        transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                    left  0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        // Petit bonus (facultatif mais utile sur iOS) :
+        -webkit-tap-highlight-color: transparent; /* évite le halo bleu au tap */
+        touch-action: manipulation;    /* supprime le délai de tap */
+      }
+  
+      &:hover::after,
+      &:focus::after,
+      &:active::after {
+        width: 100%;
+        left: 0;
+      }
+  
+      /* ✅ Lien actif (desktop + mobile) */
+      &.active::after,
+      &[aria-current="page"]::after {
+        width: 100%;
+        left: 0;
+      }
+  
+      /* (optionnel) style du texte actif */
+      &.active,
+      &[aria-current="page"] {
+        color: vars.$beige;
+        font-weight: 600;
+      }
     }
-
-    .separateur-header { display: none; }
-
+  
+    /* ---- Icônes de connexion ---- */
     .icone-login {
-      display: grid; grid-auto-flow: column; gap: 1rem; align-items: center; justify-content: start;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-top: 1rem;
+
       .log {
-        display: grid; justify-items: center; gap: .25rem; color: #111; text-decoration: none;
-        img { width: 1.5rem; height: 1.5rem; object-fit: cover; }
-        p { font-size: .95rem; margin: 0; }
+        display: grid;
+        justify-items: center;
+        gap: 0.25rem;
+        color: #111;
+        text-decoration: none;
+        font-family: "Bebas Neue";
+
+        img {
+          width: 1.5rem;
+          height: 1.5rem;
+          object-fit: cover;
+        }
+
+        p {
+          font-size: 0.8rem;
+          margin: 0;
+        }
       }
     }
   }
 
-  /* toggle mobile */
-  #nav-toggle-public:not(:checked) ~ .nav-principal { display: none; }
-  #nav-toggle-public:checked ~ .nav-principal { display: grid; }
+  /* --- Toggle mobile --- */
+  #nav-toggle-public:not(:checked) ~ .nav-principal {
+    display: none;
+  }
+
+  #nav-toggle-public:checked ~ .nav-principal {
+    display: flex;
+  }
 }
 
+/* --- Desktop layout --- */
+@media (min-width: 768px) {
+  #menu-public {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 1.5rem;
+
+    /* On cache le burger */
+    .burger {
+      display: none;
+    }
+    #nav-toggle-public {
+      display: none;
+    }
+
+    .bar-top {
+      padding: 0;
+
+      .logo-link img {
+        height: 5rem;
+        margin-left: 2rem;
+      }
+    }
+
+    /* Ligne horizontale logo - nav - login */
+    .nav-principal {
+      display: flex !important;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      padding: 0 2rem;
+      gap: 2rem;
+
+      .icone-login {
+        margin-top: 0;
+      }
+    }
+  }
+
+  /* S'assure que la nav reste affichée */
+  #menu-public #nav-toggle-public:not(:checked) ~ .nav-principal {
+    display: flex;
+    justify-content: end;
+  }
+}
 /* ========== CONNECTE ========== */
 #menu-connecte {
   background: #1E3D3A; color: #eee;
@@ -251,27 +232,29 @@
 }
 
 /* ========== BREAKPOINTS ========== */
-@media (min-width: 640px) {
-  #menu-public .nav-principal { grid-template-columns: repeat(2, minmax(0,1fr)); }
-}
 
-@media (min-width: 768px) {
-  /* Public: menu visible en ligne, burger caché */
-  #menu-public .burger { display: none; }
-  #menu-public #nav-toggle-public { display: none; }
-  #menu-public .nav-principal {
-    display: flex !important; align-items: center; justify-content: space-between; padding: 0 1rem 0 1rem;
-    .separateur-header { display: block; height: 2px; background: #000; opacity: .1; width: 2rem; }
-    .icone-login { gap: 1.25rem; }
-    a { font-size: 1.15rem; }
-  }
-
-  /* Connecté: sidebar fixe ouverte, burger caché + logo en bas */
-  #menu-connecte .burger, #menu-connecte .nav-toggle, #menu-connecte .bar-top { display: none; }
-  #menu-connecte nav.menu { position: fixed; transform: none; width: 220px; height: 100vh; padding: 40px 20px; box-sizing: border-box; }
-}
 
 @media (min-width: 1024px) {
-  #menu-public .nav-principal a { font-size: 1.25rem; letter-spacing: .15rem; }
+  #menu-public .nav-principal a { font-size: 1rem; letter-spacing: .15rem; }
   #menu-public .logo img { height: 2.75rem; }
+}
+
+
+/* 1) Appareils qui gèrent le hover (desktop, souris) */
+@media (hover: hover) and (pointer: fine) {
+  #menu-public .nav-principal a:hover::after,
+  #menu-public .nav-principal a:focus-visible::after {
+    width: 100%;
+    left: 0;
+  }
+}
+
+/* 2) Appareils tactiles (mobile/tablette) : pas de hover → on mime l'effet au tap */
+@media (hover: none), (pointer: coarse) {
+  #menu-public .nav-principal a:active::after,
+  #menu-public .nav-principal a:focus::after,
+  #menu-public .nav-principal a:focus-visible::after {
+    width: 100%;
+    left: 0;
+  }
 }

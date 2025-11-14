@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html lang="fr">
-
+<head>
+  <meta charset="UTF-8" />
+  <title>Mon site</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
 <body>
 
+  <!-- ... contenu de ta page ... -->
 
-<section class="bulle">
-        
-    <section class="floating-bubble" aria-label="Menu d'accès rapide">
+  <!-- La bulle flottante -->
+  <a href="tel:+33123456789" class="bulle-flottante__btn" data-phone="+33123456789">
+    📞
+  </a>
 
-        <nav class="actions" id="actionButtons" aria-label="Actions rapides">
-            <!-- Nouveau -->
-            <div id="vcfNotice" class="vcf-notice" style="display: none;">
-            📇 Contact en cours d'enregistrement...
-</div>
-            <a class="action-button call-vcf" title="Appeler et enregistrer le contact" aria-label="Appeler et enregistrer">
-            <img src="./assets/images/bulle-appel.png" alt="Icône téléphone" width="24" height="24" loading="lazy">
-            </a>
+  <!-- 🔽 ICI, juste avant </body> -->
+  <div class="bulle-flottante__modal" hidden>
+    <div class="bulle-flottante__modal-backdrop"></div>
+    <div class="bulle-flottante__modal-content">
+      <p>
+        Souhaitez-vous enregistrer le contact de l'entreprise dans votre téléphone ?
+        <small>(Pour vous permettre de nous recontacter facilement.)</small>
+      </p>
+      <div class="bulle-flottante__modal-actions">
+        <button type="button" data-action="call-save">Appeler & enregistrer</button>
+        <button type="button" data-action="call">Juste appeler</button>
+        <button type="button" data-action="close">Annuler</button>
+      </div>
+    </div>
+  </div>
 
-            <a href="sms:+1234567890" class="action-button" title="Envoyer un message" aria-label="Message">
-            <img src="./assets/images/bulle-whattsapp.png" alt="Icône message" width="24" height="24" loading="lazy">
-            </a>
-            <a href="mailto:exemple@mail.com" class="action-button" title="Envoyer un mail" aria-label="Email">
-            <img src="./assets/images/bulle-email.png" alt="Icône email" width="24" height="24" loading="lazy">
-            </a>
-            <a href="https://maps.google.com?q=Votre+Adresse" target="_blank" class="action-button" title="Localiser" aria-label="Localiser">
-            <img src="./assets/images/bulle-gps.png" alt="Icône localisation" width="24" height="24" loading="lazy">
-            </a>
-        </nav>
-
-        <button class="main-button" id="mainBubbleBtn" aria-label="Ouvrir le menu">
-            <img src="./assets/images/bulle-info.png" alt="une icone de bulle" width="28" height="28" loading="lazy">
-        </button>
-    </section>
-</section>
-
-<script src="/assets/js/bulle-flottante.js"></script>
-
-    
+  <!-- Scripts -->
+  <script src="/assets/js/bulle-flottante.js"></script>
+</body>
+</html>

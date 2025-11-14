@@ -8,6 +8,17 @@
     cursor: pointer;
 }
 
+@mixin boutonVertResponsive {
+  background: #1A3E38;
+  color: white;
+  height: 3rem;
+  width: 8rem;
+  font-family: "BEBAS NEUVE";
+  border: none;
+  cursor: pointer;
+}
+
+
 @mixin boutonBeige {
   background: $beige;
   color: white;

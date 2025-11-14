@@ -3,58 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Spécialistes en chaudronnerie, tuyauterie et soudure, nous accompagnons les industriels dans la fabrication, l’installation et la maintenance de leurs équipements. Grâce à notre expertise technique, notre réactivité et notre exigence qualité, nous intervenons sur des installations complexes dans les secteurs du nucléaire, de la chimie et de la maintenance industrielle. Notre objectif : garantir la fiabilité, la sécurité et la performance de vos infrastructures.">
-    <title>Page d'accueil</title>
+
 
 </head>
 <body id="P1">
     
 <section class="hero">
-    <img src="assets/images/P1_hero.png" loading= "lazy" alt="une image d'un soudeur en position">
+    <img src="assets/images/P1_hero.webp" loading= "lazy" alt="une image d'un soudeur en position">
 </section>
 
 <div class="bloc-redirection">
     <div class="trait-vert"></div>
     <section class="card">
         <div>
-            <img src="./assets/images/P1_casque.jpeg" loading= "lazy" alt="une image de casque de soudeur">
+            <img src="./assets/images/P1_casque.webp" loading= "lazy" alt="une image de casque de soudeur">
             <a href="index.php?action=bureauEtude"><p>NOTRE BUREAU <br> D'ÉTUDE</p>
-            <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a>
+            <img class="icone" src="./assets/images/P1-fleche.webp" loading= "lazy" alt="une icone de flèche"></a>
         </div>
         
         
         <div>
-            <img src="./assets/images/P1_soudeuse.jpeg" loading= "lazy" alt="une image de soudeur.">
+            <img src="./assets/images/P1_soudeuse.webp" loading= "lazy" alt="une image de soudeur.">
             <a href="index.php?action=recrutement"><p>NOS OFFRES <br> D'EMPLOI</p>
-            <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a>
+            <img class="icone" src="./assets/images/P1-fleche.webp" loading= "lazy" alt="une icone de flèche"></a>
         </div>
             
         <div>
-            <img src="./assets/images/P1_tuyauterie.jpeg" loading= "lazy" alt="une image de tuyauterie.">
+            <img src="./assets/images/P1_tuyauterie.webp" loading= "lazy" alt="une image de tuyauterie.">
             <a href="/domaineExpertise"><p>NOS DOMAINES <br> D'EXPERTISES</p>
-            <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a>
+            <img class="icone" src="./assets/images/P1-fleche.webp" loading= "lazy" alt="une icone de flèche"></a>
         </div>
             
         <div>
-            <img src="./assets/images/P1_soudeur.jpg" loading= "lazy" alt="une image de soudeur.">
-            <a href="index.php?action=recrutement"><p>REJOIGNEZ-NOUS</p>
-            <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a>
+            <img src="./assets/images/P1_soudeur.webp" loading= "lazy" alt="une image de soudeur.">
+            <!-- <a href="index.php?action=contact"><p>CONTACTEZ-NOUS</p>
+            <img class="icone" src="./assets/images/P1-fleche.png" loading= "lazy" alt="une icone de flèche"></a> -->
         </div>
 
     </section>
 
     <section class="texte1">
         <p class="tcs-C">TCS Chaudronnerie</p>
-        <h1>NAM ID PORTTITOR AUGUE. FUSCE AT TELLUS DAPI</h1>
+        <h1>INNOVONS ENSEMBLE POUR L'INDUSTRIE DE DEMAIN.</h1>
         <div class="separateur"></div>
-        <p>Curabitur ultricies lorem sit amet molestie accumsan. In viverra volutpat erat, vel dictum mi sagittis.
-        In viverra volutpat erat, vel dictum mi sagittis.</p>
+        <p>Experts en maintenance industrielle, nous mettons nos compétences en conception, ingénierie et interventions sur site au service de vos performances.
+        Chaque projet est conçu dans le respect des normes, des cahiers de charges et des impératifs de production.</p>
         <a href="index.php?action=contact"><button class="btn1">CONTACTEZ-NOUS</button></a>
     </section>
 </div>
 
 <figure>
-        <img src="assets/images/P1_img_compteur.png" loading= "lazy" alt="une image de tuyauterie.">
+        <img src="assets/images/P1_img_compteur.webp" loading= "lazy" alt="une image de tuyauterie.">
     <figcaption>
         <section class="chiffre-compteur">
             <div class="compteur" data-target="34">0</div>
@@ -73,7 +72,7 @@
 <section  class="template-titre1">
         <div >
         <p class="tcs-C">TCS Chaudronnerie</p>
-        <h2 class="titre">Morbi turpis nunc </h2>
+        <h2 class="titre">NOTRE EXPERTISE</h2>
         </div>
     <div class="separateur"></div>
 </section>
@@ -81,15 +80,15 @@
 <section class="superposition1">
 <article>
     <p class="tcs-C">TCS Chaudronnerie</p>
-    <h2>Etiam scelerisque, lacus eu luctus blandit, tellus diam.</h2>
-    <p>Vivamus lectus neque, tincidunt et consequat id, mattis vel diam. Fusce nisl justo, malesuada eu tellus vitae, lacinia cursus enim. Aenean neque elit, varius et dui in, rhoncus tincidunt ante. Suspendisse tortor libero.</p>
-    <p>Vivamus lectus neque, tincidunt et consequat id, mattis vel diam. Fusce nisl justo, malesuada eu tellus vitae, lacinia cursus enim. Aenean neque elit, varius et dui in, rhoncus tincidunt ante. Suspendisse tortor libero.</p>
+    <h2>Découvrez comment notre expertise technique donne vie à vos projets </h2>
+    <p>Notre bureau d’études accompagne vos projets industriels de la conception à la mise en service. Grâce à une équipe d’ingénieurs et de techniciens expérimentés, nous concevons des solutions sur mesure adaptées à vos besoins en maintenance, automatisation, et amélioration de process.</p>
+    <p>Nous intervenons dès la phase d’analyse pour optimiser vos installations, réduire les coûts de maintenance et accroître la performance de vos équipements.</p>
    
 </article>
 
 
-<img src="./assets/images/P1_soudeurPosition1.jpeg" loading= "lazy" alt="une image d'une soudeuse en position.">
-<button class="btn2">EN SAVOIR PLUS</button>
+<img src="./assets/images/P1_soudeurPosition1.webp" loading= "lazy" alt="une image d'une soudeuse en position.">
+<a href="index.php?action=bureauEtude"><button class="btn2">EN SAVOIR PLUS</button></a>
 </section>
 
 <section class="template-titre1">
@@ -103,12 +102,13 @@
 <section class="superposition2">
 <article>
     <p class="tcs-C">TCS Chaudronnerie</p>
-    <h2>Etiam scelerisque, lacus eu luctus blandit, tellus diam.</h2>
-    <p>Vivamus lectus neque, tincidunt et consequat id, mattis vel diam. Fusce nisl justo, malesuada eu tellus vitae, lacinia cursus enim. Aenean neque elit, varius et dui in, rhoncus tincidunt ante. Suspendisse tortor libero.</p>
-    <p>Vivamus lectus neque, tincidunt et consequat id, mattis vel diam. Fusce nisl justo, malesuada eu tellus vitae, lacinia cursus enim. Aenean neque elit, varius et dui in, rhoncus tincidunt ante. Suspendisse tortor libero.</p>
+    <h2>Découvrez l’excellence de notre savoir-faire technique</h2>
+    <p>Notre expertise technique s’appuie sur une parfaite maîtrise des plans, cahiers de soudage et cahiers des charges.
+Nous analysons, concevons et validons chaque projet avec rigueur afin de garantir la conformité, la fiabilité et la durabilité de vos installations industrielles.</p>
+    <p>De la préparation des dossiers techniques à la vérification sur site, notre équipe assure un suivi complet pour répondre aux exigences les plus strictes de vos procédés.</p>
 </article>
-<img src="./assets/images/P1_position-soudeur.jpeg" loading= "lazy" alt="une image de soudeur en position.">
-<button class="btn3">EN SAVOIR PLUS</button>
+<img src="./assets/images/P1_position-soudeur.webp" loading= "lazy" alt="une image de soudeur en position.">
+<a href="/domaineExpertise"><button class="btn3">EN SAVOIR PLUS</button></a>
 </section>
 
 <section  class="template-titre2">
@@ -127,7 +127,7 @@
 </section>
 
 <section class="citation">
-    <img src="assets/images/icone-citation.png" loading= "lazy" alt="une image de guillemet.">
+    <img src="assets/images/icone-citation.webp" loading= "lazy" alt="une image de guillemet.">
     <blockquote class="citation-texte">« TCS maîtrise parfaitement les exigences du nucléaire : rigueur, conformité RCC-M et traçabilité totale. Une équipe fiable et professionnelle. » </blockquote>
     <p class="prenom">—  Paul, Responsable technique, secteur nucléaire</p>
 </section>
@@ -136,11 +136,11 @@
     
     <section  class="template-titre2">
                 <div>
-                <p class="tcs-C">Témoignage</p>
-                <h2 class="titre">TCS Chaudronnerie </h2>
+                <p class="tcs-C">TCS Chaudronnerie </p>
+                <h2 class="titre">TÉMOIGNAGE</h2>
                 </div>
 
-           <img src="assets/images/P1_logo_EDF.png" loading= "lazy" alt="logo de EDF">
+           <img src="assets/images/P1_logo_EDF.webp" loading= "lazy" alt="logo de EDF">
     </section>
 
 

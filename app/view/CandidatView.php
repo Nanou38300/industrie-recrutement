@@ -43,15 +43,24 @@ class CandidatView
         }
         echo "<h2>Mon Profil</h2>";
     
-        // === Photo + bouton modifier ===
-        echo "<div class='photo-profil' '>";
-        echo "  <img src='/" . ltrim($photo, '/') . "' alt='Photo de profil' class='photo-candidat'>";
-        echo "  <form method='POST' enctype='multipart/form-data' action='/candidat/uploadPhoto'>
-                    <input type='file' name='photo' accept='image/*' required>
-                    <button type='submit'>Modifier la photo</button>
-                </form>";
-        echo "</div>";
-    
+       
+        // === Photo + bouton modifier === 
+
+        echo '<div class="photo-profil">';
+        echo '    <img src="/' . ltrim($photo, '/') . '" alt="Photo de profil" class="photo-candidat">';
+        echo '    <form method="POST" enctype="multipart/form-data" action="/candidat/uploadPhoto">';
+        echo '        <input 
+                            type="file" 
+                            name="photo" 
+                            accept=".jpg,.jpeg,.png,.gif,.webp" 
+                            required
+                        >';
+        echo '        <button type="submit">Modifier la photo</button>';
+        echo '    </form>';
+        echo '</div>';
+        
+
+
         // === Infos personnelles ===
         $champs = [
             'Nom'        => 'nom',

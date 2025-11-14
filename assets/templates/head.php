@@ -1,24 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <!-- Définit l'encodage des caractères en UTF-8, permettant l'affichage correct des caractères spéciaux. -->
+    <!-- Encodage et affichage responsive -->
     <meta charset="UTF-8">
-
-    <!-- Configure la mise en page pour une meilleure adaptation aux écrans mobiles et garantit un affichage responsive. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Détermine le titre de la page qui s'affichera dans l'onglet du navigateur. -->
-    <title>TCS - Tuyauterie Chaudronnerie Soudure</title>
+    <?php
+    $seoTitle     = htmlspecialchars($SEO['title'] ?? 'TCS - Tuyauterie Chaudronnerie Soudure', ENT_QUOTES, 'UTF-8');
+    $seoDesc      = htmlspecialchars($SEO['description'] ?? 'Experts en chaudronnerie, tuyauterie et soudure industrielle. Fabrication, installation et maintenance d’équipements pour le nucléaire, la chimie et la maintenance industrielle.', ENT_QUOTES, 'UTF-8');
+    $seoRobots    = htmlspecialchars($SEO['robots'] ?? 'noindex, nofollow', ENT_QUOTES, 'UTF-8');
+    $seoCanonical = htmlspecialchars($SEO['canonical'] ?? '', ENT_QUOTES, 'UTF-8');
+    ?>
 
-    <!-- Charge une feuille de style CSS pour définir l'apparence du site. -->
+    <title><?= $seoTitle ?></title>
+    <meta name="description" content="<?= $seoDesc ?>">
+    <meta name="robots" content="<?= $seoRobots ?>">
+    <?php if (!empty($seoCanonical)): ?>
+        <link rel="canonical" href="<?= $seoCanonical ?>">
+    <?php endif; ?>
+
+
+    <meta property="og:title" content="<?= $seoTitle ?>">
+    <meta property="og:description" content="<?= $seoDesc ?>">
+    <meta property="og:type" content="website">
+    <?php if (!empty($seoCanonical)): ?>
+        <meta property="og:url" content="<?= $seoCanonical ?>">
+    <?php endif; ?>
+
     <link rel="stylesheet" href="/assets/css/style.css">
 
-    <!-- Définit une URL de base pour toutes les références relatives dans la page. -->
     <base href="http://industrie.localhost:8080">
-
-    <!-- Permet d'ajouter une description de la page pour les moteurs de recherche (ici, vide). -->
-    <meta name="description" content="">
 </head>
+
 <body>
-    

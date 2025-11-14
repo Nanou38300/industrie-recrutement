@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <title>Prage Recrutement</title>
+
 
 </head>
 <body id="P4">
     
 <section class="hero">
-    <img src="assets/images/P4-hero.png" loading= "lazy" alt="une image d'un soudeur en position">
+    <img src="assets/images/P4-hero.webp" loading= "lazy" alt="une image d'un soudeur en position">
 </section>
 
 <h1>Notre processus de recrutement</h1>
@@ -23,7 +22,7 @@
         (Analyse des CV et tri des candidatures).</p>
     </div>
     
-    <img class="fleche" src="assets/images/P4_fleche.png" alt="un picto flèche">
+    <img class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
 
 
     <div class="etape-process">
@@ -33,7 +32,7 @@
         (Organisation et réalisation des entretiens, incluant la coordination des plannings).</p>
     </div>
 
-    <img class="fleche" src="assets/images/P4_fleche.png" alt="un picto flèche">
+    <img class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
 
  
     <div class="etape-process">
@@ -43,7 +42,7 @@
         (Organisation et réalisation des entretiens, incluant la coordination des plannings).</p>
     </div>
 
-    <img class="fleche" src="assets/images/P4_fleche.png" alt="un picto flèche">
+    <img class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
 
  
     <div class="etape-process">
@@ -79,7 +78,7 @@
         </div>
     <div class="separateur"></div>
 
-    <img src="assets/images/P4_chaudronnier.jpeg" alt="une image représentant un chaudronnier">
+    <img src="assets/images/P4_chaudronnier.webp" alt="une image représentant un chaudronnier">
     <article class="article"> 
         <h3>Chaudronnier H/F</h3>
         <p>C.D.I</p>
@@ -90,7 +89,7 @@
 
 
 
-    <img class="img2" src="assets/images/P4_soudeur2.jpeg" alt="une image représentant un chaudronnier">
+    <img class="img2" src="assets/images/P4_soudeur2.webp" alt="une image représentant un chaudronnier">
     <article class="article2"> 
         <h3>Soudeur H/F</h3>
         <p>C.D.I</p>
@@ -100,7 +99,7 @@
     </article>
   
 
-    <img src="assets/images/P4_soudeurPosition.png" alt="une image représentant un chaudronnier">
+    <img src="assets/images/P4_soudeurPosition.webp" alt="une image représentant un chaudronnier">
     <article class="article3"> 
         <h3>Soudeur H/F</h3>
         <p>C.D.I</p>
@@ -148,7 +147,7 @@
  
 
     <!-- V2 -->
-<section class="form-container">
+<section class="form-spontanne">
     <section class="header">
         <div>
             <p class="company-name">TCS Chaudronnerie</p>

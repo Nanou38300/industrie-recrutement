@@ -9,6 +9,11 @@
 </head>
 <body>
     <h1 class="titre-calendrier">Calendrier des rendez-vous</h1>
+        <?php if (!empty($_SESSION['flash'])): ?>
+        <?php $t = htmlspecialchars((string)($_SESSION['flash_type'] ?? 'success')); ?>
+        <div class="flash <?= $t ?>"><?= htmlspecialchars((string)$_SESSION['flash']) ?></div>
+        <?php unset($_SESSION['flash'], $_SESSION['flash_type']); ?>
+        <?php endif; ?>
     <div id="calendar"></div>
 
     <script>

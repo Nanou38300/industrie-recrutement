@@ -10,65 +10,83 @@ class AdministrateurView
         return htmlspecialchars((string)($value ?? ''));
     }
 
-    // Affiche les informations du profil administrateur
-    public function renderProfil(array $profil): void
-    {
-        // Accepte soit un tableau plat, soit ['infos' => [...]]
-        $data = isset($profil['infos']) && is_array($profil['infos']) ? $profil['infos'] : $profil;
-    
-        echo "<section class='profil-admin'>";
-        echo '<h2>Mon Profil</h2>';
-    
-        $champs = [
-            'Nom'       => 'nom',
-            'Prénom'    => 'prenom',
-            'Email'     => 'email',
-            'Téléphone' => 'telephone',
-            'Poste'     => 'poste',
-            'Ville'     => 'ville',
-        ];
-    
-        foreach ($champs as $label => $key) {
-            $valeur = $data[$key] ?? '';
-            echo '<p class="profil-info">
-                    <img src="assets/images/valide.png" alt="valide" class="valide-icone">
-                    <strong>' . $label . ' :</strong> ' . $this->safe($valeur) . '
-                  </p>';
+// Affiche les informations du profil administrateur
+public function renderProfil(array $profil): void
+{
+    // Accepte soit un tableau plat, soit ['infos' => [...]]
+    $data = isset($profil['infos']) && is_array($profil['infos']) ? $profil['infos'] : $profil;
+
+    echo "<section class='profil-admin'>";
+    echo "<h2>Mon Profil</h2>";
+
+    // --- FLASH comme pour le candidat (one-shot) ---
+    if (!empty($_SESSION['flash'])) {
+        echo "<div class='flash success'>" . htmlspecialchars((string)$_SESSION['flash']) . "</div>";
+        unset($_SESSION['flash']);
+    }
+    // ----------------------------------------------
+
+    $champs = [
+        'Nom'       => 'nom',
+        'Prénom'    => 'prenom',
+        'Email'     => 'email',
+        'Téléphone' => 'telephone',
+        'Poste'     => 'poste',
+        'Ville'     => 'ville',
+    ];
+
+    foreach ($champs as $label => $key) {
+        $valeur = $data[$key] ?? '';
+        echo '<p class="profil-info">
+                <img src="assets/images/valide.png" alt="valide" class="valide-icone">
+                <strong>' . $label . ' :</strong> ' . $this->safe($valeur) . '
+              </p>';
+    }
+
+    echo "<form method='GET' action='/administrateur/edit-profil' style='margin-top: 20px;'>";
+    echo "<button type='submit' class='btn btn-primary'>Modifier mon profil</button>";
+    echo "</form>";
+
+    echo "</section><hr>";
+}
+
+
+// Affiche le formulaire de modification du profil administrateur
+public function renderFormProfil(array $profil): void
+{
+    echo "<section class='form-profil-admin'>";
+        echo "<h2>Modifier mon profil</h2>";
+
+        // --- FLASH (mêmes classes que le candidat) ---
+        if (!empty($_SESSION['flash'])) {
+            echo "<div class='flash success'>" . $this->safe((string)$_SESSION['flash']) . "</div>";
+            unset($_SESSION['flash']);
+        }
+        // --------------------------------------------
+
+        echo "<form method='POST' action='/administrateur/edit-profil'>";
+
+        // Génère les champs du formulaire à partir du tableau $profil
+        $fields = ['nom', 'prenom', 'email', 'telephone', 'poste', 'ville'];
+        foreach ($fields as $field) {
+            $value = $this->safe($profil[$field] ?? '');
+            $label = ucfirst($field);
+            echo "<label>$label : <input type='text' name='$field' value='$value' required></label><br>";
         }
 
-        echo "<form method='GET' action='/administrateur/edit-profil' style='margin-top: 20px;'>";
-        echo "<button type='submit' class='btn btn-primary'>Modifier mon profil</button>";
+        echo "<button type='submit'>Enregistrer les modifications</button>";
         echo "</form>";
-    
-        echo "</section><hr>";
-    }
-    // Affiche le formulaire de modification du profil administrateur
-    public function renderFormProfil(array $profil): void
-    {
-        echo "<section class='form-profil-admin'>";
-            echo "<h2>Modifier mon profil</h2>";
-            echo "<form method='POST' action='/administrateur/edit-profil'>";
+    echo "</section><hr>";
 
-            // Génère les champs du formulaire à partir du tableau $profil
-            $fields = ['nom', 'prenom', 'email', 'telephone', 'poste', 'ville'];
-            foreach ($fields as $field) {
-                $value = $this->safe($profil[$field] ?? '');
-                $label = ucfirst($field);
-                echo "<label>$label : <input type='text' name='$field' value='$value' required></label><br>";
-            }
+    // Bouton pour supprimer le compte administrateur
+    echo "<section class='delete-profil'>";
+    echo "<h3>Supprimer mon compte</h3>";
+    echo "<form method='POST' action='/administrateur/delete-profil' onsubmit=\"return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')\">";
+    echo "<button type='submit' class='danger'>Supprimer mon profil</button>";
+    echo "</form>";
+    echo "</section><hr>";
+}
 
-            echo "<button type='submit'>Enregistrer les modifications</button>";
-            echo "</form>";
-        echo "</section><hr>";
-
-        // Bouton pour supprimer le compte administrateur
-        echo "<section class='delete-profil'>";
-        echo "<h3>Supprimer mon compte</h3>";
-        echo "<form method='POST' action='/administrateur/delete-profil' onsubmit=\"return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')\">";
-        echo "<button type='submit' class='danger'>Supprimer mon profil</button>";
-        echo "</form>";
-        echo "</section><hr>";
-    }
 
     // Affiche les statistiques globales dans le tableau de bord
     public function renderDashboard(array $stats): void
@@ -86,14 +104,19 @@ class AdministrateurView
 // bouton creation d'une nouvelle annonce
     public function renderAnnonces(array $annonces): void
     {
+    
         echo "<section class='annonces-admin'>";
         echo "<div class='bloc-annonces-admin'>"; // Bloc unique
     
         // Titre + bouton de création
         echo "<div class='header-annonces'>";
         echo "<h2>Gestion des annonces</h2>";
+        if (!empty($_SESSION['flash'])) {
+            echo "<div class='flash success'>" . htmlspecialchars((string)$_SESSION['flash']) . "</div>";
+            unset($_SESSION['flash']);
+        }
         echo "<form method='GET' action='/administrateur/create-annonce'>";
-        echo "<button type='submit' class='btn btn-success'>➕ Créer une annonce</button>";
+        echo "<button type='submit' class='btn-success'>➕ Créer une annonce</button>";
         echo "</form>";
         echo "</div>";
     
@@ -124,7 +147,7 @@ class AdministrateurView
                 echo "<p><strong>Lieu :</strong> " . $this->safe($a['localisation'] ?? '') . "</p>";
                 echo "<p><strong>Secteur :</strong> " . $this->safe($a['secteur_activite'] ?? '') . "</p>";
                 echo "<p><strong>Description :</strong> " . substr($this->safe($a['description'] ?? ''), 0, 100) . "...</p>";
-    
+
     
 // Modifier
 echo "<div class='btns-card'>";

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domaines d'expertises</title>
+
 </head>
 <body id="P3">
     
@@ -22,30 +22,39 @@
 
 <section class="redirection">
     <div class="plan">
-        <img class="icone" src="assets/images/P3_plan.png" alt="icone d'un plan">
-        <img class="icone" src="assets/images/P3_cahierDesCharges.png" alt="icone d'un plan">
-        <img class="icone" src="assets/images/P3_soudage.png" alt="icone d'un plan">
+    <a href="#redirection-plan" class="scroll"><img class="icone" src="assets/images/P3_plan.png" alt="icone d'un plan"></a>
+    <a href="#redirection-cahier" class="scroll"><img class="icone" src="assets/images/P3_cahierDesCharges.png" alt="icone d'un plan"></a>
+    <a href="#redirection-soudage" class="scroll"><img class="icone" src="assets/images/P3_soudage.png" alt="icone d'un plan"></a>
     </div>
     </a>
     
     <div class="cahiers">
-        <h4>PLANS</h4>
-        <h4>CAHIERS <br>DES <br>CHARGES</h4>
-        <h4>CAHIER <br>DE <br>SOUDAGE</h4>
+        <a href="#redirection-plan" class="scroll"><h4>PLANS</h4></a>
+        <a href="#redirection-cahier" class="scroll"><h4>CAHIERS <br>DES <br>CHARGES</h4></a>
+        <a href="#redirection-soudage" class="scroll"><h4>CAHIER <br>DE <br>SOUDAGE</h4></a>
     </div>
     <div class="fleches">
         <a href="#redirection-plan" class="scroll">
-        <img class="fleche" src="assets/images/P1-fleche.png" alt="icone d'une flèche"></a>
+        <img class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
 
         <a href="#redirection-cahier" class="scroll">
-        <img class="fleche" src="assets/images/P1-fleche.png" alt="icone d'une flèche"></a>
+        <img class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
 
         <a href="#redirection-soudage" class="scroll">
-        <img class="fleche" src="assets/images/P1-fleche.png" alt="icone d'une flèche"></a>
+        <img class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
     </div>
 </section>
 <section class="rect-vert">
-    <p>Cras posuere id mauris quis maximus. Maecenas sagittis sit amet ligula quis laoreet. Suspendisse scelerisque molestie odio nec mattis.</p>
+
+    <p>Au cœur de TCS Industrie, notre bureau d’étude constitue le point de départ de chaque projet en chaudronnerie, tuyauterie et soudure industrielle. </p>
+
+<ul class="expertise">Notre équipe d’ingénieurs et de techniciens qualifiés accompagne chaque étape du processus :
+    <li>Analyse des besoins et faisabilité technique</li>
+    <li>Conception 3D et modélisation (SolidWorks, AutoCAD, etc.)</li>
+    <li>Calculs mécaniques et dimensionnements</li>
+    <li>Études d’implantation et d’intégration sur site</li>
+    <li>Préparation des dossiers de fabrication et de montage</li>	
+</ul>
     <a href="contact"><button class="btn2">CONTACTEZ-NOUS</button></a>
 </section> 
 

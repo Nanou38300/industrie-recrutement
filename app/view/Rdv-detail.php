@@ -70,7 +70,7 @@ $cvUrl    = '/uploads/' . $cvName;
   </div>
 
   <!-- ACTIONS -->
-  <div class="rdv-actions" style="display:flex;gap:12px;margin-top:16px;">
+  <div class="rdv-actions">
 
     <!-- Bouton Modifier -->
     <form method="GET" action="/administrateur/edit-entretien" class="form-edit">

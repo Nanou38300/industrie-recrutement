@@ -28,12 +28,77 @@ $action = $_GET['action'] ?? ($segments[0] ?? '');
 $step   = $_GET['step']   ?? ($segments[1] ?? '');
 $id     = $_GET['id']     ?? ($segments[2] ?? '');
 
+
+// ====== SEO ======
+$actionNorm = $action !== '' ? $action : 'accueil';
+
+$baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
+         . '://' . $_SERVER['HTTP_HOST'];
+
+$currentPath = strtok($_SERVER['REQUEST_URI'], '?'); // sans query-string
+$canonical = rtrim($baseUrl, '/') . $currentPath;
+
+$metaByAction = [
+  'accueil' => [
+    'title' => "Page d'accueil",
+    'description' => "Spécialistes en chaudronnerie, tuyauterie et soudure, nous accompagnons les industriels dans la fabrication, l’installation et la maintenance de leurs équipements. Grâce à notre expertise technique, notre réactivité et notre exigence qualité, nous intervenons sur des installations complexes dans les secteurs du nucléaire, de la chimie et de la maintenance industrielle. Notre objectif : garantir la fiabilité, la sécurité et la performance de vos infrastructures.",
+  ],
+  'bureauEtude' => [
+    'title' => "Bureau d’études — TCS Chaudronnerie",
+    'description' => "Conception, ingénierie, dossiers techniques (DMOS/QMOS), et accompagnement de la conception à la mise en service.",
+  ],
+  'domaineExpertise' => [
+    'title' => "Domaines d’expertise — TCS Chaudronnerie",
+    'description' => "Nous intervenons dans les secteurs du nucléaire, de la chimie et de la maintenance industrielle, en mettant à disposition notre savoir-faire en chaudronnerie et tuyauterie. Nos équipes qualifiées réalisent des travaux en zones contrôlées, fabriquent des équipements sous pression, installent des réseaux de tuyauterie pour fluides complexes et assurent la maintenance d’installations industrielles, avec un haut niveau d’exigence en matière de sécurité, conformité et réactivité.",
+  ],
+  'recrutement' => [
+    'title' => "Recrutement — TCS Chaudronnerie",
+    'description' => "Nos offres d’emploi en chaudronnerie, tuyauterie et soudage. Rejoignez une équipe experte.",
+  ],
+  'contact' => [
+    'title' => "Contact — TCS Chaudronnerie",
+    'description' => "Parlez-nous de votre projet : maintenance, fabrication et installation d’équipements industriels.",
+  ],
+];
+
+// Par défaut (pages non publiques / back-office…) : on met noindex
+$defaultMeta = [
+  'title' => "TCS Chaudronnerie",
+  'description' => "Solutions de chaudronnerie, tuyauterie et soudure pour l’industrie.",
+  'robots' => 'noindex, nofollow',
+];
+
+// Pages publiques (menu public) indexables
+$publicActions = ['accueil','bureauEtude','domaineExpertise','recrutement','contact'];
+
+// Construction du SEO final
+$SEO = $metaByAction[$actionNorm] ?? $defaultMeta;
+$SEO['canonical'] = $canonical;
+
+// robots: index/follow pour les pages publiques, noindex ailleurs
+if (in_array($actionNorm, $publicActions, true)) {
+  $SEO['robots'] = 'index, follow';
+} else {
+  $SEO['robots'] = $SEO['robots'] ?? 'noindex, nofollow';
+}
+
+// Exemple de cas particulier : annonce/view/{id} -> indexable avec title/description dynamiques simples
+if ($action === 'annonce' && $step === 'view' && ctype_digit((string)$id)) {
+  $SEO['title'] = "Offre #$id — TCS Chaudronnerie";
+  $SEO['description'] = "Découvrez l’offre d’emploi #$id chez TCS Chaudronnerie. Postulez dès maintenant.";
+  $SEO['robots'] = 'index, follow';
+}
 // ➕ Détection d’un appel API (évite d’inclure le layout)
 $isApiCall = ($action === 'administrateur' && $step === 'api-rdv');
 
+
 // 🖼️ Layout control (uniquement si ce n’est pas un appel API)
 if (!$isApiCall) {
-    $afficherMenuPublic   = in_array($action, ['accueil', 'bureauEtude', 'domaineExpertise', 'recrutement', 'contact']);
+    // ➕ Ajout d'une condition pour afficher le menu public sur /utilisateur/login et /utilisateur/create
+    $afficherMenuPublic =
+        in_array($action, ['accueil', 'bureauEtude', 'domaineExpertise', 'recrutement', 'contact'], true)
+        || ($action === 'utilisateur' && in_array($step, ['login', 'create'], true));
+
     $afficherMenuConnecte = isset([
         'administrateur' => true,
         'candidat'       => true

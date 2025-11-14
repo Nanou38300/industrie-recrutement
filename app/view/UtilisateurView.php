@@ -30,9 +30,9 @@ class UtilisateurView
         <section class="inscription">
 
         <div class="superposition-insc">
-            <img class="img-inscription" src="./assets/images/P1_soudeur.jpg" alt="une image d\'un soudeur.">
+            <img class="img-inscription" src="./assets/images/P1_soudeur.webp" alt="une image d\'un soudeur.">
             <div class="cadre-img">
-                <img src="./assets/images/icone_fleche_blanche.png" alt="une icone fleche">
+                <img src="./assets/images/icone_fleche_blanche.webp" alt="une icone fleche">
                 <a href="/utilisateur/login" class="btn-insc">SE CONNECTER</a>
             </div>
         </div>
@@ -80,12 +80,12 @@ public function loginForm()
         </form>
         
         <div class="superposition-co">
-            <img class="img-connexion" src="./assets/images/P4_soudeurPosition.png" alt="un soudeur.">
+            <img class="img-connexion" src="./assets/images/P4_soudeurPosition.webp" alt="un soudeur.">
 
             <div class="cadre-co">
                 <a href="/utilisateur/create" class="btn-co">CREER UN COMPTE</a>
 
-                <img src="./assets/images/icone_fleche_blanche_inverse.png" alt="une icone fleche">
+                <img src="./assets/images/icone_fleche_blanche_inverse.webp" alt="une icone fleche">
             </div>
         </div>
     </section>

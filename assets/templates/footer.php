@@ -1,7 +1,7 @@
 <footer>
 
 <section class="footer-complet">
-        <a href="index.php?action=accueil"><img src="assets/images/LOGO.svg" alt="Logo de l'entreprise"></a>
+        <a href="index.php?action=accueil"><img src="assets/images/TCS.svg" alt="Logo de l'entreprise"></a>
 
         <section class="contact">
             <h4>CONTACT</h4>
@@ -13,7 +13,7 @@
             <nav>
                 <a href="index.php?action=accueil">Accueil</a>
                 <a href="index.php?action=bureauEtude">Bureau d'étude</a>
-                <a href="index.php?action=expertise">Notre expertise</a>
+                <a href="index.php?action=domaineExpertise">Notre expertise</a>
                 <a href="index.php?action=recrutement">Recrutement</a>
                 <a href="index.php?action=contact">Contact</a>
             </nav>
@@ -22,8 +22,8 @@
         <section class="reseaux">
             <h4>SUIVEZ-NOUS</h4>
             <div>
-                <img src="./assets/images/icone-linkedin.png" alt="Logo de linkedin">
-                <img src="./assets/images/icone-youtube.png" alt="Logo de youtube">
+                <img src="./assets/images/icone-linkedin.webp" alt="Logo de linkedin">
+                <img src="./assets/images/icone-youtube.webp" alt="Logo de youtube">
                 </div>
         </section>
 </section>
@@ -34,13 +34,13 @@
         <p>Réalisation Code Création 2025</p>
 </section>
 
-<img class="btn-scroll" src="assets/images/fleche-vers-le-haut.png" alt="flèche retour en haut de la page">
+<img class="btn-scroll" src="assets/images/fleche-vers-le-haut.webp" alt="flèche retour en haut de la page">
 
 
 
 <!-- Scripts -->
 <script src="/assets/js/btn-retour-haut.js" defer></script>
-<script src="/assets/js/bulle-flottante.js" defer></script>
+
 </footer>
 
 </body>

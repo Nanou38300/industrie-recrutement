@@ -130,7 +130,7 @@ class CalendrierView
         echo "    <textarea name='commentaire' rows='4' placeholder='Notes internes...'>{$commentaire}</textarea>";
         echo "  </label>";
 
-        echo "  <div class='actions' style='margin-top:12px;display:flex;gap:10px;'>";
+        echo "  <div class='actions'>";
         echo "    <button type='submit' class='btn btn-primary'>Enregistrer</button>";
         echo "    <a href='/administrateur/vue-calendrier' class='btn btn-secondary'>Annuler</a>";
         echo "  </div>";
@@ -202,6 +202,7 @@ class CalendrierView
     {
         echo "<section class='form-calendrier'>";
         echo "<h2>➕ Planifier un rendez-vous</h2>";
+
         echo "<form method='POST' action='/calendrier/planifier'>";
 
         echo "<label>ID utilisateur :

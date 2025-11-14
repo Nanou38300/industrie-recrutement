@@ -149,51 +149,84 @@ public function editProfil(): void
         header('Location: /candidat/profil'); exit;
     }
 
-public function uploadPhoto(): void
-{
-    $this->redirectIfNotConnected();
-
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_FILES['photo']['name'])) {
+    public function uploadPhoto(): void
+    {
+        $this->redirectIfNotConnected();
+    
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_FILES['photo']['name'])) {
+            header('Location: /candidat/profil'); exit;
+        }
+    
+        // === Config ===
+        $maxBytes = 10 * 1024 * 1024; // 10 Mo
+        $allowedExt = ['jpg','jpeg','png','gif','webp'];
+        $allowedMime = ['image/jpeg','image/png','image/gif','image/webp'];
+    
+        $file = $_FILES['photo'];
+        $tmp  = $file['tmp_name'];
+        $orig = $file['name'];
+        $ext  = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
+        $size = (int)$file['size'];
+    
+        // Vérif extension
+        if (!in_array($ext, $allowedExt, true)) {
+            $_SESSION['flash'] = "Format image non supporté (jpg, png, gif, webp).";
+            header('Location: /candidat/profil'); exit;
+        }
+    
+        // Vérif erreurs upload
+        if ($file['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($tmp)) {
+            $_SESSION['flash'] = "Échec de l’upload de la photo.";
+            header('Location: /candidat/profil'); exit;
+        }
+    
+        // Vérif taille (10 Mo max)
+        if ($size > $maxBytes) {
+            $_SESSION['flash'] = "Fichier trop lourd (max 10 Mo).";
+            header('Location: /candidat/profil'); exit;
+        }
+    
+        // Vérif MIME réel
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime  = finfo_file($finfo, $tmp) ?: '';
+        finfo_close($finfo);
+        if (!in_array($mime, $allowedMime, true)) {
+            $_SESSION['flash'] = "Le fichier n'est pas une image valide.";
+            header('Location: /candidat/profil'); exit;
+        }
+    
+        // Dossiers et suppression ancienne photo
+        $root = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/');
+        $dir  = $root . '/uploads';
+        if (!is_dir($dir)) @mkdir($dir, 0775, true);
+    
+        $userId = (int)$_SESSION['utilisateur']['id'];
+        $oldRel = $this->model->getCurrentPhoto($userId);
+        if ($oldRel) {
+            $oldAbs = $root . '/' . ltrim($oldRel, '/');
+            if (is_file($oldAbs)) @unlink($oldAbs);
+        }
+    
+        // Nom de fichier unique
+        $base = preg_replace('~[^a-zA-Z0-9._-]~', '_', pathinfo($orig, PATHINFO_FILENAME));
+        $name = time() . '-' . trim($base, '_-') . '.' . $ext;
+        $dest = $dir . '/' . $name;
+    
+        // Déplacement du fichier tel quel
+        $ok = move_uploaded_file($tmp, $dest);
+        if (!$ok) {
+            $_SESSION['flash'] = "Erreur lors du téléchargement de la photo.";
+            header('Location: /candidat/profil'); exit;
+        }
+        @chmod($dest, 0644);
+    
+        // Sauvegarde en base
+        $this->model->updatePhoto($userId, 'uploads/' . $name);
+    
+        $_SESSION['flash'] = "Photo mise à jour.";
         header('Location: /candidat/profil'); exit;
     }
-
-    $allowed = ['jpg','jpeg','png','gif','webp'];
-    $orig = $_FILES['photo']['name'];
-    $ext  = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-    if (!in_array($ext, $allowed, true)) {
-        $_SESSION['flash'] = "Format image non supporté (jpg, png, gif, webp).";
-        header('Location: /candidat/profil'); exit;
-    }
-
-    $root = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/');
-    $dir  = $root . '/uploads';
-    if (!is_dir($dir)) @mkdir($dir, 0775, true);
-
-    // supprime l’ancienne photo si elle existe
-    $userId = (int)$_SESSION['utilisateur']['id'];
-    $oldRel = $this->model->getCurrentPhoto($userId); // ex: 'uploads/xxx.jpg'
-    if ($oldRel) {
-        $oldAbs = $root . '/' . ltrim($oldRel, '/');
-        if (is_file($oldAbs)) @unlink($oldAbs);
-    }
-
-    $base = preg_replace('~[^a-zA-Z0-9._-]~', '_', pathinfo($orig, PATHINFO_FILENAME));
-    $name = time() . '-' . trim($base, '_-') . '.' . $ext;
-    $dest = $dir . '/' . $name;
-
-    $ok = is_uploaded_file($_FILES['photo']['tmp_name']) && move_uploaded_file($_FILES['photo']['tmp_name'], $dest);
-    if (!$ok) {
-        $_SESSION['flash'] = "Échec de l’upload de la photo.";
-        header('Location: /candidat/profil'); exit;
-    }
-    @chmod($dest, 0644);
-
-    $this->model->updatePhoto($userId, 'uploads/' . $name);
-
-    $_SESSION['flash'] = "Photo mise à jour.";
-    header('Location: /candidat/profil'); exit;
-}
-
+    
     public function postuler(int $id): void
 {
     $idUtilisateur = $_SESSION['utilisateur']['id'];

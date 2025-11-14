@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <title>Page contact</title>
+
 </head>
 <body id="P5">
     
@@ -53,7 +52,7 @@
             <section class="header">
                 <div>
                     <p class="company-name">TCS Chaudronnerie</p>
-                    <h2 class="title">Candidature spontanée</h2>
+                    <h2 class="title">Contactez-nous</h2>
                 </div>
                 <div class="separator"></div>
             </section>

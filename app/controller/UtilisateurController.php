@@ -5,6 +5,7 @@ namespace App\Controller;
 // Importe les classes nécessaires depuis d'autres namespaces
 use App\Model\UtilisateurModel;
 use App\View\UtilisateurView;
+use App\Security;
 
 class UtilisateurController
 {
@@ -15,28 +16,12 @@ class UtilisateurController
     // Constructeur qui initialise les instances du modèle et de la vue
     public function __construct()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
+        // ✅ Sessions gérées dans index.php
         $this->utilisateurModel = new UtilisateurModel();
         $this->utilisateurView  = new UtilisateurView();
     }
 
-    // ✅ Vérifie le token CSRF pour les requêtes POST
-    private function checkCsrfToken(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        $token = $_POST['csrf_token'] ?? '';
-        if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
-            http_response_code(403);
-            echo "Requête invalide (CSRF).";
-            exit;
-        }
-    }
+    // ✅ Plus besoin de checkCsrfToken(), on utilise Security::validateCSRFToken()
 
     // Méthode privée qui vérifie si un utilisateur est connecté
     private function isAuthenticated(): bool
@@ -81,8 +66,8 @@ class UtilisateurController
     public function createUtilisateur(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 🔐 CSRF
-            $this->checkCsrfToken();
+            // 🔐 CSRF centralisé
+            Security::validateCSRFToken();
 
             // ⚠️ Tu peux ajouter ici des validations supplémentaires si besoin
             $result = $this->utilisateurModel->insertUtilisateur(
@@ -147,8 +132,8 @@ class UtilisateurController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 🔐 CSRF
-            $this->checkCsrfToken();
+            // 🔐 CSRF centralisé
+            Security::validateCSRFToken();
 
             $this->utilisateurModel->updateUtilisateur(
                 $_POST['id']        ?? $id,
@@ -176,8 +161,19 @@ class UtilisateurController
     public function loginUtilisateur(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 🔐 CSRF
-            $this->checkCsrfToken();
+            // 🔐 CSRF centralisé
+            Security::validateCSRFToken();
+
+            // 🛑 Rate limiting : max 5 tentatives en 5 minutes
+            if (!Security::rateLimitCheck('login', 5, 300)) {
+                Security::logSecurityEvent('login_rate_limited', [
+                    'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+                    'email' => $_POST['email'] ?? 'unknown'
+                ]);
+                echo "<p style='color:red;'>⚠️ Trop de tentatives de connexion. Réessayez dans 5 minutes.</p>";
+                $this->utilisateurView->loginForm();
+                return;
+            }
 
             $email        = $_POST['email']        ?? '';
             $mot_de_passe = $_POST['mot_de_passe'] ?? '';
@@ -197,6 +193,17 @@ class UtilisateurController
                     'role'    => $role
                 ];
 
+                // ✅ Log de succès
+                Security::logSecurityEvent('login_success', [
+                    'user_id' => $utilisateur['id'],
+                    'email' => $utilisateur['email'],
+                    'role' => $role,
+                    'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+                ]);
+
+                // Régénérer l'ID de session pour sécurité
+                session_regenerate_id(true);
+
                 // Redirection selon le rôle
                 if ($role === 'administrateur') {
                     header('Location: /administrateur/dashboard');
@@ -205,7 +212,11 @@ class UtilisateurController
                 }
                 exit;
             } else {
-                // ❌ Identifiants invalides → message + réaffichage formulaire
+                // ❌ Identifiants invalides
+                Security::logSecurityEvent('login_failed', [
+                    'email' => $email,
+                    'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+                ]);
                 echo "<p style='color:red;'>Email ou mot de passe incorrect.</p>";
                 $this->utilisateurView->loginForm();
             }
@@ -242,8 +253,13 @@ class UtilisateurController
             return;
         }
 
-        // 🔐 CSRF
-        $this->checkCsrfToken();
+        // 🔐 CSRF centralisé
+        Security::validateCSRFToken();
+
+        Security::logSecurityEvent('user_deleted', [
+            'deleted_user_id' => $id,
+            'admin_id' => $_SESSION['utilisateur']['id'] ?? 'unknown'
+        ]);
 
         $this->utilisateurModel->deleteUtilisateur($id);
         echo "<p>Utilisateur supprimé.</p>";

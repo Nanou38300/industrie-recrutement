@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\CandidatModel;
 use App\View\CandidatView;
+use App\Security;
 
 class CandidatController
 {
@@ -12,35 +13,17 @@ class CandidatController
 
     public function __construct()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
+        // ✅ Sessions gérées dans index.php
         $this->model = new CandidatModel();
         $this->view  = new CandidatView();
     }
 
-    // 🔐 Vérifie le token CSRF pour les requêtes POST
-    private function checkCsrfToken(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        $token = $_POST['csrf_token'] ?? '';
-        if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
-            http_response_code(403);
-            echo "Requête invalide (CSRF).";
-            exit;
-        }
-    }
+    // ✅ Plus besoin de checkCsrfToken(), on utilise Security::validateCSRFToken()
+    // ✅ Plus besoin de redirectIfNotConnected(), on utilise Security::requireAuth()
 
     private function redirectIfNotConnected(): void
     {
-        if (!isset($_SESSION['utilisateur']['id'])) {
-            header("Location: /utilisateur/login");
-            exit;
-        }
+        Security::requireAuth();
     }
 
     public function dashboard(): void
@@ -73,8 +56,8 @@ class CandidatController
         $this->redirectIfNotConnected();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 🔐 CSRF
-            $this->checkCsrfToken();
+            // 🔐 CSRF centralisé
+            Security::validateCSRFToken();
 
             $ok = $this->model->updateProfil((int)$_SESSION['utilisateur']['id'], [
                 'nom'       => $_POST['nom']       ?? '',
@@ -101,8 +84,8 @@ class CandidatController
         $this->redirectIfNotConnected();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 🔐 CSRF
-            $this->checkCsrfToken();
+            // 🔐 CSRF centralisé
+            Security::validateCSRFToken();
 
             $this->model->updateProfil((int)$_SESSION['utilisateur']['id'], $_POST);
             header("Location: /candidat/profil");
@@ -122,8 +105,8 @@ class CandidatController
             exit;
         }
 
-        // 🔐 CSRF
-        $this->checkCsrfToken();
+        // 🔐 CSRF centralisé
+        Security::validateCSRFToken();
 
         $userId = (int)$_SESSION['utilisateur']['id'];
         $ok     = $this->model->deleteUtilisateur($userId);

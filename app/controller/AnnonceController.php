@@ -3,7 +3,7 @@ namespace App\Controller;
 
 use App\Model\AnnonceModel;
 use App\View\AnnonceView;
-use PDO;
+use App\Security;
 use Exception;
 
 class AnnonceController
@@ -14,45 +14,22 @@ class AnnonceController
     // App/Controller/AnnonceController.php
     public function __construct(?AnnonceModel $model = null, ?AnnonceView $view = null)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        // ✅ Sessions gérées dans index.php, plus besoin ici
         
         // CAS TESTS : si on fournit un modèle et une vue (mocks),
-        // on les utilise et on ne crée PAS de PDO
+        // on les utilise pour les tests unitaires
         if ($model && $view) {
-            // Injection de dépendances (tests, etc.)
-            $this->model = $model ?? new AnnonceModel();
-            $this->view  = $view  ?? new AnnonceView();
+            $this->model = $model;
+            $this->view  = $view;
             return;
         }
 
-        $host   = $_ENV['DB_HOST_LOCAL']     ?? 'localhost';
-        $dbname = $_ENV['DB_NAME_LOCAL']     ?? '';
-        $user   = $_ENV['DB_USER_LOCAL']     ?? '';
-        $pass   = $_ENV['DB_PASSWORD_LOCAL'] ?? '';
-
-        $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
-        $pdo = new PDO($dsn, $user, $pass);
-
-        $this->model = new AnnonceModel($pdo);
+        // ✅ Utilisation du Singleton Database (déjà dans AnnonceModel)
+        $this->model = new AnnonceModel();
         $this->view  = new AnnonceView();
     }
 
-    // 🔐 Vérifie le token CSRF pour les requêtes POST
-    private function checkCsrfToken(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        $token = $_POST['csrf_token'] ?? '';
-        if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
-            http_response_code(403);
-            echo "Requête invalide (CSRF).";
-            exit;
-        }
-    }
+    // ✅ Plus besoin de checkCsrfToken(), on utilise Security::validateCSRFToken()
 
     /**
      * Méthode par défaut qui s'exécute si aucune action n'est spécifiée
@@ -105,8 +82,8 @@ class AnnonceController
     public function createAnnonce(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 🔐 CSRF
-            $this->checkCsrfToken();
+            // 🔐 CSRF centralisé
+            Security::validateCSRFToken();
 
             try {
                 // Validation basique des données requises

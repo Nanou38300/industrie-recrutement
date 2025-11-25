@@ -8,8 +8,8 @@ use App\Model\CandidatureModel;
 use App\Model\EntretienModel;
 use App\View\AdministrateurView;
 use App\View\CalendrierView;
-
-
+use App\Security;
+use App\Config\AppConstants;
 
 class AdministrateurController
 {
@@ -22,42 +22,22 @@ class AdministrateurController
 
     public function __construct()
     {
+        // ✅ Sessions gérées dans index.php
         $this->userModel        = new UtilisateurModel();
         $this->annonceModel     = new AnnonceModel();
         $this->candidatureModel = new CandidatureModel();
         $this->entretienModel   = new EntretienModel();
         $this->view             = new AdministrateurView();
         $this->calendarView     = new CalendrierView();
-
-
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
     }
 
-    // 🔐 Vérifie si l'utilisateur est admin
+    // ✅ Utiliser Security::requireRole() au lieu de redirectIfNotAdmin()
     private function redirectIfNotAdmin(): void
     {
-        if (!isset($_SESSION['utilisateur']) || $_SESSION['utilisateur']['role'] !== 'administrateur') {
-            header("Location: /utilisateur/login");
-            exit;
-        }
+        Security::requireRole(AppConstants::ROLE_ADMIN);
     }
 
-// ✅ Vérifie le token CSRF pour les requêtes POST
-private function checkCsrfToken(): void
-{
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        return;
-    }
-
-    $token = $_POST['csrf_token'] ?? '';
-    if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
-        http_response_code(403);
-        echo "Requête invalide (CSRF).";
-        exit;
-    }
-}
+    // ✅ Plus besoin de checkCsrfToken(), on utilise Security::validateCSRFToken()
 
     // 👤 Profil administrateur + calendrier
     public function profil(int $idAdmin): void

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\CandidatureModel;
 use App\View\CandidatureView;
+use App\Security;
 
 class CandidatureController
 {
@@ -11,40 +12,20 @@ class CandidatureController
     private CandidatureView $view;
 
     public function __construct(
-    ?CandidatureModel $model = null,
-    ?CandidatureView $view = null
-) {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+        ?CandidatureModel $model = null,
+        ?CandidatureView $view = null
+    ) {
+        // ✅ Sessions gérées dans index.php
+        $this->model = $model ?? new CandidatureModel();
+        $this->view  = $view  ?? new CandidatureView();
     }
 
-    $this->model = $model ?? new CandidatureModel();
-    $this->view  = $view  ?? new CandidatureView();
-}
-
-
-    // 🔐 Vérifie le token CSRF pour les requêtes POST
-    private function checkCsrfToken(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        $token = $_POST['csrf_token'] ?? '';
-        if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
-            http_response_code(403);
-            echo "Requête invalide (CSRF).";
-            exit;
-        }
-    }
+    // ✅ Plus besoin de checkCsrfToken(), on utilise Security::validateCSRFToken()
 
     // Vérifie si l'utilisateur est connecté
     private function redirectIfNotConnected(): void
     {
-        if (!isset($_SESSION['utilisateur']['id'])) {
-            header("Location: /utilisateur/login");
-            exit;
-        }
+        Security::requireAuth();
     }
 
     // Soumission d'une candidature (candidat)
@@ -53,8 +34,8 @@ class CandidatureController
         $this->redirectIfNotConnected();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_annonce'])) {
-            // 🔐 CSRF
-            $this->checkCsrfToken();
+            // 🔐 CSRF centralisé
+            Security::validateCSRFToken();
 
             $this->model->create([
                 'id_utilisateur'    => (int)$_SESSION['utilisateur']['id'],

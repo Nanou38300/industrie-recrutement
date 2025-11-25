@@ -1,15 +1,16 @@
 <?php
-
+/**
+ * Point d'entrée unique du site TCS Chaudronnerie
+ * Gère le routing, la sécurité, le SEO et le layout
+ */
 
 declare(strict_types=1);
 ob_start();
-session_start();
-
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+// Chargement des variables d'environnement
+Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 use App\Controller\{
     AdministrateurController,
@@ -18,9 +19,16 @@ use App\Controller\{
     CandidatureController,
     UtilisateurController,
 };
+use App\Security;
 
-// Chargement des variables d'environnement
-Dotenv\Dotenv::createImmutable(__DIR__)->load();
+// ✅ Configuration sécurisée des sessions (une seule fois)
+Security::configureSecureSession();
+Security::checkSessionTimeout();
+
+// ✅ Génération du token CSRF si nécessaire
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 // 🔍 Routing parameters
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $segments = array_values(array_filter(explode('/', $requestUri)));

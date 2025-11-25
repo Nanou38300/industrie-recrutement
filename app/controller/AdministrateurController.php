@@ -44,29 +44,38 @@ class AdministrateurController
         }
     }
 
+// ✅ Vérifie le token CSRF pour les requêtes POST
+private function checkCsrfToken(): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return;
+    }
+
+    $token = $_POST['csrf_token'] ?? '';
+    if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+        http_response_code(403);
+        echo "Requête invalide (CSRF).";
+        exit;
+    }
+}
+
     // 👤 Profil administrateur + calendrier
-    public function profil(): void
+    public function profil(int $idAdmin): void
     {
         $this->redirectIfNotAdmin();
         $idAdmin = $_SESSION['utilisateur']['id'];
     
         $infos = $this->userModel->getById($idAdmin);
-        $statsAnnonces = $this->annonceModel->getStatsByAdmin($idAdmin);
-        $annoncesStats = $this->annonceModel->getAnnoncesAvecStats($idAdmin);
 
         $rendezVous = $this->entretienModel->getByAdmin($idAdmin); // ← ici
-        $jour = new \DateTimeImmutable();
-        $debutSemaine = $jour->modify('monday this week')->format('Y-m-d');
-        $finSemaine   = $jour->modify('sunday this week')->format('Y-m-d');
-        
-        $entretiensSemaine = $this->entretienModel->getEntretiensSemaine($idAdmin, $debutSemaine, $finSemaine);
-        
+      
         $this->view->renderProfil([
             'infos' => $infos,
-            'statsAnnonces' => $statsAnnonces,
             'rendezVous' => $rendezVous
         ]);
     }
+
+    
     public function editProfil(): void
     {
         $this->redirectIfNotAdmin();
@@ -77,7 +86,8 @@ class AdministrateurController
     
         $id = (int)($_SESSION['utilisateur']['id'] ?? 0);
     
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $this->checkCsrfToken();
             // (Optionnel) whitelisting des champs autorisés
             $payload = [
                 'nom'       => $_POST['nom']       ?? null,
@@ -115,9 +125,16 @@ class AdministrateurController
         $profil = $this->userModel->getById($id);
         $this->view->renderFormProfil($profil);
     }
+
     public function deleteProfil(): void
     {
     $this->redirectIfNotAdmin();
+     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $this->checkCsrfToken();
+    } else {
+        header("Location: /administrateur/profil");
+        exit;
+    }
     $id = $_SESSION['utilisateur']['id'];
 
     $success = $this->userModel->deleteUtilisateur($id);
@@ -134,24 +151,12 @@ class AdministrateurController
 
     public function logout(): void
     {
-    session_destroy();
-    header("Location: /");
-    exit;
+        session_unset();
+        session_destroy();
+        header("Location: /utilisateur/login");
+        exit;
     }
 
-    // 📊 Tableau de bord
-    public function dashboard(): void
-    {
-        $this->redirectIfNotAdmin();
-
-        $stats = [
-            'totalUtilisateurs' => count($this->userModel->selectUtilisateurs()),
-            'totalAnnonces'     => $this->annonceModel->countAll(),
-            'totalCandidatures' => $this->candidatureModel->countAll()
-        ];
-
-        $this->view->renderDashboard($stats);
-    }
 
     // 📢 Liste des annonces
     public function viewAnnonces(): void
@@ -180,7 +185,8 @@ class AdministrateurController
     {
         $this->redirectIfNotAdmin();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $this->checkCsrfToken();
             $ok = $this->annonceModel->create($_POST);
 
             if ($ok) {
@@ -204,7 +210,8 @@ class AdministrateurController
             session_start();
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $this->checkCsrfToken();
             // Ceinture et bretelles : privilégie l'id POST si présent
             $targetId = isset($_POST['id']) ? (int)$_POST['id'] : $id;
 
@@ -235,27 +242,30 @@ class AdministrateurController
         $this->view->renderFormAnnonce($annonce, 'update');
     }
     // App/Controller/AdministrateurController.php
-    public function deleteAnnonce(): void
-    {
-        $this->redirectIfNotAdmin();
+public function deleteAnnonce(): void
+{
+    $this->redirectIfNotAdmin();
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id'])) {
-            header("Location: /administrateur/annonces?flash=bad_request");
-            exit;
-        }
-
-        $id = (int)$_POST['id'];
-        $annonce = $this->annonceModel->getById($id);
-
-        if (!$annonce) {
-            header("Location: /administrateur/annonces?flash=not_found");
-            exit;
-        }
-
-        $ok = $this->annonceModel->delete($id);
-        header("Location: /administrateur/annonces?flash=" . ($ok ? "deleted" : "delete_failed"));
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id'])) {
+        header("Location: /administrateur/annonces?flash=bad_request");
         exit;
     }
+
+    // ✅ Vérification CSRF ici
+    $this->checkCsrfToken();
+
+    $id = (int)$_POST['id'];
+    $annonce = $this->annonceModel->getById($id);
+
+    if (!$annonce) {
+        header("Location: /administrateur/annonces?flash=not_found");
+        exit;
+    }
+
+    $ok = $this->annonceModel->delete($id);
+    header("Location: /administrateur/annonces?flash=" . ($ok ? "deleted" : "delete_failed"));
+    exit;
+}
     // 📦 Archiver une annonce
     public function archiveAnnonce(int $id): void
     {
@@ -291,7 +301,7 @@ class AdministrateurController
         $entretien = $entretienId ? $this->entretienModel->findById($entretienId) : null;
         $candidat = $entretien ? $this->userModel->getById($entretien['id_utilisateur']) : [];
     
-        require 'app/View/calendar.php';
+        require 'App/View/Calendar.php';
     }
     
     public function vueCalendrier(): void
@@ -343,10 +353,10 @@ class AdministrateurController
         return;
     }
 
-    require 'app/View/rdv-detail.php';
+    require 'App/View/rdv-detail.php';
 }
     
-    public function creerEntretien(): void
+public function creerEntretien(): void
 {
     $this->redirectIfNotAdmin();
 
@@ -356,7 +366,7 @@ class AdministrateurController
 
     $annonces = $this->annonceModel->getByAdmin($_SESSION['utilisateur']['id']);
     $candidats = $this->userModel->getAllCandidats();
-    echo "<h1>🧪 Test : chargement du formulaire</h1>";
+  
 
     $this->calendarView->renderFormCreation($date, $heure, $annonces, $candidats);
 }
@@ -366,6 +376,7 @@ public function validerEntretien(): void
     $this->redirectIfNotAdmin();
     if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
+    $this->checkCsrfToken();
     $data = [
         'id_utilisateur' => $_POST['id_utilisateur'] ?? null,
         'date_entretien' => $_POST['date_entretien'] ?? null,
@@ -395,7 +406,60 @@ public function validerEntretien(): void
     header("Location: /administrateur/calendrier");
     exit;
 }
-public function updateEntretien(int $id = 0): void
+public function editEntretien(): void
+{
+        $this->redirectIfNotAdmin();
+        if (session_status() === PHP_SESSION_NONE) { session_start(); }
+    
+        // Récupère l'id en GET (affichage) ou POST (soumission)
+        $id = $_GET['id'] ?? $_POST['id'] ?? null;
+        if (!$id) {
+            $_SESSION['flash'] = "❌ Entretien introuvable (id manquant).";
+            $_SESSION['flash_type'] = 'error';
+            header("Location: /administrateur/calendrier");
+            exit;
+        }
+        $id = (int)$id;
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $this->checkCsrfToken();
+            $data = [
+                'date_entretien' => $_POST['date_entretien'] ?? null,
+                'heure'          => $_POST['heure'] ?? null,
+                'type'           => $_POST['type'] ?? '',
+                'lien_visio'     => $_POST['lien_visio'] ?? null,
+                'commentaire'    => $_POST['commentaire'] ?? null,
+            ];
+    
+            if ($data['date_entretien'] && $data['heure'] && $data['type']) {
+                $success = $this->entretienModel->update($id, $data);
+                $_SESSION['flash'] = $success
+                    ? "✅ Rendez-vous mis à jour avec succès."
+                    : "❌ Échec de la mise à jour du rendez-vous.";
+                $_SESSION['flash_type'] = $success ? 'success' : 'error';
+                header("Location: /administrateur/calendrier");
+                exit;
+            }
+    
+            $_SESSION['flash'] = "⚠️ Champs obligatoires manquants.";
+            $_SESSION['flash_type'] = 'warning';
+            header("Location: /administrateur/view-rdv?id=" . $id);
+            exit;
+        }
+    
+        $entretien = $this->entretienModel->findById($id);
+        if (!$entretien) {
+            $_SESSION['flash'] = "❌ Entretien introuvable.";
+            $_SESSION['flash_type'] = 'error';
+            header("Location: /administrateur/calendrier");
+            exit;
+        }
+    
+        $this->calendarView->renderFormModification($entretien);
+    }
+
+
+    public function updateEntretien(int $id = 0): void
 {
     $this->redirectIfNotAdmin();
     if (session_status() === PHP_SESSION_NONE) { session_start(); }
@@ -404,7 +468,7 @@ public function updateEntretien(int $id = 0): void
         header("Location: /administrateur/calendrier");
         exit;
     }
-
+    $this->checkCsrfToken();
     // Id prioritaire depuis POST
     $targetId = isset($_POST['id']) ? (int)$_POST['id'] : (int)$id;
 
@@ -441,7 +505,8 @@ public function deleteEntretien(): void
         header("Location: /administrateur/calendrier");
         exit;
     }
-
+    $this->checkCsrfToken();
+    
     $id = (int)($_POST['id'] ?? 0);
     if ($id <= 0) {
         $_SESSION['flash'] = "❌ Identifiant de rendez-vous invalide.";
@@ -462,87 +527,8 @@ public function deleteEntretien(): void
     header("Location: /administrateur/calendrier");
     exit;
 }
-    // 🔔 Rappel du jour
-    public function rappelDuJour(): void
-    {
-        $this->redirectIfNotAdmin();
-        $aujourdHui = date('Y-m-d');
-        $rappels = $this->entretienModel->getByDate($aujourdHui);
-        foreach ($rappels as $entretien) {
-            $this->calendarView->renderRappel($entretien);
-        }
-    }
 
 
-    public function updateStatut(): void
-    {
-        $this->redirectIfNotAdmin();
     
-        $id = $_POST['id_candidature'] ?? $_POST['id'] ?? null;
-        $statut = $_POST['statut'] ?? null;
-        $commentaire = $_POST['commentaire_admin'] ?? '';
-    
-        if ($id && $statut) {
-            $ok = $this->candidatureModel->update((int)$id, [
-                'statut' => $statut,
-                'commentaire_admin' => $commentaire
-            ]);
-            $_SESSION['message'] = $ok ? "✅ Statut mis à jour." : "❌ Échec de la mise à jour.";
-        }
-    
-        header("Location: /administrateur/candidatures");
-        exit;
-    }
-    
-    public function editEntretien(): void
-    {
-        $this->redirectIfNotAdmin();
-        if (session_status() === PHP_SESSION_NONE) { session_start(); }
-    
-        // Récupère l'id en GET (affichage) ou POST (soumission)
-        $id = $_GET['id'] ?? $_POST['id'] ?? null;
-        if (!$id) {
-            $_SESSION['flash'] = "❌ Entretien introuvable (id manquant).";
-            $_SESSION['flash_type'] = 'error';
-            header("Location: /administrateur/calendrier");
-            exit;
-        }
-        $id = (int)$id;
-    
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'date_entretien' => $_POST['date_entretien'] ?? null,
-                'heure'          => $_POST['heure'] ?? null,
-                'type'           => $_POST['type'] ?? '',
-                'lien_visio'     => $_POST['lien_visio'] ?? null,
-                'commentaire'    => $_POST['commentaire'] ?? null,
-            ];
-    
-            if ($data['date_entretien'] && $data['heure'] && $data['type']) {
-                $success = $this->entretienModel->update($id, $data);
-                $_SESSION['flash'] = $success
-                    ? "✅ Rendez-vous mis à jour avec succès."
-                    : "❌ Échec de la mise à jour du rendez-vous.";
-                $_SESSION['flash_type'] = $success ? 'success' : 'error';
-                header("Location: /administrateur/calendrier");
-                exit;
-            }
-    
-            $_SESSION['flash'] = "⚠️ Champs obligatoires manquants.";
-            $_SESSION['flash_type'] = 'warning';
-            header("Location: /administrateur/view-rdv?id=" . $id);
-            exit;
-        }
-    
-        $entretien = $this->entretienModel->findById($id);
-        if (!$entretien) {
-            $_SESSION['flash'] = "❌ Entretien introuvable.";
-            $_SESSION['flash_type'] = 'error';
-            header("Location: /administrateur/calendrier");
-            exit;
-        }
-    
-        $this->calendarView->renderFormModification($entretien);
-    }
 
 }

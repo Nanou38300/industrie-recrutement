@@ -23,16 +23,20 @@ class UtilisateurModel
         string $mot_de_passe,
         string $date_naissance,
         int $telephone
-    ): void {
+    ): bool {
+        if ($this->emailExists($email)) {
+            return false;
+        }
+
         $hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-        $role = (preg_match('/@cts\.fr$/', $email)) ? 'administrateur' : 'candidat';
+        $role = $this->isAdminEmail($email) ? 'administrateur' : 'candidat';
 
         $stmt = $this->db->prepare("
             INSERT INTO {$this->table} 
             (nom, prenom, email, mot_de_passe, date_naissance, telephone, role)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$nom, $prenom, $email, $hash, $date_naissance, $telephone, $role]);
+        return $stmt->execute([$nom, $prenom, $email, $hash, $date_naissance, $telephone, $role]);
     }
 
     // 📋 Liste des utilisateurs
@@ -58,12 +62,7 @@ class UtilisateurModel
         return $req->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
-    // 🔓 Déconnexion
-    public function logoutUtilisateur(): void
-    {
-        session_unset();
-        session_destroy();
-    }
+
 
     // ✏️ Mise à jour simple
     public function updateUtilisateur(int $id, string $nom, string $prenom, string $email, int $telephone): void
@@ -82,7 +81,32 @@ class UtilisateurModel
         $del = $this->db->prepare("DELETE FROM utilisateur WHERE id = ?");
         return $del->execute([$id]);
     }
-    
+
+    private function isAdminEmail(string $email): bool
+    {
+        $list = $_ENV['ADMIN_EMAILS'] ?? '';
+        if ($list === '') {
+            return false;
+        }
+
+        $allowed = array_filter(array_map('trim', explode(';', $list)));
+        $emailLower = strtolower($email);
+
+        foreach ($allowed as $allowedEmail) {
+            if ($emailLower === strtolower($allowedEmail)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function emailExists(string $email): bool
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM {$this->table} WHERE email = ?");
+        $stmt->execute([$email]);
+        return (bool)$stmt->fetchColumn();
+    }
 
     // 🔍 Récupération par ID
     public function getById(int $id): ?array

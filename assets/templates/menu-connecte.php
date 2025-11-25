@@ -34,9 +34,9 @@ if ($role === 'administrateur') {
     <input type="checkbox" id="nav-toggle-connecte" class="nav-toggle" aria-hidden="true">
 
     <div class="bar-top">
-        <a href="/accueil" class="logo-link" aria-label="Aller à l'accueil">
-            <img src="assets/images/TCS.svg" alt="Logo de l'entreprise">
-        </a>
+        
+    <img class='logo-link' src="assets/images/TCS.svg" alt="Logo de l'entreprise">
+      
         <label for="nav-toggle-connecte" class="burger" aria-label="Ouvrir le menu" aria-controls="nav-connecte" aria-expanded="false">
             <span></span><span></span><span></span>
         </label>
@@ -48,10 +48,9 @@ if ($role === 'administrateur') {
                 <a href="<?= htmlspecialchars($link) ?>" class="<?= isActive($link) ?>"><?= htmlspecialchars($label) ?></a>
             <?php endforeach; ?>
         </div>
-        <div class="logoconnecte">
-            <a href="/accueil" aria-label="Aller à l'accueil">
-                <img src="assets/images/TCS.svg" alt="Logo de l'entreprise">
-            </a>
-        </div>
+
+                <img class="logoconnecte" src="assets/images/TCS.svg" alt="Logo de l'entreprise">
+    
+   
     </nav>
 </header>

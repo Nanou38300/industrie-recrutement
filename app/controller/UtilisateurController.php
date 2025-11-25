@@ -2,16 +2,13 @@
 // Définit le namespace du contrôleur
 namespace App\Controller;
 
-
 // Importe les classes nécessaires depuis d'autres namespaces
 use App\Model\UtilisateurModel;
 use App\View\UtilisateurView;
-use App\Database;
 
-// Déclare la classe contrôleur UtilisateurController
 class UtilisateurController
 {
-    // Déclare les propriétés privées pour le modèle et la vue
+    // Propriétés privées pour le modèle et la vue
     private UtilisateurModel $utilisateurModel;
     private UtilisateurView $utilisateurView;
 
@@ -21,8 +18,24 @@ class UtilisateurController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+
         $this->utilisateurModel = new UtilisateurModel();
-        $this->utilisateurView = new UtilisateurView();
+        $this->utilisateurView  = new UtilisateurView();
+    }
+
+    // ✅ Vérifie le token CSRF pour les requêtes POST
+    private function checkCsrfToken(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        $token = $_POST['csrf_token'] ?? '';
+        if (!isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+            http_response_code(403);
+            echo "Requête invalide (CSRF).";
+            exit;
+        }
     }
 
     // Méthode privée qui vérifie si un utilisateur est connecté
@@ -34,50 +47,92 @@ class UtilisateurController
     // Méthode privée pour savoir si l'utilisateur est administrateur
     private function isAdmin(): bool
     {
-        return $this->isAuthenticated() && ($_SESSION['utilisateur']['role'] ?? '') === 'administrateur';
+        return $this->isAuthenticated() && (($_SESSION['utilisateur']['role'] ?? '') === 'administrateur');
     }
 
     // Méthode privée pour savoir si l'utilisateur est candidat
     private function isCandidat(): bool
     {
-        return $this->isAuthenticated() && ($_SESSION['utilisateur']['role'] ?? '') === 'candidat';
+        return $this->isAuthenticated() && (($_SESSION['utilisateur']['role'] ?? '') === 'candidat');
     }
 
-    // Méthode pour afficher la liste des utilisateurs (admin uniquement)
-    public function listUtilisateur(): void
+    private function isAdminEmail(string $email): bool
     {
-        if (!$this->isAdmin()) {
-            echo '<h1>Accès refusé : seuls les administrateurs peuvent voir la liste des utilisateurs.</h1>';
-            return;
+        $list = $_ENV['ADMIN_EMAILS'] ?? '';
+        if ($list === '') {
+            return false;
         }
 
-        $utilisateurs = $this->utilisateurModel->selectUtilisateurs();
-        $this->utilisateurView->displayUtilisateurs($utilisateurs);
+        $allowed = array_filter(array_map('trim', explode(';', $list)));
+        $emailLower = strtolower($email);
+
+        foreach ($allowed as $allowedEmail) {
+            if ($emailLower === strtolower($allowedEmail)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    // Méthode pour créer un nouvel utilisateur
+    // ─────────────────────────────────────
+    // 👤 Création d'un nouvel utilisateur
+    // ─────────────────────────────────────
     public function createUtilisateur(): void
     {
-        // Si le formulaire a été soumis (méthode POST)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->utilisateurModel->insertUtilisateur(
-                $_POST['nom'],                // Nom saisi
-                $_POST['prenom'],             // Prénom saisi
-                $_POST['email'],              // Email saisi
-                $_POST['mot_de_passe'],       // Mot de passe saisi
-                $_POST['date_naissance'],     // Date de naissance
-                (int) $_POST['telephone'],    // Téléphone converti en entier
-                $_POST['role'] ?? 'candidat'  // Rôle, par défaut 'candidat'
+            // 🔐 CSRF
+            $this->checkCsrfToken();
+
+            // ⚠️ Tu peux ajouter ici des validations supplémentaires si besoin
+            $result = $this->utilisateurModel->insertUtilisateur(
+                $_POST['nom']            ?? '',
+                $_POST['prenom']         ?? '',
+                $_POST['email']          ?? '',
+                $_POST['mot_de_passe']   ?? '',
+                $_POST['date_naissance'] ?? '',
+                (int)($_POST['telephone'] ?? 0)
             );
 
-            echo "<p>Utilisateur créé avec succès.</p>";
+            if (!$result) {
+                $_SESSION['flash'] = "Un compte existe déjà avec cette adresse e-mail.";
+                header('Location: /utilisateur/create');
+                exit;
+            }
+
+            // Récupérer l'utilisateur pour le connecter
+            $utilisateur = $this->utilisateurModel->loginUtilisateur($_POST['email'] ?? '');
+            if ($utilisateur) {
+                // Même logique de rôle que dans loginUtilisateur()
+                $role = $this->isAdminEmail($utilisateur['email']) ? 'administrateur' : 'candidat';
+
+                $_SESSION['utilisateur'] = [
+                    'id'     => $utilisateur['id'],
+                    'nom'    => $utilisateur['nom'],
+                    'prenom' => $utilisateur['prenom'],
+                    'email'  => $utilisateur['email'],
+                    'role'   => $role,
+                ];
+
+                if ($role === 'administrateur') {
+                    header('Location: /administrateur/dashboard');
+                } else {
+                    header('Location: /candidat/profil');
+                }
+                exit;
+            }
+
+            // Fallback si, pour une raison quelconque, la connexion auto échoue
+            echo "<p>Utilisateur créé avec succès, mais la connexion automatique a échoué.</p>";
         } else {
-            // Affiche le formulaire si pas encore soumis
+            // GET : affiche le formulaire d'inscription
             $this->utilisateurView->displayInsertForm();
         }
     }
 
-    // Méthode pour modifier un utilisateur existant
+    // ─────────────────────────────────────
+    // 📝 Modification d'un utilisateur
+    // ─────────────────────────────────────
     public function editUtilisateur(int $id): void
     {
         if (!$this->isAuthenticated()) {
@@ -86,24 +141,26 @@ class UtilisateurController
         }
 
         // Seul l'admin ou l'utilisateur lui-même peut modifier ses infos
-        if (!$this->isAdmin() && $_SESSION['utilisateur']['id'] != $id) {
+        if (!$this->isAdmin() && ($_SESSION['utilisateur']['id'] ?? 0) != $id) {
             echo '<h1>Accès refusé : vous ne pouvez modifier que votre propre profil.</h1>';
             return;
         }
 
-        // Traitement du formulaire (modification)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // 🔐 CSRF
+            $this->checkCsrfToken();
+
             $this->utilisateurModel->updateUtilisateur(
-                $_POST['id'],         // ID de l'utilisateur
-                $_POST['nom'],        // Nouveau nom
-                $_POST['prenom'],     // Nouveau prénom
-                $_POST['email'],      // Nouvel email
-                $_POST['telephone']   // Nouveau téléphone
+                $_POST['id']        ?? $id,
+                $_POST['nom']       ?? '',
+                $_POST['prenom']    ?? '',
+                $_POST['email']     ?? '',
+                $_POST['telephone'] ?? ''
             );
 
             echo "<p>Modification réussie.</p>";
         } else {
-            // Affiche le formulaire pré-rempli avec les données existantes
+            // GET : affiche le formulaire pré-rempli
             $utilisateur = $this->utilisateurModel->selectUtilisateur($id);
             if ($utilisateur) {
                 $this->utilisateurView->displayUpdateForm($utilisateur);
@@ -113,23 +170,25 @@ class UtilisateurController
         }
     }
 
-    // Méthode pour connecter un utilisateur
+    // ─────────────────────────────────────
+    // 🔑 Connexion utilisateur
+    // ─────────────────────────────────────
     public function loginUtilisateur(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';
+            // 🔐 CSRF
+            $this->checkCsrfToken();
+
+            $email        = $_POST['email']        ?? '';
             $mot_de_passe = $_POST['mot_de_passe'] ?? '';
-    
+
             $utilisateur = $this->utilisateurModel->loginUtilisateur($email);
-    
+
             if ($utilisateur && password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
-                // 🧠 Vérification du domaine CTS
-                $role = $utilisateur['role'] ?? 'candidat';
-                if (preg_match('/@cts\.fr$/', $utilisateur['email'])) {
-                    $role = 'administrateur';
-                }
-    
-                // ✅ Création de la session avec les infos
+                // Vérification du domaine CTS pour le rôle admin
+                $role = $this->isAdminEmail($utilisateur['email']) ? 'administrateur' : 'candidat';
+
+                // Création de la session
                 $_SESSION['utilisateur'] = [
                     'id'      => $utilisateur['id'],
                     'nom'     => $utilisateur['nom'],
@@ -137,27 +196,28 @@ class UtilisateurController
                     'email'   => $utilisateur['email'],
                     'role'    => $role
                 ];
-    
-                // 🔁 Redirection selon le rôle
-                if ($_SESSION['utilisateur']['role'] === 'administrateur') {
-                    echo '<script>window.location.href = "/administrateur/dashboard";</script>';
+
+                // Redirection selon le rôle
+                if ($role === 'administrateur') {
+                    header('Location: /administrateur/dashboard');
                 } else {
-                    echo '<script>window.location.href = "/candidat/profil";</script>';
+                    header('Location: /candidat/profil');
                 }
                 exit;
             } else {
-                // ❌ Identifiants invalides
+                // ❌ Identifiants invalides → message + réaffichage formulaire
                 echo "<p style='color:red;'>Email ou mot de passe incorrect.</p>";
                 $this->utilisateurView->loginForm();
             }
         } else {
-            // 📄 Affiche le formulaire de connexion
+            // GET : affiche le formulaire de connexion
             $this->utilisateurView->loginForm();
         }
     }
-    
 
-    // Méthode pour déconnecter un utilisateur
+    // ─────────────────────────────────────
+    // 🚪 Déconnexion
+    // ─────────────────────────────────────
     public function logoutUtilisateur(): void
     {
         session_unset();
@@ -165,15 +225,25 @@ class UtilisateurController
         header("Location: /utilisateur/login");
         exit;
     }
-    
 
-    // Méthode pour supprimer un utilisateur (admin uniquement)
+    // ─────────────────────────────────────
+    // 🗑️ Suppression d'un utilisateur (admin)
+    // ─────────────────────────────────────
     public function deleteUtilisateur($id): void
     {
         if (!$this->isAdmin()) {
             echo '<h1>Accès refusé : seuls les administrateurs peuvent supprimer des utilisateurs.</h1>';
             return;
         }
+
+        // On impose une requête POST + CSRF pour la suppression
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo "<p>Requête invalide.</p>";
+            return;
+        }
+
+        // 🔐 CSRF
+        $this->checkCsrfToken();
 
         $this->utilisateurModel->deleteUtilisateur($id);
         echo "<p>Utilisateur supprimé.</p>";

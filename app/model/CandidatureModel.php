@@ -14,7 +14,7 @@ class CandidatureModel
         $this->db = (new Database())->getConnection();
     }
 
-    // 📥 Crée une nouvelle candidature
+    // Crée une nouvelle candidature
     public function create(array $data): bool
     {
         $stmt = $this->db->prepare("
@@ -32,14 +32,14 @@ class CandidatureModel
         ]);
     }
 
-    // 📊 Compte toutes les candidatures
+    // Compte toutes les candidatures
     public function countAll(): int
     {
         $stmt = $this->db->query("SELECT COUNT(*) FROM candidature");
         return (int) $stmt->fetchColumn();
     }
 
-  // 👁️ Récupère une candidature par son ID
+  // Récupère une candidature par son ID
 public function findById(int $id): ?array
 {
     $stmt = $this->db->prepare("
@@ -58,7 +58,7 @@ public function findById(int $id): ?array
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-// 📋 Liste complète des candidatures (admin)
+// Liste complète des candidatures (admin)
 public function findAll(): array
 {
     $stmt = $this->db->query("
@@ -76,7 +76,7 @@ public function findAll(): array
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-    // 📊 Liste des candidatures d’un utilisateur (candidat)
+    // Liste des candidatures d’un utilisateur (candidat)
     public function findByUtilisateur(int $idUtilisateur): array
     {
         $stmt = $this->db->prepare("
@@ -114,7 +114,7 @@ public function findAll(): array
         ]);
     }
 
-    // 🗑️ Supprime une candidature
+    // Supprime une candidature
     public function delete(int $id): bool
     {
         $stmt = $this->db->prepare("DELETE FROM candidature WHERE id = :id");

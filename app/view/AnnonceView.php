@@ -1,258 +1,232 @@
 <?php
+
 namespace App\View;
 
-class AnnonceView {
-
-    public function renderProfil(array $data): void
+class AnnonceView
 {
-    $infos = $data['infos'];
-    $stats = $data['statsAnnonces'];
-    $rendezVous = $data['rendezVous'];
+    // --------- Helpers sécurité / CSRF ---------
 
-    echo "<section class='admin-profil'>";
-    // Bloc infos personnelles
-    echo "<div class='bloc-infos'>";
-    echo "<img src='/" . htmlspecialchars($infos['photo'] ?? 'default.jpg') . "' alt='Photo'>";
-    echo "<h2>" . htmlspecialchars($infos['nom']) . "</h2>";
-    echo "<p>" . htmlspecialchars($infos['poste']) . " - " . htmlspecialchars($infos['societe']) . "</p>";
-    echo "<p>Email : " . htmlspecialchars($infos['email']) . "</p>";
-    echo "<p>Tél : " . htmlspecialchars($infos['telephone']) . "</p>";
-    echo "<a href='/administrateur/edit-profil'>✏️ Modifier</a>";
-    echo "</div>";
-
-    // Bloc suivi d'annonces
-    echo "<div class='bloc-annonces'>";
-    echo "<h3>Suivi d'annonces</h3>";
-    foreach ($stats as $stat) {
-        echo "<div class='stat-poste'>";
-        echo "<strong>" . htmlspecialchars($stat['poste']) . "</strong><br>";
-        echo "Candidatures : " . $stat['total'] . " | Non lues : " . $stat['non_lues'];
-        echo "</div>";
+    private function safe($value): string
+    {
+        return htmlspecialchars((string)($value ?? ''), ENT_QUOTES, 'UTF-8');
     }
-    echo "</div>";
 
-    // Bloc calendrier
-    echo "<div class='bloc-calendrier'>";
-    echo "<h3>Suivi de rendez-vous</h3>";
-    foreach ($rendezVous as $rdv) {
-        echo "<div class='rdv'>";
-        echo "<strong>" . htmlspecialchars($rdv['date_entretien']) . "</strong> : ";
-        echo htmlspecialchars($rdv['nom_candidat']) . " pour le poste de " . htmlspecialchars($rdv['poste']);
-        echo "</div>";
+    private function getCsrfToken(): string
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
+        return $_SESSION['csrf_token'];
     }
-    echo "</div>";
-    echo "</section>";
-}
 
+    private function csrfField(): string
+    {
+        return "<input type='hidden' name='csrf_token' value='" . $this->safe($this->getCsrfToken()) . "'>";
+    }
+
+    // --------- Liste des annonces ---------
 
     public function renderListe(array $annonces): void
-{
-    echo "<section class='annonces'>";
-    echo "<h2>Annonces Disponibles</h2>";
+    {
+        echo "<section class='annonces-front'>";
+        echo "<h1>Nos offres d'emploi</h1>";
 
-    foreach ($annonces as $annonce) {
-        echo "<div class='annonce'>";
-        
-        // Bloc résumé
-        echo "<div class='resume'>";
-        echo "<h3>" . htmlspecialchars($annonce['titre'] ?? 'Sans titre') . "</h3>";
-        echo "<p><strong>Lieu :</strong> " . htmlspecialchars($annonce['localisation'] ?? '') . "</p>";
-        echo "<p><strong>Contrat :</strong> " . htmlspecialchars($annonce['type_contrat'] ?? '') . "</p>";
-        echo "<p><strong>Salaire :</strong> " . htmlspecialchars($annonce['salaire'] ?? '') . "</p>";
-        echo "<p><strong>Publié le :</strong> " . htmlspecialchars($annonce['date_publication'] ?? '') . "</p>";
-        echo "<button class='toggle-details'>Voir plus</button>";
-        echo "<form method='POST' action='/candidat/postuler?id=" . htmlspecialchars($annonce['id']) . "'>";
-        echo "<button type='submit'> Postuler</button>";
+        if (empty($annonces)) {
+            echo "<p>Aucune annonce disponible pour le moment.</p>";
+            echo "<a href='index.php?action=annonce&step=create' class='btn btn-primary'>➕ Créer une annonce</a>";
+            echo "</section>";
+            return;
+        }
+
+        echo "<div class='annonces-list'>";
+
+        foreach ($annonces as $a) {
+            echo "<article class='annonce-item'>";
+            echo "<h2>" . $this->safe($a['titre'] ?? '') . "</h2>";
+            echo "<p><strong>Lieu :</strong> " . $this->safe($a['localisation'] ?? '') . "</p>";
+            echo "<p><strong>Secteur :</strong> " . $this->safe($a['secteur_activite'] ?? '') . "</p>";
+            echo "<p><strong>Type de contrat :</strong> " . $this->safe($a['type_contrat'] ?? '') . "</p>";
+            echo "<p><strong>Référence :</strong> " . $this->safe($a['reference'] ?? '') . "</p>";
+
+            echo "<p class='annonce-extrait'>"
+                . nl2br($this->safe(mb_substr($a['description'] ?? '', 0, 200))) . "...</p>";
+
+            echo "<div class='annonce-actions'>";
+            echo "<a href='index.php?action=annonce&step=view&id=" . $this->safe($a['id'] ?? '') . "' class='btn btn-secondary'>Voir le détail</a>";
+            echo "<a href='index.php?action=annonce&step=update&id=" . $this->safe($a['id'] ?? '') . "' class='btn btn-warning'>Modifier</a>";
+
+            // Suppression via POST + CSRF
+            echo "<form method='POST' action='index.php?action=annonce&step=delete' style='display:inline-block' 
+                    onsubmit=\"return confirm('Supprimer cette annonce ?');\">";
+            echo $this->csrfField();
+            echo "<input type='hidden' name='id' value='" . $this->safe($a['id'] ?? '') . "'>";
+            echo "<button type='submit' class='btn btn-danger'>Supprimer</button>";
+            echo "</form>";
+
+            echo "</div>";
+
+            echo "</article>";
+        }
+
+        echo "</div>"; // .annonces-list
+        echo "<div class='annonces-footer'>";
+        echo "<a href='index.php?action=annonce&step=create' class='btn btn-primary'>➕ Créer une annonce</a>";
+        echo "</div>";
+        echo "</section>";
+    }
+
+    // --------- Détail d'une annonce ---------
+
+    public function renderDetails(array $annonce): void
+    {
+        echo "<section class='annonce-detail'>";
+        echo "<a href='index.php?action=annonce' class='btn btn-secondary'>&larr; Retour aux annonces</a>";
+
+        echo "<h1>" . $this->safe($annonce['titre'] ?? '') . "</h1>";
+        echo "<p><strong>Référence :</strong> " . $this->safe($annonce['reference'] ?? '') . "</p>";
+        echo "<p><strong>Lieu :</strong> " . $this->safe($annonce['localisation'] ?? '') . "</p>";
+        echo "<p><strong>Code postal :</strong> " . $this->safe($annonce['code_postale'] ?? '') . "</p>";
+        echo "<p><strong>Secteur :</strong> " . $this->safe($annonce['secteur_activite'] ?? '') . "</p>";
+        echo "<p><strong>Type de contrat :</strong> " . $this->safe($annonce['type_contrat'] ?? '') . "</p>";
+        echo "<p><strong>Salaire :</strong> " . $this->safe($annonce['salaire'] ?? '') . "</p>";
+        echo "<p><strong>Statut :</strong> " . $this->safe($annonce['statut'] ?? '') . "</p>";
+
+        echo "<h2>Description</h2>";
+        echo "<p>" . nl2br($this->safe($annonce['description'] ?? '')) . "</p>";
+
+        echo "<h2>Mission</h2>";
+        echo "<p>" . nl2br($this->safe($annonce['mission'] ?? '')) . "</p>";
+
+        echo "<h2>Profil recherché</h2>";
+        echo "<p>" . nl2br($this->safe($annonce['profil_recherche'] ?? '')) . "</p>";
+
+        echo "<h2>Avantages</h2>";
+        echo "<p>" . nl2br($this->safe($annonce['avantages'] ?? '')) . "</p>";
+
+        echo "<div class='annonce-detail-actions'>";
+        echo "<a href='index.php?action=annonce&step=update&id=" . $this->safe($annonce['id'] ?? '') . "' class='btn btn-warning'>Modifier</a>";
+
+        // Archive
+        echo "<form method='POST' action='index.php?action=annonce&step=archive' style='display:inline-block'
+                onsubmit=\"return confirm('Archiver cette annonce ?');\">";
+        echo $this->csrfField();
+        echo "<input type='hidden' name='id' value='" . $this->safe($annonce['id'] ?? '') . "'>";
+        echo "<button type='submit' class='btn btn-outline-secondary'>Archiver</button>";
         echo "</form>";
-        echo "</div>";
 
-        // Bloc détails masqué
-        echo "<div class='details'>";
-       // détails
-echo "<h4>Description</h4><p>" . htmlspecialchars($annonce['description'] ?? '') . "</p>";
-echo "<h4>Missions</h4><p>" . htmlspecialchars($annonce['mission'] ?? '') . "</p>"; 
-echo "<h4>Profil</h4><p>" . htmlspecialchars($annonce['profil_recherche'] ?? '') . "</p>";
-        echo "<h4>Avantages</h4><p>" . htmlspecialchars($annonce['avantages'] ?? '') . "</p>";
-        echo "</div>";
+        // Activer
+        echo "<form method='POST' action='index.php?action=annonce&step=activate' style='display:inline-block'
+                onsubmit=\"return confirm('Activer cette annonce ?');\">";
+        echo $this->csrfField();
+        echo "<input type='hidden' name='id' value='" . $this->safe($annonce['id'] ?? '') . "'>";
+        echo "<button type='submit' class='btn btn-success'>Activer</button>";
+        echo "</form>";
 
         echo "</div>";
+
+        echo "</section>";
     }
 
-    echo "</section>";
-}
+    // --------- Formulaire création / édition ---------
 
+    /**
+     * @param string $mode 'create' ou 'update'
+     * @param array|null $annonce
+     */
+    public function renderForm(string $mode = 'create', ?array $annonce = null): void
+    {
+        $isUpdate = ($mode === 'update');
 
-    public function renderDetails(array $a) {
-        echo "<div class='annonce-details'>";
-        echo "<h2>{$a['titre']}</h2>";
-        echo "<div class='annonce-meta'>";
-        echo "<span class='badge'>{$a['statut']}</span> ";
-        echo "<span class='date'>Publié le : {$a['date_publication']}</span>";
-        echo "</div>";
-        
-        echo "<div class='section'>";
-        echo "<h3>Description</h3>";
-        echo "<p>{$a['description']}</p>";
-        echo "</div>";
-        
-        echo "<div class='section'>";
-        echo "<h3>Mission</h3>";
-        echo "<p>{$a['mission']}</p>";
-        echo "</div>";
-        
-        echo "<div class='section'>";
-        echo "<h3>Profil recherché</h3>";
-        echo "<p>{$a['profil_recherche']}</p>";
-        echo "</div>";
-        
-        echo "<div class='info-grid'>";
-        echo "<div class='info-item'><strong>Secteur :</strong> {$a['secteur_activite']}</div>";
-        echo "<div class='info-item'><strong>Localisation :</strong> {$a['localisation']} ({$a['code_postale']})</div>";
-        echo "<div class='info-item'><strong>Salaire :</strong> {$a['salaire']}</div>";
-        echo "<div class='info-item'><strong>Avantages :</strong> {$a['avantages']}</div>";
-        echo "<div class='info-item'><strong>Type de contrat :</strong> {$a['type_contrat']}</div>";
-        echo "<div class='info-item'><strong>Durée :</strong> {$a['duree_contrat']}</div>";
+        $id            = $annonce['id'] ?? null;
+        $titre         = $annonce['titre'] ?? '';
+        $description   = $annonce['description'] ?? '';
+        $mission       = $annonce['mission'] ?? '';
+        $profil        = $annonce['profil_recherche'] ?? '';
+        $localisation  = $annonce['localisation'] ?? '';
+        $code_postale  = $annonce['code_postale'] ?? '';
+        $secteur       = $annonce['secteur_activite'] ?? '';
+        $type_contrat  = $annonce['type_contrat'] ?? 'CDI';
+        $salaire       = $annonce['salaire'] ?? '';
+        $statut        = $annonce['statut'] ?? 'activée';
+        $avantages     = $annonce['avantages'] ?? '';
 
-        echo "</div>";
-        
-        echo "<div class='actions'>";
-        echo "<a href='?action=annonce' class='btn btn-secondary'>Retour à la liste</a> ";
-        echo "<a href='?action=annonce&step=update&id={$a['id']}' class='btn btn-primary'>✏️ Modifier</a>";
-        echo "</div>";
-        echo "</div>";
-    }
+        $action = "index.php?action=annonce&step=" . ($isUpdate ? "update" : "create");
 
-    public function renderForm(string $mode, ?array $data = null) {
-        $action = $mode === 'create' ? 'create' : 'update';
-        $title = $mode === 'create' ? '➕ Créer une annonce' : '✏️ Modifier une annonce';
-        $idField = $mode === 'update' ? "<input type='hidden' name='id' value='{$data['id']}'>" : "";
-        
-        echo "<div class='form-container'>";
-        echo "<h2>$title</h2>";
-        echo "<form method='POST' action='?action=annonce&step=$action' class='annonce-form'>";
-        echo $idField;
-        
-        // Informations principales
-        echo "<fieldset>";
-        echo "<legend>Informations principales</legend>";
-        echo "<div class='form-group'>";
-        echo "<label for='titre'>Titre de l'annonce *:</label>";
-        echo "<input type='text' id='titre' name='titre' value='" . htmlspecialchars($data['titre'] ?? '') . "' required>";
-        echo "</div>";
-        
-        echo "<div class='form-group'>";
-        echo "<label for='description'>Description *:</label>";
-        echo "<textarea id='description' name='description' rows='4' required>" . htmlspecialchars($data['description'] ?? '') . "</textarea>";
-        echo "</div>";
-        
-        echo "<div class='form-group'>";
-        echo "<label for='mission'>Mission *:</label>";
-        echo "<textarea id='mission' name='mission' rows='4' required>" . htmlspecialchars($data['mission'] ?? '') . "</textarea>";
-        echo "</div>";
-        
-        echo "<div class='form-group'>";
-        echo "<label for='profil_recherche'>Profil recherché *:</label>";
-        echo "<textarea id='profil_recherche' name='profil_recherche' rows='3' required>" . htmlspecialchars($data['profil_recherche'] ?? '') . "</textarea>";
-        echo "</div>";
-        echo "</fieldset>";
-        
-        // Localisation
-        echo "<fieldset>";
-        echo "<legend>Localisation</legend>";
-        echo "<div class='form-row'>";
-        echo "<div class='form-group'>";
-        echo "<label for='localisation'>Ville *:</label>";
-        echo "<input type='text' id='localisation' name='localisation' value='" . htmlspecialchars($data['localisation'] ?? '') . "' required>";
-        echo "</div>";
-        echo "<div class='form-group'>";
-        echo "<label for='code_postale'>Code postal *:</label>";
-        echo "<input type='text' id='code_postale' name='code_postale' value='" . htmlspecialchars($data['code_postale'] ?? '') . "' required>";
-        echo "</div>";
-        echo "</div>";
-        echo "</fieldset>";
-        
-        // Détails du poste
-        echo "<fieldset>";
-        echo "<legend>Détails du poste</legend>";
-        echo "<div class='form-group'>";
-        echo "<label for='secteur_activite'>Secteur d'activité *:</label>";
-        echo "<input type='text' id='secteur_activite' name='secteur_activite' value='" . htmlspecialchars($data['secteur_activite'] ?? '') . "' required>";
-        echo "</div>";
-        
-        echo "<div class='form-row'>";
-        echo "<div class='form-group'>";
-        echo "<label for='salaire'>Salaire:</label>";
-        echo "<input type='text' id='salaire' name='salaire' value='" . htmlspecialchars($data['salaire'] ?? '') . "'>";
-        echo "</div>";
-        echo "<div class='form-group'>";
-        echo "<label for='avantages'>Avantages:</label>";
-        echo "<input type='text' id='avantages' name='avantages' value='" . htmlspecialchars($data['avantages'] ?? '') . "'>";
-        echo "</div>";
-        echo "</div>";
-        
-        echo "<div class='form-row'>";
-        echo "<div class='form-group'>";
-        echo "<label for='type_contrat'>Type de contrat *:</label>";
-        echo "<select id='type_contrat' name='type_contrat' required>";
-        $types = ['CDI', 'CDD', 'Stage', 'Alternance', 'Freelance'];
-        foreach ($types as $type) {
-            $selected = (($data['type_contrat'] ?? '') === $type) ? 'selected' : '';
-            echo "<option value='$type' $selected>$type</option>";
+        echo "<section class='form-annonce-front'>";
+        echo "<h1>" . ($isUpdate ? "Modifier l’annonce" : "Créer une annonce") . "</h1>";
+
+        echo "<form method='POST' action='{$action}'>";
+        echo $this->csrfField();
+
+        if ($isUpdate && $id) {
+            echo "<input type='hidden' name='id' value='" . $this->safe($id) . "'>";
         }
-        echo "</select>";
-        echo "</div>";
-        echo "<div class='form-group'>";
-        echo "<label for='duree_contrat'>Durée du contrat:</label>";
-        echo "<input type='text' id='duree_contrat' name='duree_contrat' value='" . htmlspecialchars($data['duree_contrat'] ?? '') . "'>";
-        echo "</div>";
-        echo "</div>";
-        echo "</fieldset>";
-        
-        // Informations administratives
-        echo "<fieldset>";
-        echo "<legend>Informations administratives</legend>";
-        echo "<div class='form-row'>";
-        echo "<div class='form-group'>";
-        echo "<label for='date_publication'>Date de publication *:</label>";
-        echo "<input type='date' id='date_publication' name='date_publication' value='" . htmlspecialchars($data['date_publication'] ?? date('Y-m-d')) . "' required>";
-        echo "</div>";
-        echo "</div>";
-        
-        echo "<div class='form-row'>";
-        echo "<div class='form-group'>";
-        echo "<label for='statut'>Statut *:</label>";
-        echo "<select id='statut' name='statut' required>";
-        $statuts = ['activée', 'brouillon', 'archivée'];
-        foreach ($statuts as $s) {
-            $selected = (($data['statut'] ?? 'activée') === $s) ? 'selected' : '';
-            echo "<option value='{$s}' {$selected}>" . ucfirst($s) . "</option>";
-        }
-        echo "</select>";
-        echo "</div>";
-        echo "<div class='form-group'>";
-        echo "<label for='id_administrateur'>ID Administrateur *:</label>";
-        echo "<input type='number' id='id_administrateur' name='id_administrateur' value='" . htmlspecialchars($data['id_administrateur'] ?? ($_SESSION['utilisateur']['id'] ?? '')) . "' required>";
-        echo "</div>";
-        echo "</div>";
-        echo "</fieldset>";
-        
-        // Actions
+
+        echo "<label>Titre
+                <input type='text' name='titre' value='" . $this->safe($titre) . "' required>
+              </label>";
+
+        echo "<label>Description
+                <textarea name='description' rows='4' required>" . $this->safe($description) . "</textarea>
+              </label>";
+
+        echo "<label>Mission
+                <textarea name='mission' rows='4' required>" . $this->safe($mission) . "</textarea>
+              </label>";
+
+        echo "<label>Profil recherché
+                <textarea name='profil_recherche' rows='4' required>" . $this->safe($profil) . "</textarea>
+              </label>";
+
+        echo "<label>Localisation
+                <input type='text' name='localisation' value='" . $this->safe($localisation) . "' required>
+              </label>";
+
+        echo "<label>Code postal
+                <input type='text' name='code_postale' value='" . $this->safe($code_postale) . "' required>
+              </label>";
+
+        echo "<label>Secteur d'activité
+                <input type='text' name='secteur_activite' value='" . $this->safe($secteur) . "' required>
+              </label>";
+
+        echo "<label>Type de contrat
+                <select name='type_contrat' required>
+                    <option value='CDI' " . ($type_contrat === 'CDI' ? 'selected' : '') . ">CDI</option>
+                    <option value='CDD' " . ($type_contrat === 'CDD' ? 'selected' : '') . ">CDD</option>
+                    <option value='Intérim' " . ($type_contrat === 'Intérim' ? 'selected' : '') . ">Intérim</option>
+                </select>
+              </label>";
+
+        echo "<label>Salaire
+                <input type='text' name='salaire' value='" . $this->safe($salaire) . "' required>
+              </label>";
+
+        echo "<label>Statut
+                <select name='statut' required>
+                    <option value='activée' " . ($statut === 'activée' ? 'selected' : '') . ">Activée</option>
+                    <option value='brouillon' " . ($statut === 'brouillon' ? 'selected' : '') . ">Brouillon</option>
+                    <option value='archivée' " . ($statut === 'archivée' ? 'selected' : '') . ">Archivée</option>
+                </select>
+              </label>";
+
+        echo "<label>Avantages
+                <textarea name='avantages' rows='3'>" . $this->safe($avantages) . "</textarea>
+              </label>";
+
         echo "<div class='form-actions'>";
-        echo "<button type='submit' class='btn btn-primary'>Enregistrer</button> ";
-        echo "<a href='?action=annonce' class='btn btn-secondary'>Annuler</a>";
+        echo "<button type='submit' class='btn btn-primary'>" .
+                ($isUpdate ? "Enregistrer les modifications" : "Créer l’annonce") .
+             "</button>";
+        echo "<a href='index.php?action=annonce' class='btn btn-secondary'>Annuler</a>";
         echo "</div>";
-        
+
         echo "</form>";
-        echo "</div>";
-        
- 
-
-    echo '<script src="./assets/js/annonce.js"></script>';
+        echo "</section>";
     }
-
-
 }
-
-
-?>
-

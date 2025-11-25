@@ -1,56 +1,43 @@
 <?php
-declare(strict_types=1);
+declare(strict_types=1); // Active le typage strict en PHP
 
-use PHPUnit\Framework\TestCase;
-use App\Controller\AnnonceController;
-use App\Model\AnnonceModel;
-use App\View\AnnonceView;
+use PHPUnit\Framework\TestCase;      // Classe de base pour les tests PHPUnit
+use App\Controller\AnnonceController; // Le contrôleur qu’on veut tester
+use App\Model\AnnonceModel;         
+use App\View\AnnonceView;         
 
+// Classe de test pour AnnonceController
 final class AnnonceControllerTest extends TestCase
 {
-    public function testListAnnoncesAppelleRenderListeAvecDonneesDisponibles(): void
+    // Nom du test : on vérifie que viewAnnonce()
+    // appelle bien renderDetails() quand l’annonce existe.
+    public function testViewAnnonceExistanteAppelleRenderDetails(): void
     {
-        // Données simulées
-        $annonces = [
-            ['id' => 1, 'titre' => 'Développeur PHP'],
-            ['id' => 2, 'titre' => 'Chef de projet'],
-        ];
+        // On prépare une fausse annonce que le modèle renverra
+        $annonce = ['id' => 1, 'titre' => 'Dev PHP'];
 
-        // --- Mock du modèle ---
-        // disableOriginalConstructor = pas de PDO
-        $modelBuilder = $this->getMockBuilder(AnnonceModel::class)
-                             ->disableOriginalConstructor();
+        // On crée un faux modèle (mock) et une fausse vue
+        $model = $this->createMock(AnnonceModel::class);
+        $view  = $this->createMock(AnnonceView::class);
 
-        // Si ta classe a bien la méthode getAnnoncesDisponibles(), on la mocke.
-        // Sinon, on ne la déclare pas et on se rabattra sur getAll().
-        $hasGetDisponibles = method_exists(AnnonceModel::class, 'getAnnoncesDisponibles');
+        // On dit : quand le contrôleur demandera getById(1),
+        // le modèle mock doit être appelé une fois et renvoyer $annonce
+        $model->expects($this->once())
+              ->method('getById')
+              ->with($this->equalTo(1))
+              ->willReturn($annonce);
 
-        if ($hasGetDisponibles) {
-            $model = $modelBuilder->onlyMethods(['getAll','getAnnoncesDisponibles'])->getMock();
-            $model->method('getAll')->willReturn($annonces);
-            $model->method('getAnnoncesDisponibles')->willReturn($annonces);
-        } else {
-            $model = $modelBuilder->onlyMethods(['getAll'])->getMock();
-            $model->method('getAll')->willReturn($annonces);
-        }
-
-        // --- Mock de la vue ---
-        $view = $this->getMockBuilder(AnnonceView::class)
-                     ->onlyMethods(['renderListe'])
-                     ->getMock();
-
+        // On dit : la vue mock doit appeler une fois renderDetails()
+        // avec exactement $annonce en paramètre
         $view->expects($this->once())
-             ->method('renderListe')
-             ->with($this->equalTo($annonces));
+             ->method('renderDetails')
+             ->with($this->equalTo($annonce));
 
-        // --- Contrôleur (injection pour éviter la BDD) ---
+        // On crée le contrôleur avec nos mocks (donc pas de vraie BDD)
         $controller = new AnnonceController($model, $view);
 
-        // --- Action ---
-        // Si getAnnoncesDisponibles n'existe pas dans le modèle réel mais que
-        // le contrôleur l'appelle, tu auras une erreur "undefined method".
-        // Corrige alors soit le contrôleur pour appeler getAll(), soit ajoute
-        // bien la méthode au modèle.
-        $controller->listAnnonces();
+        // On exécute la méthode à tester
+        // → le test vérifie que les attentes ci‑dessus sont respectées
+        $controller->viewAnnonce(1);
     }
 }

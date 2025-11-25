@@ -2115,10 +2115,10 @@ filter: brightness(0) invert(1); /* rend l’icône blanche si elle est noire */
 #calendar {
     max-width: 1000px;
     margin: 2rem auto;
-    z-index: -2;
-    position: absolute;
+    // z-index: -2;
+    // position: absolute;
     width: 100%;
-    left: 16rem;
+    // left: 16rem;
 }
 .fc-event-title {
     font-weight: bold;
@@ -2271,7 +2271,7 @@ filter: brightness(0) invert(1); /* rend l’icône blanche si elle est noire */
    .delete-profil {
      max-width: 820px;
      margin: 5rem 10rem 5rem 23rem;
-     width: 20%;
+    text-align: center;
      padding: 18px;
      background: #fff7f7;
      border: 1px solid #fecaca;
@@ -2591,6 +2591,6 @@ filter: brightness(0) invert(1); /* rend l’icône blanche si elle est noire */
 
 
 
-@include meta.load-css("bulle-flottante");
+
 @include meta.load-css("mobile");
 @include meta.load-css("footer");

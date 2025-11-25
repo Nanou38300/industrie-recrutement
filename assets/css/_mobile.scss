@@ -570,6 +570,9 @@
             padding: 0.7rem;
         }
     }
+    .delete-profil {
+        width: 90%;
+    }
     .profil-admin,.form-profil-admin, .delete-profil{
         margin: 1rem;
         padding: 2rem;
@@ -642,15 +645,15 @@
                 gap: 1rem;
                 select, input {
                     border: 2px solid vars.$beige;
-                    height: 1.6rem;
+                    height: 2rem;
                     width: 7rem;
                     margin: 0.1rem;
                 }
                 button {
                     background-color: vars.$vert;
                     color: white;        
-                    height: 1.6rem;
-                    width: 5rem;
+                    height: 2rem;
+                    width: 6rem;
                     font-family: bebas neue;
                 }
             }
@@ -692,6 +695,8 @@ h2 {
 }
 #calendar {
     left: 0;
+    position: relative;
+    margin: 1rem auto;
 }
 }
 
@@ -777,7 +782,10 @@ h2 {
                 }
             }
         }
-    
+    // Page Modification annonce 
+    .form-container {
+        margin: 0;
+    }
     //page candidature 
     .candidatures {
         padding: 1rem;

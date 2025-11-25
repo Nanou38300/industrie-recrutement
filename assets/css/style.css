@@ -41,7 +41,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-right: 3rem;
+  margin-right: 1rem;
   cursor: pointer;
   padding: 4px;
   border-radius: 8px;
@@ -49,9 +49,16 @@
 .burger span {
   display: block;
   height: 3px;
-  background: white;
   transition: transform 0.25s ease, opacity 0.2s ease, width 0.25s ease;
   width: 100%;
+}
+
+#menu-connecte .burger span {
+  background: white;
+}
+
+#menu-public .burger span {
+  background: black;
 }
 
 /* ========== PUBLIC HEADER ========== */
@@ -78,12 +85,7 @@
 #menu-public .logo .logo-link {
   display: inline-flex;
   align-items: center;
-}
-#menu-public .logo .logo-link img {
-  margin-left: 3rem;
-}
-#menu-public .logo img {
-  height: 3rem;
+  height: 5rem;
   -o-object-fit: contain;
      object-fit: contain;
 }
@@ -185,9 +187,11 @@
   #menu-public .bar-top {
     padding: 0;
   }
-  #menu-public .bar-top .logo-link img {
-    height: 5rem;
+  #menu-public .bar-top .logo .logo-link {
     margin-left: 2rem;
+  }
+  #menu-public .bar-top .logo .logo-link img {
+    height: 3rem;
   }
   #menu-public .nav-principal {
     display: flex !important;
@@ -221,13 +225,18 @@
   padding: 0.75rem 1rem;
   background: #1E3D3A;
 }
-#menu-connecte .bar-top .logo-link img {
+#menu-connecte .bar-top .logo-link {
   height: 3rem;
   -o-object-fit: contain;
      object-fit: contain;
 }
+#menu-connecte .menu {
+  position: absolute;
+  z-index: 10;
+}
 #menu-connecte nav.menu {
-  position: fixed;
+  position: absolute;
+  z-index: 99;
   inset: 0 auto 0 0;
   width: 240px;
   max-width: 80%;
@@ -266,12 +275,10 @@
 }
 #menu-connecte nav.menu .logoconnecte {
   height: 4rem;
+  width: 9rem;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-#menu-connecte nav.menu .logoconnecte img {
-  height: 4rem;
 }
 #menu-connecte #nav-toggle-connecte:checked ~ nav.menu {
   transform: translateX(0);
@@ -2774,10 +2781,7 @@ hr {
 #calendar {
   max-width: 1000px;
   margin: 2rem auto;
-  z-index: -2;
-  position: absolute;
   width: 100%;
-  left: 16rem;
 }
 
 .fc-event-title {
@@ -2945,7 +2949,7 @@ hr {
 .delete-profil {
   max-width: 820px;
   margin: 5rem 10rem 5rem 23rem;
-  width: 20%;
+  text-align: center;
   padding: 18px;
   background: #fff7f7;
   border: 1px solid #fecaca;
@@ -3239,74 +3243,6 @@ hr {
   font-weight: 700;
   border: none;
   cursor: pointer;
-}
-
-.bulle-flottante__modal[hidden] {
-  display: none;
-}
-
-.bulle-flottante__modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 9998;
-}
-
-.bulle-flottante__modal-content {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: #ffffff;
-  padding: 16px 18px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  z-index: 9999;
-  max-width: 280px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  text-align: left;
-}
-
-.bulle-flottante__modal-content p {
-  margin: 0 0 10px;
-  font-size: 14px;
-  color: #222;
-}
-
-.bulle-flottante__modal-content small {
-  display: block;
-  margin-top: 4px;
-  font-size: 11px;
-  color: #666;
-}
-
-.bulle-flottante__modal-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.bulle-flottante__modal-actions button {
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.bulle-flottante__modal-actions [data-action=call-save] {
-  background: #2563eb;
-  color: #fff;
-}
-
-.bulle-flottante__modal-actions [data-action=call] {
-  background: #e5e7eb;
-  color: #111827;
-}
-
-.bulle-flottante__modal-actions [data-action=close] {
-  background: transparent;
-  color: #6b7280;
 }
 
 @font-face {
@@ -3853,6 +3789,9 @@ hr {
   .profil-admin p {
     padding: 0.7rem;
   }
+  .delete-profil {
+    width: 90%;
+  }
   .profil-admin, .form-profil-admin, .delete-profil {
     margin: 1rem;
     padding: 2rem;
@@ -3918,15 +3857,15 @@ hr {
   }
   .candidatures-admin .bloc-candidatures-admin .candidature-item select, .candidatures-admin .bloc-candidatures-admin .candidature-item input {
     border: 2px solid #C9AB89;
-    height: 1.6rem;
+    height: 2rem;
     width: 7rem;
     margin: 0.1rem;
   }
   .candidatures-admin .bloc-candidatures-admin .candidature-item button {
     background-color: #1A3E38;
     color: white;
-    height: 1.6rem;
-    width: 5rem;
+    height: 2rem;
+    width: 6rem;
     font-family: bebas neue;
   }
   h2 {
@@ -3965,6 +3904,8 @@ hr {
   }
   #calendar {
     left: 0;
+    position: relative;
+    margin: 1rem auto;
   }
 }
 @media screen and (max-width: 750px) and (orientation: portrait) {
@@ -4031,6 +3972,9 @@ hr {
   }
   .annonces .annonce-details p {
     font-size: 0.9rem;
+  }
+  .form-container {
+    margin: 0;
   }
   .candidatures {
     padding: 1rem;

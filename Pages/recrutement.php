@@ -7,6 +7,13 @@
 
 </head>
 <body id="P4">
+
+<?php if (!empty($_SESSION['flash'])): ?>
+    <div class="flash success">
+        <?= htmlspecialchars((string)$_SESSION['flash'], ENT_QUOTES, 'UTF-8') ?>
+    </div>
+    <?php unset($_SESSION['flash'], $_SESSION['flash_type']); ?>
+<?php endif; ?>
     
 <section class="hero">
     <img src="assets/images/P4-hero.webp" loading= "lazy" alt="une image d'un soudeur en position">
@@ -108,45 +115,7 @@
         <a href="/utilisateur/create"><button class="btn1">POSTULER</button></a>
     </article>
     </section>
-<!-- 
 
-    <section class="formulaire">
-        <section  class="template-titre1">
-            <div >
-            <p class="tcsC">TCS Chaudronnerie</p>
-            <h2 class="titre">CANDIDATURE SPONTANNÉE </h2>
-            </div>
-        <div class="separateur"></div>
-        </section>
-
-        <form action="candidature.php" method="POST" enctype="multipart/form-data">
-            
-            <label for="nom">Nom :</label>
-            <input type="text" name="nom" id="nom" required>
-            
-            <label for="nom">Prénom:</label>
-            <input type="text" name="prnom" id="prenom" required>
-
-            <label for="email">Email :</label>
-            <input type="email" name="email" id="email" required>
-
-            <label for="message">Message :</label>
-            <textarea name="message" id="message" rows="5" required class="message"></textarea>
-
-            <label for="cv">CV (PDF ou DOC) :</label>
-            <input class="" type="file" name="cv" id="cv" accept=".pdf,.doc,.docx" required>
-
-            ✅ Consentement RGPD
-            <div class="rgpd">
-                <input type="checkbox" name="rgpd" id="rgpd" required>
-                <label for="rgpd">J’accepte que mes données soient utilisées dans le cadre de ce recrutement, conformément à la politique de confidentialité.</label>
-            </div>
-            <button class="btn1" type="submit">Envoyer</button>
-        </form>
-    </section> -->
- 
-
-    <!-- V2 -->
 <section class="form-spontanne">
     <section class="header">
         <div>

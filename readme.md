@@ -96,7 +96,7 @@ les tables utilisées :
 - Administrateur : compte du ou des recruteurs
 - Utilisateur : compte des candidats
 - Annonces : offres d'emploi
-- Candidatures : candidatures envoyées
+- Candidatures : candidatures envoyées (suivi candidat + back-office)
 - Entretien : rendez-vous programmés
 
 
@@ -199,9 +199,11 @@ Nettoyage des appels inutiles à id_annonce dans les formulaires liés aux entre
 
 
 🔧 2. CandidatureModel.php
-Normalisation du champ statut avec les valeurs : envoyée, consultée, entretien, recruté, refusé.
-Ajout de la validation stricte des statuts dans la méthode update().
-Correction de la méthode findByUtilisateur() pour inclure le champ statut.
+- `create()` (lignes 17-33) : insertion sécurisée d’une candidature avec statut `envoyée` par défaut et date automatique.
+- `findById()` / `findAll()` (lignes 42-78) : jointures complètes pour récupérer utilisateur + annonce.
+- `findByUtilisateur()` (lignes 79-92) : ajout des champs nécessaires au suivi candidat.
+- `update()` (lignes 94-115) : normalisation des entrées, validation stricte (`envoyée`, `consultée`, `entretien`, `recruté`, `refusé`) avant la requête préparée.
+- `delete()` (lignes 117-122) : suppression sécurisée.
 
 
 
@@ -224,29 +226,25 @@ supprimerEntretien(int $id) : supprime l’entretien et retourne un code HTTP 20
 
 
 
-🔧 5. CalendrierView.php
-Ajout de la méthode renderCalendrier() pour afficher les entretiens mensuels.
-Ajout de la méthode renderFormCreation() avec les champs : date, heure, candidat, type, lien visio, commentaire.
-Ajout de la méthode renderRappels() pour afficher les rappels du jour.
-Ajout de la méthode renderDetails() pour afficher les détails d’un entretien.
+🔧 5. CandidatureController.php
+- Ajout/injection des dépendances `CandidatureModel` et `CandidatureView`.
+- Contrôle centralisé des droits (méthode `redirectIfNotConnected()` + vérification du rôle admin pour la liste et la mise à jour).
+- `submitCandidature()` : protections CSRF + redirections propres.
+- `updateStatut()` : normalisation du statut avant passage au modèle, messages flash.
+- `listCandidatures()` / `suivi()` : séparation claire des vues admin vs candidat.
 
 
 
-🗃️ 6. Base de données
-Suppression ou mise en NULL des contraintes sur id_annonce et id_candidature dans la table entretien.
-Vérification du type DATE pour le champ date_entretien afin d’assurer la compatibilité avec les filtres mensuels.
+🗃️ 6. Vues & CSS
+- `App/View/CandidatureView.php` : formulaire inline avec champ caché CSRF et affichage des commentaires.
+- `App/View/CandidatView.php` : timeline dynamique du suivi (`renderSuiviCandidatures`).
+- `assets/css/style.scss` : sections `.candidatures-admin` et `.timeline` pour styliser les interfaces.
 
 
 
-📅 INTÉGRATION DE FULLCALENDAR
-
-1. Ajout du fichier calendar.php
-Chargement de FullCalendar via CDN.
-Initialisation du calendrier en vue hebdomadaire (timeGridWeek).
-Configuration des événements via l’URL /administrateur/api-rdv.
-Ajout des interactions :
-Sélection de créneau → redirection vers le formulaire de création.
-Clic sur événement → menu d’action : voir, modifier, supprimer.
+🧪 Tests & docs
+- `test/CandidatureControllerTest.php` : mock du modèle et de la vue pour garantir que `suivi()` récupère bien les candidatures avant rendu.
+- `readme.md` : section “modifications” mise à jour pour refléter les fichiers/fonctions clés modifiés.
 
 
 

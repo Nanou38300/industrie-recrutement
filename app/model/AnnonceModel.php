@@ -161,12 +161,7 @@ class AnnonceModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // 📊 Compter toutes les annonces
-    public function countAll(): int
-    {
-        $stmt = $this->db->query("SELECT COUNT(*) FROM {$this->table}");
-        return (int) $stmt->fetchColumn();
-    }
+
 
     // 🔍 Récupérer les annonces d’un administrateur
     public function getByAdministrateur(int $idAdmin, ?string $statut = null): array
@@ -205,39 +200,6 @@ class AnnonceModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // 📊 Statistiques par annonce
-    public function getStatsByAdmin(int $idAdmin): array
-    {
-        $stmt = $this->db->prepare("
-            SELECT a.titre,
-                   COUNT(c.id) AS total_candidatures,
-                   SUM(CASE WHEN c.statut = 'non_lue' THEN 1 ELSE 0 END) AS non_lues
-            FROM {$this->table} a
-            LEFT JOIN candidature c ON c.id_annonce = a.id
-            WHERE a.id_administrateur = :idAdmin
-            GROUP BY a.titre
-        ");
-        $stmt->execute(['idAdmin' => $idAdmin]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 
-    // 📊 Annonces avec stats (limitées)
-    public function getAnnoncesAvecStats(int $idAdmin, int $limit = 4): array
-    {
-        $stmt = $this->db->prepare("
-            SELECT a.id, a.titre,
-                   COUNT(c.id) AS total_candidatures,
-                   SUM(CASE WHEN c.statut = 'non_lue' THEN 1 ELSE 0 END) AS non_lues
-            FROM {$this->table} a
-            LEFT JOIN candidature c ON c.id_annonce = a.id
-            WHERE a.id_administrateur = :idAdmin
-            GROUP BY a.id, a.titre
-            ORDER BY a.date_publication DESC
-            LIMIT :limit
-        ");
-        $stmt->bindValue(':idAdmin', $idAdmin, PDO::PARAM_INT);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+ 
 }

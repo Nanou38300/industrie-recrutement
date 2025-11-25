@@ -140,7 +140,7 @@ Nous analysons, concevons et validons chaque projet avec rigueur afin de garanti
                 <h2 class="titre">TÉMOIGNAGE</h2>
                 </div>
 
-           <img src="assets/images/P1_logo_EDF.webp" loading= "lazy" alt="logo de EDF">
+           <img src="assets/images/P1_logo_EDF.webp" loading= "lazy" alt="logo de la socété EDF">
     </section>
 
 

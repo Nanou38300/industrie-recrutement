@@ -6,6 +6,13 @@
 
 </head>
 <body id="P5">
+
+<?php if (!empty($_SESSION['flash'])): ?>
+    <div class="flash success">
+        <?= htmlspecialchars((string)$_SESSION['flash'], ENT_QUOTES, 'UTF-8') ?>
+    </div>
+    <?php unset($_SESSION['flash'], $_SESSION['flash_type']); ?>
+<?php endif; ?>
     
 <section class="hero">
     <img src="assets/images/P5_hero.png" loading= "lazy" alt="une image d'un soudeur en position">

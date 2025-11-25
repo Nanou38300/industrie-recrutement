@@ -5,6 +5,10 @@ declare(strict_types=1);
 ob_start();
 session_start();
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Controller\{
@@ -12,10 +16,7 @@ use App\Controller\{
     CandidatController,
     AnnonceController,
     CandidatureController,
-    EntretienController,
-    CalendrierController,
     UtilisateurController,
-    NewsController
 };
 
 // Chargement des variables d'environnement
@@ -124,12 +125,52 @@ try {
             include "Pages/{$action}.php";
             break;
 
-            case 'administrateur':
+        // Traitement des formulaires contact + candidature spontanée (contact.php / recrutement.php)
+        case 'candidature.php':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $nom    = trim($_POST['nom'] ?? '');
+                $prenom = trim($_POST['prenom'] ?? '');
+                $email  = trim($_POST['email'] ?? '');
+                $msg    = trim($_POST['message'] ?? '');
+
+                // Destination RH (à adapter si besoin)
+                $to = 'rh@tcs-chaudronnerie.fr';
+
+                // Sujet différent selon la page d'origine
+                $fromPage = strpos($_SERVER['HTTP_REFERER'] ?? '', 'contact') !== false ? 'Formulaire de contact' : 'Candidature spontanée';
+                $subject  = "[$fromPage] $nom $prenom";
+
+                $body  = "Origine : $fromPage\n\n";
+                $body .= "Nom    : $nom\n";
+                $body .= "Prénom : $prenom\n";
+                $body .= "Email  : $email\n\n";
+                $body .= "Message :\n$msg\n";
+
+                // Tentative d'envoi de mail basique
+                @mail($to, $subject, $body, "From: $email\r\nReply-To: $email\r\n");
+
+                $_SESSION['flash'] = $fromPage === 'Formulaire de contact'
+                    ? "✅ Votre message a bien été envoyé."
+                    : "✅ Votre candidature spontanée a bien été envoyée.";
+                $_SESSION['flash_type'] = 'success';
+
+                // Redirection : contact ou recrutement
+                if ($fromPage === 'Formulaire de contact') {
+                    header('Location: /contact');
+                } else {
+                    header('Location: /recrutement');
+                }
+                exit;
+            }
+            // Si appel non-POST, retour à l'accueil
+            header('Location: /accueil');
+            exit;
+
+        case 'administrateur':
     $ctrl = new AdministrateurController;
 
     match ($step) {
         // Profil & sessions
-        'dashboard'        => $ctrl->dashboard($_SESSION['utilisateur']['id']),
         'profil'           => $ctrl->profil($_SESSION['utilisateur']['id']),
         'edit-profil'      => $ctrl->editProfil(),
         'delete-profil'    => $ctrl->deleteProfil(),
@@ -160,7 +201,7 @@ try {
         'deleteEntretien'  => $ctrl->deleteEntretien(),
 
         // Par défaut
-        default            => $ctrl->dashboard($_SESSION['utilisateur']['id']),
+        default           => $ctrl->profil($_SESSION['utilisateur']['id']),
     };
     break;
             
@@ -185,16 +226,8 @@ try {
         case 'annonce':
             $ctrl = new AnnonceController;
             
-            // Gestion des actions spéciales avec paramètres GET
-            if (isset($_GET['status'])) {
-                $ctrl->listByStatus($_GET['status']);
-                break;
-            }
-            
-            if (isset($_GET['stats'])) {
-                $ctrl->showStats();
-                break;
-            }
+
+
             
             // Affichage des messages de succès/erreur
             $ctrl->displayMessages();
@@ -214,7 +247,6 @@ try {
                     echo "<div class='alert alert-warning'>⚠️ ID manquant pour supprimer l'annonce.</div>";
                     $ctrl->index();
                 })(),
-                'search' => $ctrl->searchAnnonces(),
                 'archive' => $id ? $ctrl->archiveAnnonce((int)$id) : (function() use ($ctrl) {
                     echo "<div class='alert alert-warning'>⚠️ ID manquant pour archiver l'annonce.</div>";
                     $ctrl->index();
@@ -241,19 +273,6 @@ try {
                 };
                 break;
 
-        case 'entretien':
-            $ctrl = new EntretienController;
-            match ($step) {
-                'planifier' => $ctrl->planifierEntretien(),
-                'edit-entretien'    => $ctrl->editEntretien(),     // ✅ GET (affichage) et POST (enregistrement)
-                'delete-entretien'  => $ctrl->deleteEntretien(),   // ✅ POST suppression
-                'editEntretien'     => $ctrl->editEntretien(),
-                'deleteEntretien'   => $ctrl->deleteEntretien(),
-                'valider-entretien' => $ctrl->validerEntretien(),
-                'rappel'    => $ctrl->envoyerRappel((int)$id),
-                default     => $ctrl->listEntretiens(),
-            };
-            break;
 
         case 'utilisateur':
             $ctrl = new UtilisateurController;
@@ -265,18 +284,6 @@ try {
                 'update' => $ctrl->updateUtilisateur(),
                 'delete' => $ctrl->deleteUtilisateur((int)$id),
                 default  => $ctrl->listUtilisateur(),
-            };
-            break;
-
-        case 'calendrier':
-            $ctrl = new CalendrierController;
-            match ($step) {
-                'semaine'      => $ctrl->vueSemaine(),
-                'jour'         => $ctrl->vueJour($id),
-                'rappel'       => $ctrl->rappelDuJour(),
-                'rendez-vous'  => $ctrl->infoRendezVous($id),
-                'vue-calendrier' => $ctrl->vueCalendrier(),
-                default        => $ctrl->vueSemaine(),
             };
             break;
 
@@ -296,30 +303,18 @@ try {
     }
 
 } catch (Exception $e) {
-    // Gestion globale des erreurs
-    echo "<div class='container' style='margin: 20px auto; padding: 20px; max-width: 800px;'>";
-    echo "<div class='alert alert-danger' style='color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 4px;'>";
-    echo "<h3>⚠️ Erreur Système</h3>";
-    echo "<p><strong>Message :</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
-    echo "<p><strong>Fichier :</strong> " . htmlspecialchars($e->getFile()) . " (ligne " . $e->getLine() . ")</p>";
-    
-    echo "<hr style='margin: 15px 0;'>";
-    echo "<p><strong>Solutions possibles :</strong></p>";
-    echo "<ul>";
-    echo "<li>Vérifiez la configuration de votre base de données</li>";
-    echo "<li>Assurez-vous que toutes les tables existent</li>";
-    echo "<li>Vérifiez les variables d'environnement (.env)</li>";
-    echo "<li>Contrôlez les permissions des fichiers</li>";
-    echo "</ul>";
-    
-    echo "<div style='text-align: center; margin-top: 20px;'>";
-    echo "<a href='?action=accueil' style='display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px;'>🏠 Retour à l'accueil</a>";
-    echo "<a href='?action=annonce' style='display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;'>📋 Voir les annonces</a>";
+    // Message générique pour l'utilisateur
+    echo "<div class='container' style='margin: 20px auto; padding: 20px; max-width: 600px;'>";
+    echo "<div class='alert alert-danger' style='color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 20px; border-radius: 6px; text-align: center;'>";
+    echo "<h3>⚠️ Une erreur est survenue</h3>";
+    echo "<p>Nous ne pouvons pas afficher la page demandée pour le moment. Veuillez réessayer plus tard ou retourner à l'accueil.</p>";
+    echo "<div style='margin-top: 20px;'>";
+    echo "<a href='?action=accueil' style='display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;'>🏠 Retour à l'accueil</a>";
     echo "</div>";
     echo "</div>";
     echo "</div>";
     
-    // Log de l'erreur pour le debugging
+    // Log détaillé uniquement côté serveur
     error_log("Erreur dans index.php : " . $e->getMessage() . " - " . $e->getFile() . ":" . $e->getLine());
 }
 

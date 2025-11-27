@@ -286,3 +286,55 @@ Le calendrier FullCalendar est désormais :
 Dynamique et synchronisé avec la base de données
 Interactif pour la création, modification et suppression d’entretiens
 Intégré proprement dans la structure MVC du projet
+
+## Tableau de traçabilité RNCP 37674
+
+| Bloc RNCP | Compétences visées | Livrables / preuves dans le projet | Validation |
+|-----------|--------------------|------------------------------------|------------|
+| RNCP37674BC01<br>Développer la partie front-end d'une application web ou web mobile sécurisée | • Installer/configurer l'environnement web<br>• Maquetter les interfaces web/mobile<br>• Réaliser les interfaces statiques<br>• Développer les interactions dynamiques | • Environnement Docker : `Dockerfile`, `Docker-compose.yml`, variables `.env` documentées dans `readme.md`<br>• Interfaces statiques : `Pages/accueil.php`, `Pages/recrutement.php`, composants partagés `assets/templates/*.php`<br>• Intégration UI : `assets/css/style.scss` (layout, responsive, accessibilité), `assets/js/*.js` (menu burger, calendrier, navigation)<br>• Vues MVC : `App/View/CandidatView.php`, `App/View/AdministrateurView.php`, `App/View/CalendrierView.php` pour les dashboards dynamiques | ✅ Fonctionnel – navigation front office/back office testée manuellement, conformité RGPD/RGAA prise en compte (structure sémantique, formulaires, mentions légales) |
+| RNCP37674BC02<br>Développer la partie back-end d'une application web ou web mobile sécurisée | • Mettre en place la base de données relationnelle<br>• Développer les accès aux données SQL/NoSQL<br>• Développer les composants métier côté serveur<br>• Documenter le déploiement d'une application dynamique | • Connexion PDO sécurisée : `App/Database.php`, gestion des secrets via `.env`<br>• Accès aux données : `App/Model/*Model.php` (requêtes préparées, validation des statuts, jointures)<br>• Composants métier : `App/Controller/*Controller.php` (gestion annonces, candidatures, entretiens, utilisateurs) + API JSON `AdministrateurController::apiRdv()`<br>• Tests et qualité : `test/AnnonceControllerTest.php`, `test/CandidatureControllerTest.php`, `test/SimpleTest.php`<br>• Déploiement documenté : sections « Installation » et procédure Docker du `readme.md`, configuration serveur `nginx.conf` | ✅ Fonctionnel – tests PHPUnit existants, scénarios de gestion recruteur/candidat vérifiés, procédure de déploiement reproductible |
+
+## Tests unitaires – Mon explication pour le jury
+
+### Pourquoi j'ai fait des tests ?
+Imaginez une recette de cuisine : avant de servir le plat, on goûte pour vérifier que c'est bon.  
+Un **test unitaire**, c'est pareil : c'est un petit programme qui « goûte » mon code pour s'assurer qu'il fonctionne comme prévu.
+
+**Avantage** : si je modifie mon code plus tard, je relance les tests et je sais immédiatement si j'ai cassé quelque chose.
+
+---
+
+### Comment je lance les tests ?
+1. J'ouvre un terminal dans le dossier du projet.
+2. Je tape : `./vendor/bin/phpunit`
+3. Si tout va bien, je vois : **OK (3 tests, 3 assertions)** en vert.
+
+---
+
+### Mes 3 fichiers de test
+
+| Fichier | Question que je pose | Réponse attendue |
+|---------|----------------------|------------------|
+| `SimpleTest.php` | Est-ce que 1 + 1 = 2 ? | Oui → PHPUnit fonctionne. |
+| `AnnonceControllerTest.php` | Quand je demande l'annonce n°1, est-ce qu'elle s'affiche ? | Oui → Le contrôleur et la vue communiquent bien. |
+| `CandidatureControllerTest.php` | Est-ce qu'un candidat voit uniquement ses propres candidatures ? | Oui → La sécurité des données est respectée. |
+
+---
+
+### Ce que je dis au jury (script oral)
+
+> « J'ai mis en place des tests automatiques avec PHPUnit.  
+> Concrètement, j'ai 3 petits programmes qui vérifient que :
+> 1. PHPUnit est bien configuré (test 1 + 1).
+> 2. Quand on demande une annonce, elle s'affiche correctement.
+> 3. Un candidat ne peut voir que ses propres candidatures, pas celles des autres.
+>
+> Pour lancer les tests, je tape une seule commande. Si tout est vert, mon code fonctionne. Si c'est rouge, je sais exactement où corriger.
+>
+> Ça me permet de modifier mon code sans avoir peur de tout casser. »
+
+---
+
+### Captures d'écran à ajouter
+1. **Terminal** : résultat `OK (3 tests, 3 assertions)`.
+2. **Dossier test/** : arborescence dans VS Code montrant les 3 fichiers.

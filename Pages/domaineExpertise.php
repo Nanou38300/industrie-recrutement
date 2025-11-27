@@ -35,13 +35,13 @@
     </div>
     <div class="fleches">
         <a href="#redirection-plan" class="scroll">
-        <img class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
+        <img loading="lazy" class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
 
         <a href="#redirection-cahier" class="scroll">
-        <img class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
+        <img loading="lazy" class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
 
         <a href="#redirection-soudage" class="scroll">
-        <img class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
+        <img loading="lazy" class="fleche" src="assets/images/P1-fleche.webp" alt="icone d'une flèche"></a>
     </div>
 </section>
 <section class="rect-vert">
@@ -68,7 +68,7 @@
 </section>
 
 <section class="plan-chaudronnerie" id="redirection-plan">
-    <img src="assets/images/P3_planChaudronnerie.png" alt="une image d'un plan de chaudronnerie">
+    <img loading="lazy" src="assets/images/P3_planChaudronnerie.png" alt="une image d'un plan de chaudronnerie">
         <article class="texte-chaudronnerie">
             <p>Notre bureau d’études intégré est le cœur stratégique de notre entreprise de chaudronnerie et tuyauterie industrielle. Il accompagne nos clients dès les premières phases du projet en proposant des solutions techniques sur mesure, fiables et conformes aux exigences réglementaires.</p>
 
@@ -142,7 +142,7 @@
 
 </article>
 
-<img src="assets/images/P3_cahierCharge.jpg" alt="une image d'un cahier des charges">
+<img loading="lazy" src="assets/images/P3_cahierCharge.jpg" alt="une image d'un cahier des charges">
 </section>
 
 
@@ -156,7 +156,7 @@
 </section>
 
 <section class="cahier-soudage" id="redirection-soudage">
-    <img src="assets/images/P3_DMOS.jpeg" alt="une image d'un cahier de soudage">
+    <img loading="lazy" src="assets/images/P3_DMOS.jpeg" alt="une image d'un cahier de soudage">
     <article class="texte-soudage">
     <p>Une maîtrise complète de vos projets industriels
     Notre société intervient dans le domaine de la chaudronnerie et de la tuyauterie industrielle avec une approche globale, intégrant un bureau d’études technique dédié à la conception, à la modélisation et à la validation des installations.

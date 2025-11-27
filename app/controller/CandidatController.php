@@ -58,6 +58,18 @@ class CandidatController
     }
 
     // ─────────────────────────────────────
+    // 📋 Suivi des candidatures (candidat)
+    // ─────────────────────────────────────
+
+    public function renderSuiviCandidatures(): void
+    {
+        $this->redirectIfNotConnected();
+        $id = (int)$_SESSION['utilisateur']['id'];
+        $candidatures = $this->model->getCandidatures($id);
+        $this->view->renderSuiviCandidatures($candidatures);
+    }
+
+    // ─────────────────────────────────────
     // 👤 Profil
     // ─────────────────────────────────────
 
@@ -361,17 +373,6 @@ public function uploadPhoto(): void
 
         header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '/candidat/annonces'));
         exit;
-    }
-
-    // ─────────────────────────────────────
-    // 🔎 Suivi des candidatures
-    // ─────────────────────────────────────
-    public function renderSuiviCandidatures(): void
-    {
-        $this->redirectIfNotConnected();
-        $id          = (int)$_SESSION['utilisateur']['id'];
-        $candidatures = $this->model->getCandidatures($id);
-        $this->view->renderSuiviCandidatures($candidatures);
     }
 
     // ─────────────────────────────────────

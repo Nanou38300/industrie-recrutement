@@ -297,8 +297,8 @@ try {
             break;
 
         default:
-            // Action non reconnue, afficher l'accueil
-            include "Pages/accueil.php";
+            http_response_code(404);
+            include "Pages/page404.php";
             break;
     }
 

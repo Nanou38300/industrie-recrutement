@@ -15,7 +15,7 @@
 <?php endif; ?>
     
 <section class="hero">
-    <img src="assets/images/P5_hero.png" loading= "lazy" alt="une image d'un soudeur en position">
+    <img loading="lazy" src="assets/images/P5_hero.png" loading= "lazy" alt="une image d'un soudeur en position">
 </section>
 
 
@@ -27,7 +27,7 @@
             <section>
                 <p>TÉLÉPHONE</p>
                 <div class="bloc-co">
-                    <img src="./assets/images/icone-contact-tel.png" alt="icone de téléphone">
+                    <img loading="lazy" src="./assets/images/icone-contact-tel.png" alt="icone de téléphone">
                     <p>04.34.35.36.37</p>
                 </div>
             </section>
@@ -35,7 +35,7 @@
             <section>
                 <p>MAIL</p>
                 <div class="bloc-co">
-                    <img src="./assets/images/icone-contact-email.png" alt="icone de mail">
+                    <img loading="lazy" src="./assets/images/icone-contact-email.png" alt="icone de mail">
                     <p>contact@tcs-industries.fr</p>
                 </div>
             </section>
@@ -43,7 +43,7 @@
             <section>
                     <p>ADRESSE</p>
                     <div class="bloc-co">
-                        <img src="./assets/images/icone-contact-adresse.png" alt="icone de localisation">
+                        <img loading="lazy" src="./assets/images/icone-contact-adresse.png" alt="icone de localisation">
                         <p>80 rue de l'indutrie</p>
                         <p>38300 NIVOLAS-VERMELLE</p>
                     </div>

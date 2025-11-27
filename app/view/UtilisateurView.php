@@ -55,9 +55,9 @@ class UtilisateurView
         <section class="inscription">
 
             <div class="superposition-insc">
-                <img class="img-inscription" src="./assets/images/P1_soudeur.webp" alt="une image d\'un soudeur.">
+                <img loading="lazy" class="img-inscription" src="./assets/images/P1_soudeur.webp" alt="une image d\'un soudeur.">
                 <div class="cadre-img">
-                    <img src="./assets/images/icone_fleche_blanche.webp" alt="une icone fleche">
+                    <img loading="lazy" src="./assets/images/icone_fleche_blanche.webp" alt="une icone fleche">
                     <a href="/utilisateur/login" class="btn-insc">SE CONNECTER</a>
                 </div>
             </div>
@@ -125,11 +125,11 @@ class UtilisateurView
             </form>
             
             <div class="superposition-co">
-                <img class="img-connexion" src="./assets/images/P4_soudeurPosition.webp" alt="un soudeur.">
+                <img loading="lazy" class="img-connexion" src="./assets/images/P4_soudeurPosition.webp" alt="un soudeur.">
 
                 <div class="cadre-co">
                     <a href="/utilisateur/create" class="btn-co">CREER UN COMPTE</a>
-                    <img src="./assets/images/icone_fleche_blanche_inverse.webp" alt="une icone fleche">
+                    <img loading="lazy" src="./assets/images/icone_fleche_blanche_inverse.webp" alt="une icone fleche">
                 </div>
             </div>
         </section>

@@ -1,9 +1,6 @@
 
 <?php
-
-// Afficher ce header uniquement si l'utilisateur n'est PAS connecté
 if (!isset($_SESSION)) { session_start(); }
-if (!empty($_SESSION['utilisateur'])) { return; }
 
 function isActive($path) {
     $current = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');

@@ -55,7 +55,7 @@ class CandidatView
 
         // === Photo + bouton modifier === 
         echo '<div class="photo-profil">';
-        echo '    <img src="/' . ltrim($photo, '/') . '" alt="Photo de profil" class="photo-candidat">';
+        echo '    <img loading="lazy" src="/' . ltrim($photo, '/') . '" alt="Photo de profil du candidat" class="photo-candidat">';
         echo '    <form method="POST" enctype="multipart/form-data" action="/candidat/uploadPhoto">';
         echo          $this->csrfField();
         echo '        <input 
@@ -81,7 +81,7 @@ class CandidatView
         foreach ($champs as $label => $key) {
             $val = $this->safe($data[$key] ?? '');
             echo "<p class='profil-info'>
-                    <img src='/assets/images/valide.png' alt='valide' class='valide-icone'>
+                    <img loading='lazy' src='/assets/images/valide.png' alt='' class='valide-icone'>
                     <strong>{$label} :</strong> {$val}
                   </p>";
         }
@@ -90,7 +90,7 @@ class CandidatView
         if (!empty($data['linkedin'])) {
             $lnk = $this->safe($data['linkedin']);
             echo "<p class='profil-info'>
-                    <img src='/assets/images/valide.png' alt='valide' class='valide-icone'>
+                    <img loading='lazy' src='/assets/images/valide.png' alt='' class='valide-icone'>
                     <strong>LinkedIn :</strong> <a href='{$lnk}' target='_blank'>{$lnk}</a>
                   </p>";
         }
@@ -318,7 +318,7 @@ class CandidatView
                 echo "<p><strong>Date de publication :</strong> " . $this->safe($a['date_publication'] ?? '') . "</p>";
 
                 echo "<button onclick='toggleDetails(this)' class='btn-toggle'>
-                        <img class='img-deroulante' src='/assets/images/fleche-bas.png' alt='Voir les détails'>
+                        <img loading='lazy' class='img-deroulante' src='/assets/images/fleche-bas.png' alt='Voir les détails'>
                       </button>";
 
                 // POSTULER → POST + CSRF

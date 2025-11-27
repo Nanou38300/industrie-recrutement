@@ -248,5 +248,20 @@ class UtilisateurController
         $this->utilisateurModel->deleteUtilisateur($id);
         echo "<p>Utilisateur supprimé.</p>";
     }
+
+    // ─────────────────────────────────────
+    // 📋 Liste des utilisateurs (admin)
+    // ─────────────────────────────────────
+    public function listUtilisateur(): void
+    {
+        if (!$this->isAdmin()) {
+            http_response_code(403);
+            echo "<p>Accès refusé. Cette page est réservée aux administrateurs.</p>";
+            return;
+        }
+
+        $utilisateurs = $this->utilisateurModel->selectUtilisateurs();
+        $this->utilisateurView->displayUtilisateurs($utilisateurs);
+    }
 }
 ?>

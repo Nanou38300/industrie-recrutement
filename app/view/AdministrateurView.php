@@ -58,7 +58,7 @@ class AdministrateurView
         foreach ($champs as $label => $key) {
             $valeur = $data[$key] ?? '';
             echo '<p class="profil-info">
-                    <img src="assets/images/valide.png" alt="valide" class="valide-icone">
+                    <img loading="lazy" src="assets/images/valide.png" alt="valide" class="valide-icone">
                     <strong>' . $label . ' :</strong> ' . $this->safe($valeur) . '
                   </p>';
         }
@@ -162,7 +162,7 @@ class AdministrateurView
                 echo "<form method='GET' action='/administrateur/edit-annonce' class='form-edit'>";
                 echo "<input type='hidden' name='id' value='" . $this->safe($a['id'] ?? '') . "'>";
                 echo "<button type='submit' class='btn-edit'>
-                        <img src='assets/images/stylo.png' alt='modifier' class='icon-edit'>
+                        <img loading='lazy' src='assets/images/stylo.png' alt='modifier' class='icon-edit'>
                         Modifier
                       </button>";
                 echo "</form>";
@@ -176,7 +176,7 @@ class AdministrateurView
                 echo "<input type='hidden' name='id' value='" . $this->safe($a['id'] ?? '') . "'>";
 
                 echo "<button type='submit' class='btn-delete'>
-                        <img src='assets/images/poubelle.png' alt='supprimer' class='icon-delete'>
+                        <img loading='lazy' src='assets/images/poubelle.png' alt='supprimer' class='icon-delete'>
                         Supprimer
                     </button>";
                 

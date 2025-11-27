@@ -23,37 +23,37 @@
 <section class="picto-processus">
   
     <div class="etape-process">
-        <img src="assets/images/P4_pictodossier.webp" alt="un picto de dossier">
+        <img loading="lazy" src="assets/images/P4_pictodossier.webp" alt="un picto de dossier">
         <p class="texte-beige">Tri des candidatures pour identifier les profils correspondant aux critères.</p>
         <p>Délai entre 3 à 7 jours.
         (Analyse des CV et tri des candidatures).</p>
     </div>
     
-    <img class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
+    <img loading="lazy" class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
 
 
     <div class="etape-process">
-        <img src="assets/images/P4_pictotri.webp" alt="un picto de tris de candidatures">
+        <img loading="lazy" src="assets/images/P4_pictotri.webp" alt="un picto de tris de candidatures">
         <p class="texte-beige">Entretiens individuels.</p>
         <p>Délai entre 7 à 10 jours.
         (Organisation et réalisation des entretiens, incluant la coordination des plannings).</p>
     </div>
 
-    <img class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
+    <img loading="lazy" class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
 
  
     <div class="etape-process">
-        <img src="assets/images/P4_pictoentretien.webp" alt="un picto de deux personnes qui discutent">
+        <img loading="lazy" src="assets/images/P4_pictoentretien.webp" alt="un picto de deux personnes qui discutent">
         <p class="texte-beige">Entretiens individuels.</p>
         <p>Délai entre 7 à 10 jours.
         (Organisation et réalisation des entretiens, incluant la coordination des plannings).</p>
     </div>
 
-    <img class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
+    <img loading="lazy" class="fleche" src="assets/images/P4_fleche.webp" alt="un picto flèche">
 
  
     <div class="etape-process">
-        <img src="assets/images/P4_pictochoix.webp" alt="un picto de trois personnes les mains en l'air tenant deux pieces de puzels">
+        <img loading="lazy" src="assets/images/P4_pictochoix.webp" alt="un picto de trois personnes les mains en l'air tenant deux pieces de puzels">
         <p class="texte-beige">Choix finale
         & Intégration.</p>
         <p>Délai entre 7 à 10 jours.
@@ -85,7 +85,7 @@
         </div>
     <div class="separateur"></div>
 
-    <img src="assets/images/P4_chaudronnier.webp" alt="une image représentant un chaudronnier">
+    <img loading="lazy" src="assets/images/P4_chaudronnier.webp" alt="une image représentant un chaudronnier">
     <article class="article"> 
         <h3>Chaudronnier H/F</h3>
         <p>C.D.I</p>
@@ -96,7 +96,7 @@
 
 
 
-    <img class="img2" src="assets/images/P4_soudeur2.webp" alt="une image représentant un chaudronnier">
+    <img loading="lazy" class="img2" src="assets/images/P4_soudeur2.webp" alt="une image représentant un chaudronnier">
     <article class="article2"> 
         <h3>Soudeur H/F</h3>
         <p>C.D.I</p>
@@ -106,7 +106,7 @@
     </article>
   
 
-    <img src="assets/images/P4_soudeurPosition.webp" alt="une image représentant un chaudronnier">
+    <img loading="lazy" src="assets/images/P4_soudeurPosition.webp" alt="une image représentant un chaudronnier">
     <article class="article3"> 
         <h3>Soudeur H/F</h3>
         <p>C.D.I</p>
